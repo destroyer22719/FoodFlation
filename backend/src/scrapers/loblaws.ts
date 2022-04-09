@@ -12,7 +12,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
 
     await sequelize.sync();
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
     });
 
     const page = await browser.newPage();
@@ -111,7 +111,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
             const itemPrice = new Price({
                 id: uuidv4(),
                 price: parseFloat(data.price.slice(1)),
-                itemId: itemObj?.id,
+                itemId: itemObj.id,
             });
 
             await itemPrice.save();
