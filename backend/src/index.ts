@@ -6,7 +6,7 @@ import itemRouter from "./routes/items.js";
 import storeRouter from "./routes/stores.js";
 import companyRouter from "./routes/companies.js";
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 dotenv.config();
 
 const app = express();

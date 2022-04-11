@@ -26,7 +26,7 @@ export const getStoreById = async (
     next: NextFunction
 ) => {
     try {
-        const store = Store.findByPk(req.params.id, {
+        const store = await Store.findByPk(req.params.id, {
             include: [Item],
         });
 
