@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import Price from "../model/Price.js";
 import sequelize from "../config/db.js";
 import Item from "../model/Item.js";
 import Store from "../model/Store.js";
@@ -26,7 +27,7 @@ export const getStoreById = async (
 ) => {
     try {
         const store = await Store.findByPk(req.params.id, {
-            include: [Item],
+            include: [{model: Item, include: [Price]}],
         });
 
         if (!store)

@@ -12,6 +12,7 @@ export interface Store {
     postalCode: string;
     companyId: string;
     company: Company;
+    items: Item[]
 }
 
 export interface Item {
