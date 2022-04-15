@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import ItemList from "../../components/ItemList";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
 import { Store } from "../../global";
@@ -16,6 +17,8 @@ export default function StorePage({ store }: AppProps) {
                     <p>
                         {store.street}, {store.city} {store.postalCode}
                     </p>
+                    <div>{store.items.length} Tracked</div>
+                    {store.items.map((item) => <ItemList key={item.id} item={item}/>)}
                 </div>
             ) : (
                 <div>
@@ -30,7 +33,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     query: { storeId },
 }) => {
     const res = await fetch(`${API_URL}/stores/${storeId}`);
-    console.log(`${API_URL}/store/${storeId}`);
     const store: Store = await res.json();
 
     return {
