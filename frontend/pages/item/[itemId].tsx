@@ -12,6 +12,7 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import { sortItemPricesByDate } from "../../utli";
 
 ChartJS.register(
     CategoryScale,
@@ -62,14 +63,7 @@ export default function ItemPage({ item }: AppProps) {
     const labels: string[] = [];
     let datasetAmt = 7;
 
-    const parsedPrices = prices
-        .sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-            if (dateA < dateB) return -1;
-            else if (dateA > dateB) return 1;
-            return 0;
-        })
+    const parsedPrices = sortItemPricesByDate(prices)
         .slice(0, datasetAmt)
         .map((priceObj) => {
             const date = new Date(priceObj.createdAt);
@@ -78,7 +72,7 @@ export default function ItemPage({ item }: AppProps) {
             return priceObj.price;
         });
 
-        console.log(parsedPrices);
+    console.log(parsedPrices);
 
     const data = {
         labels,
@@ -97,7 +91,17 @@ export default function ItemPage({ item }: AppProps) {
         <div>
             <h1>{item.name}</h1>
 
-            <Line data={data} />
+            <Line
+                data={data}
+                options={{
+                    scales: {
+                        xAxes: {
+                            type: "time",
+                            time: { parser: "MM/DD/YYYY" },
+                        },
+                    },
+                }}
+            />
         </div>
     );
 }
