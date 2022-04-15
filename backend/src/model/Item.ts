@@ -15,7 +15,7 @@ import Store from "./Store.js";
 
 @Table({
     timestamps: true,
-    tableName: "item",
+    tableName: "items",
     freezeTableName: true,
 })
 export default class Item extends Model {

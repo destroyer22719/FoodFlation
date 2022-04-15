@@ -25,9 +25,7 @@ export const getItemById = async (
 };
 
 export const getAllItems = async (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction
 ) => {

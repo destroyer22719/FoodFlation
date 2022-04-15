@@ -3,9 +3,7 @@ import Company from "../model/Company.js";
 import Store from "../model/Store.js";
 
 export const getAllCompanies = async (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction
 ) => {

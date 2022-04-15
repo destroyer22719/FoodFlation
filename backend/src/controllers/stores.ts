@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import sequelize from "../config/db.js";
 import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 
 export const getAllStores = async (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction
 ) => {
@@ -34,8 +33,23 @@ export const getStoreById = async (
             res.send({
                 message: `No store found with id of ${req.params.id}`,
             }).status(404);
-        
         else res.send(store);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getAllLocations = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const [data] = await sequelize.query(`
+            SELECT DISTINCT city FROM stores
+        `);
+
+        res.send(data);
     } catch (err) {
         next(err);
     }

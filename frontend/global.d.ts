@@ -28,4 +28,5 @@ export interface Price {
     price: number,
     item: Item,
     itemId: string
+    createdAt: string
 }

@@ -1,8 +1,17 @@
+import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
+
 export default function SearchBox() {
-  return (
-    <div>
-        <h3>Find a store</h3>
-        <input type="text" placeholder="Find a store by postal code"/>
-    </div>
-  )
+    const [show, setShow] = useState(false)
+
+    return (
+        <div>
+            <h3>
+                <FaSearch /> Find a store
+            </h3>
+            {show && (<div>
+                
+            </div>)}
+        </div>
+    );
 }

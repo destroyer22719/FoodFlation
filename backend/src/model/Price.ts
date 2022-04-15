@@ -13,7 +13,7 @@ import Item from "./Item.js";
 
 @Table({
     timestamps: true,
-    tableName: "price",
+    tableName: "prices",
     freezeTableName: true,
 })
 export default class Price extends Model {
