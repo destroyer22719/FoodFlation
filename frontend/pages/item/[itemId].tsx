@@ -13,6 +13,7 @@ import {
     Legend,
 } from "chart.js";
 import { sortItemPricesByDate } from "../../utli";
+import Image from "next/image";
 
 ChartJS.register(
     CategoryScale,
@@ -58,24 +59,56 @@ type AppProps = {
     item: Item;
 };
 
+type DataSet = {
+    x: string;
+    y: number;
+};
+
 export default function ItemPage({ item }: AppProps) {
     const { prices } = item;
-    const labels: string[] = [];
-    let datasetAmt = 7;
 
-    const parsedPrices = sortItemPricesByDate(prices)
-        .slice(0, datasetAmt)
-        .map((priceObj) => {
-            const date = new Date(priceObj.createdAt);
-            if (!labels.includes(dateNumToStr(date.getDay())))
-                labels.push(dateNumToStr(date.getDay()));
-            return priceObj.price;
+    //dates
+    const xDataset: string[] = [];
+    //prices
+    const yDataset: number[] = [];
+
+    const highest: DataSet = { x: "", y: -Infinity };
+    const lowest: DataSet = { x: "", y: Infinity };
+
+    sortItemPricesByDate(prices).forEach(({ createdAt, price }) => {
+        const date = new Date(createdAt).toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit",
         });
 
-    console.log(parsedPrices);
+        if (xDataset.includes(date) && yDataset.includes(price)) return;
+        xDataset.push(date);
+        yDataset.push(price);
+
+        if (price > highest.y) {
+            highest.y = price;
+            highest.x = date;
+        } else if (price < lowest.y) {
+            lowest.y = price;
+            lowest.x = date;            
+        }
+    });
+
+    const parsedPrices: DataSet[] = [];
+
+    for (let i = 0; i < prices.length; i++) {
+        parsedPrices.push({
+            x: xDataset[i],
+            y: yDataset[i],
+        });
+    }
 
     const data = {
-        labels,
+        label: "Date",
         datasets: [
             {
                 label: "Item Price",
@@ -90,18 +123,38 @@ export default function ItemPage({ item }: AppProps) {
     return (
         <div>
             <h1>{item.name}</h1>
+            <p>
+                At {item.store.street}, {item.store.city}{" "}
+                {item.store.postalCode}
+            </p>
+            <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
+            <div>
+                <div>Latest Price: {"$"}{parsedPrices[0].y} on {parsedPrices[0].x}</div>
+                <div>Highest Price: {"$"}{highest.y} on {highest.x}</div>
+                <div>Lowest Price: {"$"}{lowest.y} on {lowest.x}</div>
+            </div>
 
-            <Line
-                data={data}
-                options={{
-                    scales: {
-                        xAxes: {
-                            type: "time",
-                            time: { parser: "MM/DD/YYYY" },
+            <div>
+                <Line
+                    data={data}
+                    options={{
+                        scales: {
+                            // @ts-ignore - I don't know why but ts is telling me it has to be an object while it'll only work if it's an array
+                            xAxes: [
+                                {
+                                    type: "time",
+                                    time: {
+                                        displayFormats: {
+                                            hour: "hA MMM D",
+                                        },
+                                        parser: "MM/DD/YYYY",
+                                    },
+                                },
+                            ],
                         },
-                    },
-                }}
-            />
+                    }}
+                />
+            </div>
         </div>
     );
 }
