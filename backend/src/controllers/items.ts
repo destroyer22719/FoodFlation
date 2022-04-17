@@ -14,10 +14,9 @@ export const getItemById = async (
         });
 
         if (!item)
-            res.send({
+            res.status(404).send({
                 message: `No item found with id of ${req.params.id}`,
-            }).status(404);
-        
+            });
         else res.send(item);
     } catch (err) {
         next(err);

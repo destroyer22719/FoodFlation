@@ -29,9 +29,9 @@ export const getCompanyById = async (
         });
 
         if (!company)
-            res.send({
+            res.status(404).send({
                 message: `No company found with id of ${req.params.id}`,
-            }).status(404);
+            });
 
         else res.send(company);
     } catch (err) {
