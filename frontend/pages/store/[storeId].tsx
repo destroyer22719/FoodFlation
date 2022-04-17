@@ -22,7 +22,7 @@ export default function StorePage({ store }: AppProps) {
                 </div>
             ) : (
                 <div>
-                    <h1>Store not found</h1>
+                    <h1>Store Not Found</h1>
                 </div>
             )}
         </Layout>
