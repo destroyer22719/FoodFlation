@@ -5,16 +5,27 @@ import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 
 export const getAllStores = async (
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const stores = await Store.findAll({
-            include: [Item],
-        });
+        let stores: Store[] = [];
+        if (req.query.search) {
+            stores = await Store.findAll({
+                where: {
+                    city: req.query.search?.toString().replace("%20", " "),
+                },
+            });
+        } else {
+            stores = await Store.findAll();
+        }
 
-        res.send(stores);
+        if (stores.length) res.send(stores);
+        else
+            res.status(404).send({
+                message: `No store found with city of ${req.query.search}`,
+            });
     } catch (err) {
         next(err);
     }
@@ -27,13 +38,13 @@ export const getStoreById = async (
 ) => {
     try {
         const store = await Store.findByPk(req.params.id, {
-            include: [{model: Item, include: [Price]}],
+            include: [{ model: Item, include: [Price] }],
         });
 
         if (!store)
-            res.send({
+            res.status(404).send({
                 message: `No store found with id of ${req.params.id}`,
-            }).status(404);
+            });
         else res.send(store);
     } catch (err) {
         next(err);
