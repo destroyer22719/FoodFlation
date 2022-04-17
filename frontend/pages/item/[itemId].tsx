@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { sortItemPricesByDate } from "../../utli";
 import Image from "next/image";
+import Layout from "../../components/Layout";
 
 ChartJS.register(
     CategoryScale,
@@ -94,7 +95,7 @@ export default function ItemPage({ item }: AppProps) {
             highest.x = date;
         } else if (price < lowest.y) {
             lowest.y = price;
-            lowest.x = date;            
+            lowest.x = date;
         }
     });
 
@@ -121,41 +122,60 @@ export default function ItemPage({ item }: AppProps) {
     };
 
     return (
-        <div>
-            <h1>{item.name}</h1>
-            <p>
-                At {item.store.street}, {item.store.city}{" "}
-                {item.store.postalCode}
-            </p>
-            <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
-            <div>
-                <div>Latest Price: {"$"}{parsedPrices[0].y} on {parsedPrices[0].x}</div>
-                <div>Highest Price: {"$"}{highest.y} on {highest.x}</div>
-                <div>Lowest Price: {"$"}{lowest.y} on {lowest.x}</div>
-            </div>
-
-            <div>
-                <Line
-                    data={data}
-                    options={{
-                        scales: {
-                            // @ts-ignore - I don't know why but ts is telling me it has to be an object while it'll only work if it's an array
-                            xAxes: [
-                                {
-                                    type: "time",
-                                    time: {
-                                        displayFormats: {
-                                            hour: "hA MMM D",
+        <Layout title={item.name || "Item Not Found"}>
+            {item.id ? (
+                <>
+                    <h1>{item.name}</h1>
+                    <p>
+                        At {item.store.street}, {item.store.city}{" "}
+                        {item.store.postalCode}
+                    </p>
+                    <Image
+                        width={200}
+                        height={200}
+                        src={item.imgUrl}
+                        alt={item.name}
+                    />
+                    <div>
+                        <div>
+                            Latest Price: {"$"}
+                            {parsedPrices[0].y} on {parsedPrices[0].x}
+                        </div>
+                        <div>
+                            Highest Price: {"$"}
+                            {highest.y} on {highest.x}
+                        </div>
+                        <div>
+                            Lowest Price: {"$"}
+                            {lowest.y} on {lowest.x}
+                        </div>
+                    </div>
+                    <div>
+                        <Line
+                            data={data}
+                            options={{
+                                scales: {
+                                    // @ts-ignore - I don't know why but ts is telling me it has to be an object while it'll only work if it's an array
+                                    xAxes: [
+                                        {
+                                            type: "time",
+                                            time: {
+                                                displayFormats: {
+                                                    hour: "hA MMM D",
+                                                },
+                                                parser: "MM/DD/YYYY",
+                                            },
                                         },
-                                        parser: "MM/DD/YYYY",
-                                    },
+                                    ],
                                 },
-                            ],
-                        },
-                    }}
-                />
-            </div>
-        </div>
+                            }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <h1>Item Not Found</h1>
+            )}
+        </Layout>
     );
 }
 
