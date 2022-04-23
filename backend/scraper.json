@@ -17,7 +17,13 @@
             "lettuce",
             "brocoli",
             "rice",
-            "cooking oil"
+            "cooking oil",
+            "salmon",
+            "tuna",
+            "cucumbers",
+            "potatoes",
+            "bread",
+            "cereal"
         ],
         "stores": [
             {
@@ -33,6 +39,41 @@
             {
                 "postalCode": "M5E 1Z2",
                 "street": "10 Lower Jarvis St",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4E 3W2",
+                "street": "50 Musgrave St",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4H 1P6",
+                "street": "11 Redway Rd",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4M 3H9",
+                "street": "17 Leslie St",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4K 2P1",
+                "street": "720 Broadview Ave",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4P 1H4",
+                "street": "101 Eglinton Ave E Unit 1",
+                "city": "Toronto, Ontario"
+            },
+            {
+                "postalCode": "M4G 1E1",
+                "street": "301 Moore Ave",
+                "city": "East York, Ontario"
+            },
+            {
+                "postalCode": " M4T 1L7",
+                "street": "12 St Clair Ave E",
                 "city": "Toronto, Ontario"
             }
         ]

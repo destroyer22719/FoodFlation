@@ -55,22 +55,31 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
             await page.waitForSelector(".product-tile");
 
             //retrieves the value of first item
-            const data = await page.evaluate(() => {
+            const results = await page.evaluate(() => {
+                const results = [];
+
                 const name = document.getElementsByClassName(
                     "product-name__item product-name__item--name"
-                )[0];
-                const price = document.querySelector(
+                );
+                const price = document.querySelectorAll(
                     ".price__value.selling-price-list__item__price.selling-price-list__item__price--now-price.selling-price-list__item__price--__value"
                 );
-                const img = document.querySelector(
+                const img = document.querySelectorAll(
                     ".product-tile__thumbnail__image > img"
                 );
 
-                return {
-                    name: (<HTMLElement>name).innerText,
-                    price: (<HTMLElement>price).innerText,
-                    imgUrl: (<HTMLImageElement>img).src,
-                };
+                //finds a maximum of 3 of each item
+                const totalIters = name.length > 3 ? 3 : name.length;
+
+                for (let i = 0; i < totalIters; i++) {
+                    results.push({
+                        name: (<HTMLElement>name[i]).innerText,
+                        price: (<HTMLElement>price[i]).innerText,
+                        imgUrl: (<HTMLImageElement>img[i]).src,
+                    });
+                }
+
+                return results;
             });
 
             //inserts information to database
@@ -95,26 +104,32 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
                 await store.save();
             }
 
-            let itemObj = await Item.findOne({ where: { name: data.name } });
-
-            if (!itemObj) {
-                itemObj = new Item({
-                    id: uuidv4(),
-                    name: data.name,
-                    storeId: store.id,
-                    imgUrl: data.imgUrl,
+            for (const result of results) {
+                console.log(`${result.name} - ${result.price}`);
+                let itemObj = await Item.findOne({
+                    where: { name: result.name },
                 });
 
-                await itemObj.save();
+                if (!itemObj) {
+                    itemObj = new Item({
+                        id: uuidv4(),
+                        name: result.name,
+                        storeId: store.id,
+                        imgUrl: result.imgUrl,
+                    });
+
+                    await itemObj.save();
+                }
+
+                const itemPrice = new Price({
+                    id: uuidv4(),
+                    price: parseFloat(result.price.slice(1)),
+                    itemId: itemObj.id,
+                });
+
+                await itemPrice.save();
             }
 
-            const itemPrice = new Price({
-                id: uuidv4(),
-                price: parseFloat(data.price.slice(1)),
-                itemId: itemObj.id,
-            });
-
-            await itemPrice.save();
             console.timeEnd(`Scraping for ${item} at ${postalCode}`);
         }
     }
