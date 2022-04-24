@@ -23,7 +23,9 @@
             "cucumbers",
             "potatoes",
             "bread",
-            "cereal"
+            "cereal",
+            "beets",
+            "radish"
         ],
         "stores": [
             {
@@ -72,7 +74,7 @@
                 "city": "East York, Ontario"
             },
             {
-                "postalCode": " M4T 1L7",
+                "postalCode": "M4T 1L7",
                 "street": "12 St Clair Ave E",
                 "city": "Toronto, Ontario"
             }
