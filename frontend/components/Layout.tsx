@@ -4,11 +4,32 @@ import SearchBox from "./SearchBox";
 import style from "../styles/Layout.module.scss";
 import nav from "../styles/Nav.module.scss";
 import Link from "next/link";
+import { Button } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 type Props = {
     title: string;
     children: React.ReactNode;
 };
+
+const buttonStyles = {
+    "&.MuiButton-root": {
+        border: "2px solid #9388A2",
+    },
+    "&.MuiButton-text": {
+        color: "#9388A2",
+    },
+    "&.MuiButton-contained": {
+        color: "#9388A2",
+    },
+    "&.MuiButton-outlined": {
+        color: "#9388A2",
+    },
+};
+
+const iconStyles = {
+    color: "#9388A2"
+}
 
 const Layout: React.FC<Props> = ({ title, children }) => {
     React.useEffect(() => {
@@ -31,9 +52,21 @@ const Layout: React.FC<Props> = ({ title, children }) => {
             </Head>
             <nav className={nav["nav"]}>
                 {/* <SearchBox /> */}
-                <Link href={"/"}>Home</Link>
-                <Link href={"/store/find"}>Search Prices</Link>
-                <Link href={"/faq"}>FAQ</Link>
+                <Link href={"/"} passHref>
+                    <Button sx={buttonStyles} variant="outlined">
+                        Home
+                    </Button>
+                </Link>
+                <Link href={"/store/find"} passHref>
+                    <Button sx={buttonStyles} variant="outlined">
+                        <SearchIcon style={{fill: "#9388A2"}} /> Track Prices
+                    </Button>
+                </Link>
+                <Link href={"/faq"} passHref>
+                    <Button sx={buttonStyles} variant="outlined">
+                        FAQ
+                    </Button>
+                </Link>
             </nav>
             <div>{children}</div>
         </div>

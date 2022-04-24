@@ -4,4 +4,19 @@
     display: flex;
     font-family: $montserrat;
     align-items: center;
+    background-color: $purple-dark;
+    border-bottom: 2px solid $purple-light;
+    padding: 20px;
+    justify-content: space-between;
+    color: $purple-light;
+
+    &__item {
+        &-center {
+            border:5px solid red;
+            color: $purple-light
+        }
+    }
+    a {
+        text-decoration: none;
+    }
 }
