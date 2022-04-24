@@ -1,0 +1,10 @@
+@import "assets/vars";
+
+.layout h1, .layout h2, .layout h3 {
+    font-family: $montserrat;
+}
+
+.layout * {
+    font-family: $lato; 
+    box-sizing: border-box;
+}
