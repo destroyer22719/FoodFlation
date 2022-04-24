@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import Company from "../model/Company.js";
 
 export async function getPricesLoblaws(items: string[], stores: Address[]) {
+    console.log(new Date());
     console.log("Starting scraping for Lablaws...");
     console.time("Scraping Lablaws");
 
@@ -54,7 +55,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
 
             await page.waitForSelector(".product-tile");
 
-            //retrieves the value of first item
+            //retrieves the value of the first 3 items
             const results = await page.evaluate(() => {
                 const results = [];
 
@@ -90,7 +91,9 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
                 await company.save();
             }
 
-            let store = await Store.findOne({ where: { postalCode, companyId: company.id } });
+            let store = await Store.findOne({
+                where: { postalCode, companyId: company.id },
+            });
             if (!store) {
                 store = new Store({
                     id: uuidv4(),
@@ -136,5 +139,6 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
 
     console.log("Finished scraping for Lablaws");
     console.timeEnd("Scraping Lablaws");
+    console.log(new Date());
     await browser.close();
 }
