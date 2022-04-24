@@ -90,7 +90,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
                 await company.save();
             }
 
-            let store = await Store.findOne({ where: { postalCode } });
+            let store = await Store.findOne({ where: { postalCode, companyId: company.id } });
             if (!store) {
                 store = new Store({
                     id: uuidv4(),
@@ -107,7 +107,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
             for (const result of results) {
                 console.log(`${result.name} - ${result.price}`);
                 let itemObj = await Item.findOne({
-                    where: { name: result.name },
+                    where: { name: result.name, storeId: store.id },
                 });
 
                 if (!itemObj) {
