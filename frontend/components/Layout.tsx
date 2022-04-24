@@ -16,7 +16,7 @@ export default function Layout({ title = "Home", children }: AppProps) {
                     name="description"
                     content="Track price histories of grocery stores in Canada"
                 />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.png" />
             </Head>
             <nav>
                 <SearchBox />

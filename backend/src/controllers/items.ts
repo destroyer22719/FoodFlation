@@ -35,3 +35,16 @@ export const getAllItems = async (
         next(err);
     }
 };
+
+export const getItemCount = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const itemCount = await Item.count();
+        res.send({count: itemCount});
+    } catch (err) {
+        next(err);
+    }
+};

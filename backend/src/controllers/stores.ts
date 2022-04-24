@@ -66,3 +66,17 @@ export const getAllLocations = async (
         next(err);
     }
 };
+
+export const getStoreCount = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const storeCount = await Store.count();
+
+        res.send({count: storeCount});
+    } catch (err) {
+        next(err);
+    }
+};
