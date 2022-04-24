@@ -1,4 +1,4 @@
-export default function AboutPage() {
+const AboutPage: React.FC = () => {
     return (
         <div>
             <h1>About Food Flation</h1>
@@ -9,3 +9,5 @@ export default function AboutPage() {
         </div>
     );
 }
+
+export default AboutPage;

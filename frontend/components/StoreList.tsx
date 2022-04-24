@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Store } from "../global";
 
-type AppProps = {
+type Props = {
     store: Store;
 };
 
-export default function StoreList({ store }: AppProps) {
+const StoreList:React.FC<Props> = ({ store }) => {
     return (
         <div>
             <Link href={`/store/${store.id}`} passHref>
@@ -21,3 +21,5 @@ export default function StoreList({ store }: AppProps) {
         </div>
     );
 }
+
+export default StoreList;

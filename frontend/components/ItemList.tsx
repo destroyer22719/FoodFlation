@@ -3,11 +3,11 @@ import Link from "next/link";
 import { Item } from "../global";
 import { sortItemPricesByDate } from "../utli";
 
-type AppProps = {
+type Props = {
     item: Item;
 };
 
-export default function ItemList({ item }: AppProps) {
+const ItemList:React.FC<Props> = ({ item }) => {
     item.prices = sortItemPricesByDate(item.prices);
 
     return (
@@ -21,3 +21,5 @@ export default function ItemList({ item }: AppProps) {
         </Link>
     );
 }
+
+export default ItemList

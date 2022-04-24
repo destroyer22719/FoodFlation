@@ -1,13 +1,14 @@
 import Head from "next/head";
-import { ReactChild, ReactChildren } from "react";
+import * as React from "react";
 import SearchBox from "./SearchBox";
+import style from "../styles/Layout.module.scss";
 
-type AppProps = {
-    title?: string,
-    children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[];
+type Props = {
+    title: string,
+    children: React.ReactNode;
 }
 
-export default function Layout({ title = "Home", children }: AppProps) {
+const Layout:React.FC<Props> = ({ title, children }) => {
     return (
         <>
             <Head>
@@ -23,7 +24,9 @@ export default function Layout({ title = "Home", children }: AppProps) {
                 <div>Home</div>
                 <div>FAQ</div>
             </nav>
-            {children}
+            <div className={style["layout"]}>{children}</div>
         </>
     );
 }
+
+export default Layout

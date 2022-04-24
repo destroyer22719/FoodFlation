@@ -4,11 +4,11 @@ import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
 import { Store } from "../../global";
 
-type AppProps = {
+type Props = {
     store: Store;
 };
 
-export default function StorePage({ store }: AppProps) {
+const StorePage: React.FC<Props> = ({ store }) => {
     return (
         <Layout title={store.name || "Store Not Found"}>
             {store.id ? (
@@ -41,3 +41,5 @@ export const getServerSideProps: GetServerSideProps = async ({
         },
     };
 };
+
+export default StorePage;

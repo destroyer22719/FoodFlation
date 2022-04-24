@@ -56,7 +56,7 @@ const dateNumToStr = (date: number): dayOfWeek => {
     }
 };
 
-type AppProps = {
+type Props = {
     item: Item;
 };
 
@@ -64,8 +64,7 @@ type DataSet = {
     x: string;
     y: number;
 };
-
-export default function ItemPage({ item }: AppProps) {
+const ItemPage: React.FC<Props> = ({ item }) => {
     const { prices } = item;
 
     //dates
@@ -189,3 +188,5 @@ export const getServerSideProps: GetServerSideProps = async ({
         props: { item },
     };
 };
+
+export default ItemPage;

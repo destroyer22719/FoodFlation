@@ -6,7 +6,7 @@ interface fetchResultElement {
     city: string;
 }
 
-export default function SearchBox() {
+const SearchBox: React.FC<{}> = () => {
     const [show, setShow] = useState(false);
     const [locations, setLocations] = useState<string[]>([]);
     const [provinces, setProvinces] = useState<string[]>([]);
@@ -32,7 +32,7 @@ export default function SearchBox() {
             if (!cities.includes(city))
                 setCities((oldArray) => [...oldArray, city]);
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [locations]);
 
     return (
@@ -54,4 +54,6 @@ export default function SearchBox() {
             )}
         </div>
     );
-}
+};
+
+export default SearchBox;

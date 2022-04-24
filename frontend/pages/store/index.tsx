@@ -4,11 +4,11 @@ import StoreList from "../../components/StoreList";
 import { API_URL } from "../../config";
 import { Store } from "../../global";
 
-type AppProps = {
+type Props = {
     stores: Store[];
 };
 
-export default function StoresPage({ stores }: AppProps) {
+const StoresPage: React.FC<Props> = ({ stores }) => {
     return (
         <Layout title="Store List">
             <p>{stores.length} Results</p>
@@ -30,3 +30,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
         },
     };
 };
+
+export default StoresPage;
