@@ -28,7 +28,7 @@ const buttonStyles = {
 };
 
 const iconStyles = {
-    color: "#9388A2"
+    fill: "#9388A2"
 }
 
 const Layout: React.FC<Props> = ({ title, children }) => {
@@ -59,7 +59,7 @@ const Layout: React.FC<Props> = ({ title, children }) => {
                 </Link>
                 <Link href={"/store/find"} passHref>
                     <Button sx={buttonStyles} variant="outlined">
-                        <SearchIcon style={{fill: "#9388A2"}} /> Track Prices
+                        <SearchIcon sx={iconStyles} /> Track Prices
                     </Button>
                 </Link>
                 <Link href={"/faq"} passHref>
