@@ -1,0 +1,91 @@
+@import "assets/vars";
+
+.store-list {
+    background-color: $black;
+    border: 5px solid $black;
+
+    &__location {
+        &-field {
+            border: 2px solid $purple-light;
+            padding: 25px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px auto;
+            display: flex;
+        }
+
+        &-prov-col,
+        &-city-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &-city-col {
+            & > * {
+                width: 150px;
+                margin-bottom: 5px;
+                font-weight: bold;
+
+                &:hover {
+                    border: 2px solid $blue-dark;
+                    background-color: $blue-dark;
+                    color: $purple-light;
+                }
+            }
+        }
+    }
+
+    &__list {
+        &-pagination-buttons {
+            display: flex;
+
+            & > * {
+                width: 140px;
+                padding: 20px;
+            }
+        }
+
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+
+        & > * {
+            width: 350px;
+            height: 150px;
+            margin: 0 20px 20px 0;
+        }
+    }
+
+    &__store-item {
+        & > *:hover {
+            background-color: $blue-dark;
+            outline: none;
+            border: none;
+            border: 2px solid $purple-light;
+
+            span {
+                color: $purple-light;
+            }
+        }
+
+        &--format {
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+        }
+
+        &-address {
+            display: flex;
+            flex-direction: column;
+            margin-left: 25px;
+            align-items: flex-start;
+
+            & span {
+                color: $blue-dark;
+                font-weight: bold;
+                font-size: 14px;
+            }
+        }
+    }
+}
