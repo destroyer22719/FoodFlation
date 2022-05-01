@@ -10,12 +10,16 @@ export const getAllStores = async (
     next: NextFunction
 ) => {
     try {
+        const pageSize = 15;
+
         let stores: Store[] = [];
         if (req.query.search) {
             stores = await Store.findAll({
                 where: {
                     city: req.query.search?.toString().replace("%20", " "),
                 },
+                limit: pageSize,
+                offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
             });
         } else {
             stores = await Store.findAll();
@@ -75,7 +79,7 @@ export const getStoreCount = async (
     try {
         const storeCount = await Store.count();
 
-        res.send({count: storeCount});
+        res.send({ count: storeCount });
     } catch (err) {
         next(err);
     }
