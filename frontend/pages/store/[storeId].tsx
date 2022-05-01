@@ -17,8 +17,10 @@ const StorePage: React.FC<Props> = ({ store }) => {
                     <p>
                         {store.street}, {store.city} {store.postalCode}
                     </p>
-                    <div>{store.items.length} Tracked</div>
-                    {store.items.map((item) => <ItemList key={item.id} item={item}/>)}
+                    <div>{store.items.length} Items Tracked</div>
+                    {store.items.map((item) => (
+                        <ItemList key={item.id} item={item} />
+                    ))}
                 </div>
             ) : (
                 <div>
@@ -27,7 +29,7 @@ const StorePage: React.FC<Props> = ({ store }) => {
             )}
         </Layout>
     );
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async ({
     query: { storeId },
