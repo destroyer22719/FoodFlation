@@ -12,7 +12,6 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
-import { sortItemPricesByDate } from "../../utli";
 import Image from "next/image";
 import Layout from "../../components/Layout";
 
@@ -25,36 +24,6 @@ ChartJS.register(
     Tooltip,
     Legend
 );
-
-type dayOfWeek =
-    | "Monday"
-    | "Tuesday"
-    | "Wednesday"
-    | "Thursday"
-    | "Friday"
-    | "Saturday"
-    | "Sunday";
-
-const dateNumToStr = (date: number): dayOfWeek => {
-    switch (date) {
-        case 1:
-            return "Monday";
-        case 2:
-            return "Tuesday";
-        case 3:
-            return "Wednesday";
-        case 4:
-            return "Thursday";
-        case 5:
-            return "Friday";
-        case 6:
-            return "Saturday";
-        case 7:
-            return "Sunday";
-        default:
-            return "Monday";
-    }
-};
 
 type Props = {
     item: Item;
@@ -75,7 +44,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const highest: DataSet = { x: "", y: -Infinity };
     const lowest: DataSet = { x: "", y: Infinity };
 
-    sortItemPricesByDate(prices).forEach(({ createdAt, price }) => {
+    prices.forEach(({ createdAt, price }) => {
         const date = new Date(createdAt).toLocaleDateString("en-US", {
             day: "2-digit",
             month: "2-digit",
