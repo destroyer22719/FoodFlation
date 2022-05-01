@@ -53,7 +53,11 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
                 )}`
             );
 
-            await page.waitForSelector(".product-tile");
+            try {
+                await page.waitForSelector(".product-tile", {timeout: 15000});
+            } catch (err) {
+                continue;
+            }
 
             //retrieves the value of the first 3 items
             const results = await page.evaluate(() => {
