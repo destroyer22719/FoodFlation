@@ -2,18 +2,26 @@
 
 .layout {
     margin: 0;
-    //I have no fucking clue why but I need this in order for there not to be whitespace at the top
-    border: 1px solid $black; 
     background-color: $black;
     height: calc(100vh - 2px);
+    
+    a {
+        text-decoration: none;
+    }
+
+    * {
+        font-family: $lato; 
+        box-sizing: border-box;
+        color: white;
+    }
+
+    h1, h2, h3 {
+        font-family: $montserrat;   
+    }
+
+    &__main {
+        width: 98%;
+        margin: auto;
+    }
 }
 
-.layout h1, .layout h2, .layout h3 {
-    font-family: $montserrat;
-}
-
-.layout * {
-    font-family: $lato; 
-    box-sizing: border-box;
-    color: white;
-}

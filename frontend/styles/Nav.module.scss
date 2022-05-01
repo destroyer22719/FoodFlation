@@ -9,14 +9,12 @@
     padding: 20px;
     justify-content: space-between;
     color: $purple-light;
-
+    margin-bottom: 10px;
     &__item {
         &-center {
             border:5px solid red;
             color: $purple-light
         }
     }
-    a {
-        text-decoration: none;
-    }
+ 
 }
