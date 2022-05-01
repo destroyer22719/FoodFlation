@@ -4,6 +4,16 @@ import sequelize from "../config/db.js";
 import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 
+type QueryResult = {
+    city: string;
+    cityCount: number;
+};
+
+type ResponseParsed = {
+    province: string;
+    cities: QueryResult[];
+};
+
 export const getAllStores = async (
     req: Request,
     res: Response,
@@ -61,11 +71,33 @@ export const getAllLocations = async (
     next: NextFunction
 ) => {
     try {
-        const [data] = await sequelize.query(`
-            SELECT DISTINCT city FROM stores
+        const [queryResults] = await sequelize.query(`
+            SELECT city, COUNT(city) AS cityCount FROM stores GROUP BY city
         `);
 
-        res.send(data);
+        const datas: QueryResult[] = queryResults as QueryResult[];
+
+        const response: ResponseParsed[] = [];
+
+        //maps the cities to province
+        for (const data of datas) {
+            const city = data.city.split(", ")[0];
+            const prov = data.city.split(", ")[1];
+            const provIndex = response.map((x) => x.province).indexOf(prov);
+
+            if (provIndex === -1) {
+                response.push({
+                    province: prov,
+                    cities: [data],
+                });
+            } else if (
+                !response[provIndex].cities.map((x) => x.city).includes(city)
+            ) {
+                response[provIndex].cities.push(data);
+            }
+        }
+
+        res.send(response);
     } catch (err) {
         next(err);
     }
