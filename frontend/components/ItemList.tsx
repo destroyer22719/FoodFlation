@@ -19,11 +19,11 @@ const ItemList: React.FC<Props> = ({ item }) => {
                 />
                 <div>
                     {"$"}
-                    {item.prices[0].price}
+                    {item.price}
                 </div>
                 <div>
                     Last Updated:{" "}
-                    {new Date(item.prices[0].createdAt).toLocaleString("en-US")}
+                    {new Date(item.lastUpdated!).toLocaleString("en-US")}
                 </div>
             </div>
         </Link>

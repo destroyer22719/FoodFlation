@@ -8,7 +8,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import style from "../../styles/StoreList.module.scss";
-import { ButtonContained, ButtonOutlined } from "../../muiComponents";
+import ButtonContained from "../../components/ButtonContained"
+import ButtonOutlined from "../../components/ButtonOutlined"
+
 
 type Props = {
     stores: Store[];
@@ -39,7 +41,6 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
         <Layout title="Store List">
             <div className={style["store-list"]}>
                 <ButtonOutlined
-                    variant="outlined"
                     onClick={() => setshowSearch(!showSearch)}
                 >
                     <SearchIcon /> Find a Store
@@ -68,7 +69,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                                 href={`/store?location=${data.city}`}
                                                 passHref
                                             >
-                                                <ButtonOutlined variant="outlined">
+                                                <ButtonOutlined>
                                                     {data.city.split(", ")[0]} -{" "}
                                                     {data.cityCount}
                                                 </ButtonOutlined>
@@ -87,7 +88,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                 </div>
                 <div className={style["store-list__list-pagination-buttons"]}>
                     {location && (
-                        <ButtonContained variant="contained">
+                        <ButtonContained >
                             Page {page}/{maxPages}
                         </ButtonContained>
                     )}
@@ -98,7 +99,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                             }`}
                             passHref
                         >
-                            <ButtonContained variant="contained">
+                            <ButtonContained>
                                 {">"}
                             </ButtonContained>
                         </Link>
@@ -109,7 +110,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         href={`/stores?location=${location}&page=${page - 1}`}
                         passHref
                     >
-                        <ButtonContained variant="contained">
+                        <ButtonContained>
                             {"<"}
                         </ButtonContained>
                     </Link>
