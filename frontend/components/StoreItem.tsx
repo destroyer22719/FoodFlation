@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { Store } from "../global";
-import { ButtonContained } from "../muiComponents";
+import ButtonContained  from "./ButtonContained";
 import style from "../styles/StoreList.module.scss";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 const StoreItem: React.FC<Props> = ({ store }) => {
     return (
         <div className={style["store-list__store-item"]}>
-            <ButtonContained variant="outlined">
+            <ButtonContained>
                 <Link href={`/store/${store.id}`} passHref>
                     <a href="#" className={style["store-list__store-item--format"]}>
                         <Image
