@@ -4,7 +4,7 @@ import style from "../styles/Layout.module.scss";
 import nav from "../styles/Nav.module.scss";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
-import { ButtonOutlined } from "../muiComponents";
+import ButtonOutlined from "./ButtonOutlined";
 
 type Props = {
     title: string;
@@ -34,17 +34,17 @@ const Layout: React.FC<Props> = ({ title, children }) => {
             <nav className={nav["nav"]}>
                 {/* <SearchBox /> */}
                 <Link href={"/"} passHref>
-                    <ButtonOutlined variant="outlined">
+                    <ButtonOutlined>
                         Home
                     </ButtonOutlined>
                 </Link>
                 <Link href={"/store/"} passHref>
-                    <ButtonOutlined variant="outlined">
+                    <ButtonOutlined>
                         <SearchIcon /> Track Prices
                     </ButtonOutlined>
                 </Link>
                 <Link href={"/faq"} passHref>
-                    <ButtonOutlined variant="outlined">
+                    <ButtonOutlined>
                         FAQ
                     </ButtonOutlined>
                 </Link>
