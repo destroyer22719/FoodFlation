@@ -32,14 +32,20 @@ const StorePage: React.FC<Props> = ({ store }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({
-    query: { storeId },
+    query: { storeId, page },
 }) => {
-    const res = await fetch(`${API_URL}/stores/${storeId}`);
-    const store: Store = await res.json();
+    const storeReq = await fetch(`${API_URL}/stores/${storeId}`);
+    const itemsReq = await fetch(
+        `${API_URL}/items/store/${storeId}?page=${page ? +page : 1}`
+    );
+    const store: Store = await storeReq.json();
+    const itemsRes = await itemsReq.json();
 
     return {
         props: {
             store,
+            items: itemsRes.items,
+            totalItems: itemsRes.total,
         },
     };
 };
