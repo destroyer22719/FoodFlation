@@ -14,6 +14,9 @@ import {
 } from "chart.js";
 import Image from "next/image";
 import Layout from "../../components/Layout";
+import styles from "../../styles/Item.module.scss";
+import ButtonOutlined from "../../components/ButtonOutlined";
+import Link from "next/link";
 
 ChartJS.register(
     CategoryScale,
@@ -44,7 +47,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const highest: DataSet = { x: "", y: -Infinity };
     const lowest: DataSet = { x: "", y: Infinity };
 
-    prices.forEach(({ createdAt, price }) => {
+    prices!.forEach(({ createdAt, price }) => {
         const date = new Date(createdAt).toLocaleDateString("en-US", {
             day: "2-digit",
             month: "2-digit",
@@ -69,7 +72,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
 
     const parsedPrices: DataSet[] = [];
 
-    for (let i = 0; i < prices.length; i++) {
+    for (let i = 0; i < prices!.length; i++) {
         parsedPrices.push({
             x: xDataset[i],
             y: yDataset[i],
@@ -82,40 +85,52 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             {
                 label: "Item Price",
                 fill: true,
-                backgroundColor: "rgba(75,192,192,0.2)",
-                borderColor: "rgba(75,192,192,1)",
+                backgroundColor: "none",
+                borderColor: "#9388A2",
                 data: parsedPrices,
             },
         ],
     };
-
+    console.log(item);
     return (
         <Layout title={item.name || "Item Not Found"}>
             {item.id ? (
                 <>
-                    <h1>{item.name}</h1>
-                    <p>
-                        At {item.store.street}, {item.store.city}{" "}
-                        {item.store.postalCode}
-                    </p>
-                    <Image
-                        width={200}
-                        height={200}
-                        src={item.imgUrl}
-                        alt={item.name}
-                    />
-                    <div>
-                        <div>
-                            Latest Price: {"$"}
-                            {parsedPrices[0].y} on {parsedPrices[0].x}
+                    <div className={styles["item-page__header"]}>
+                        <Link href={`/store/${item.store.id}`} passHref>
+                            <ButtonOutlined className={styles["item-page__back-button"]}>
+                                {"<"}
+                            </ButtonOutlined>
+                        </Link>
+                        <div >
+                            <h1>{item.name}</h1>
+                            <p>
+                                {item.store.street}, {item.store.city}{" "}
+                                {item.store.postalCode}
+                            </p>
                         </div>
+                    </div>
+
+                    <div className={styles["item-page__item-section"]}>
+                        <Image
+                            width={200}
+                            height={200}
+                            src={item.imgUrl}
+                            alt={item.name}
+                        />
                         <div>
-                            Highest Price: {"$"}
-                            {highest.y} on {highest.x}
-                        </div>
-                        <div>
-                            Lowest Price: {"$"}
-                            {lowest.y} on {lowest.x}
+                            <div>
+                                Latest Price: {"$"}
+                                {parsedPrices[0].y} on {parsedPrices[0].x}
+                            </div>
+                            <div>
+                                Highest Price: {"$"}
+                                {highest.y} on {highest.x}
+                            </div>
+                            <div>
+                                Lowest Price: {"$"}
+                                {lowest.y} on {lowest.x}
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -128,9 +143,6 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                         {
                                             type: "time",
                                             time: {
-                                                displayFormats: {
-                                                    hour: "hA MMM D",
-                                                },
                                                 parser: "MM/DD/YYYY",
                                             },
                                         },
@@ -145,7 +157,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             )}
         </Layout>
     );
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async ({
     query: { itemId },
