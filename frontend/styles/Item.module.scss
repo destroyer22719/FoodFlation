@@ -1,0 +1,19 @@
+.item-page {
+    &__header, &__item-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &__header {
+        & > * {
+            margin-right: 20px;
+        }
+    }
+
+    &__back-button {
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+}
