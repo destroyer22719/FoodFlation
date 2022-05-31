@@ -12,13 +12,13 @@
             overflow-x: auto;
             margin: 20px auto;
             display: flex;
+            justify-content: center;
         }
 
         &-prov-col,
         &-city-col {
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
         &-city-col {
@@ -37,23 +37,38 @@
     }
 
     &__list {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        & > * {
+            width: 285px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
         &-pagination-buttons {
             display: flex;
 
             & > * {
                 width: 140px;
                 padding: 20px;
+                color: $blue-dark;
+                font-weight: bold;
+                font-size: 16px;
             }
         }
 
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 20px;
-
-        & > * {
-            width: 350px;
-            height: 150px;
-            margin: 0 20px 20px 0;
+        @media only screen and (min-width: 400px) {
+            flex-direction: row;
+            & > * {
+                margin-left: 10px;
+                margin-right: 10px;
+                width: 350px;
+            }
         }
     }
 
@@ -79,12 +94,18 @@
             display: flex;
             flex-direction: column;
             margin-left: 25px;
-            align-items: flex-start;
+            align-items: center;
 
             & span {
                 color: $blue-dark;
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 12px;
+            }
+
+            @media only screen and (min-width: 400px) { 
+                & span {
+                    font-size: 14px;
+                }
             }
         }
     }

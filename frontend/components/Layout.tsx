@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import style from "../styles/Layout.module.scss";
 import nav from "../styles/Nav.module.scss";
 import Link from "next/link";
@@ -34,19 +34,21 @@ const Layout: React.FC<Props> = ({ title, children }) => {
             <nav className={nav["nav"]}>
                 {/* <SearchBox /> */}
                 <Link href={"/"} passHref>
-                    <ButtonOutlined>
-                        Home
-                    </ButtonOutlined>
+                    <a href="#">
+                        <ButtonOutlined>Home</ButtonOutlined>
+                    </a>
                 </Link>
                 <Link href={"/store/"} passHref>
-                    <ButtonOutlined>
-                        <SearchIcon /> Track Prices
-                    </ButtonOutlined>
+                    <a href="#">
+                        <ButtonOutlined>
+                            <SearchIcon /> Track Prices
+                        </ButtonOutlined>
+                    </a>
                 </Link>
                 <Link href={"/faq"} passHref>
-                    <ButtonOutlined>
-                        FAQ
-                    </ButtonOutlined>
+                    <a href="#">
+                        <ButtonOutlined>FAQ</ButtonOutlined>
+                    </a>
                 </Link>
             </nav>
             <div className={style["layout__main"]}>{children}</div>
