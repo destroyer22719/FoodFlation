@@ -22,11 +22,22 @@ type Props = {
     onClick?: MouseEventHandler<HTMLButtonElement>;
     className?: string;
     children: React.ReactNode;
+    disabled?: boolean;
 };
 
-const ButtonOutlined: React.FC<Props> = ({ onClick, className, children }) => {
+const ButtonOutlined: React.FC<Props> = ({
+    onClick,
+    className,
+    children,
+    disabled = false,
+}) => {
     return (
-        <ButtonOutlinedStyled variant="contained" className={className} onClick={onClick}>
+        <ButtonOutlinedStyled
+            variant="contained"
+            className={className}
+            onClick={onClick}
+            disabled={disabled}
+        >
             {children}
         </ButtonOutlinedStyled>
     );

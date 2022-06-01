@@ -20,17 +20,28 @@ const ButtonContainedStyles = styled(Button)({
 });
 
 type Props = {
-    onClick?: MouseEventHandler<HTMLButtonElement>
+    onClick?: MouseEventHandler<HTMLButtonElement>;
     className?: string;
     children: React.ReactNode;
+    disabled?: boolean;
 };
 
-const ButtonContained: React.FC<Props> = ({ onClick, className, children }) => {
+const ButtonContained: React.FC<Props> = ({
+    onClick,
+    className,
+    children,
+    disabled = false,
+}) => {
     return (
-        <ButtonContainedStyles className={className} onClick={onClick} variant="contained">
+        <ButtonContainedStyles
+            className={className}
+            onClick={onClick}
+            variant="contained"
+            disabled={disabled}
+        >
             {children}
         </ButtonContainedStyles>
     );
-}
+};
 
-export default ButtonContained
+export default ButtonContained;
