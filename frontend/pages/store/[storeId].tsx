@@ -5,7 +5,7 @@ import ItemList from "../../components/ItemList";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
 import { Item, Store } from "../../global";
-import style from "../../styles/Store.module.scss";
+import styles from "../../styles/Store.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 
 type Props = {
@@ -25,34 +25,76 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems }) => {
     return (
         <Layout title={store.name || "Store Not Found"}>
             {store.id ? (
-                <div className={style["store-page"]}>
+                <div className={styles["store-page"]}>
                     <h1>{store.name}</h1>
                     <p>
                         {store.street}, {store.city} {store.postalCode}
                     </p>
                     <div>{totalItems} Items Tracked</div>
-                    <div className={style["store-page__pagination-buttons"]}>
-                        {page !== 1 && (
+                    <div className={styles["store-page__pagination-buttons"]}>
+                        <ButtonContained
+                            disabled={page == 1}
+                            className={styles["store-page__pagination-button"]}
+                        >
                             <Link
                                 passHref
-                                href={`${currentPath}?page=${page - 1}`}
+                                href={
+                                    page == 1
+                                        ? "#"
+                                        : `${currentPath}?page=${page - 1}`
+                                }
                             >
-                                <ButtonContained>{"<"}</ButtonContained>
+                                <a
+                                    href="#"
+                                    className={
+                                        styles[
+                                            "store-page__pagination-button-link"
+                                        ]
+                                    }
+                                >
+                                    {"<"}
+                                </a>
                             </Link>
-                        )}
-                        <ButtonContained>
-                            Page {page}/{maxPages}
                         </ButtonContained>
-                        {page !== maxPages && (
+                        <ButtonContained
+                            className={styles["store-page__pagination-button"]}
+                        >
+                            <a
+                                href="#"
+                                className={
+                                    styles["store-page__pagination-button-link"]
+                                }
+                            >
+                                {" "}
+                                Page {page}/{maxPages}
+                            </a>
+                        </ButtonContained>
+                        <ButtonContained
+                            disabled={page == maxPages}
+                            className={styles["store-page__pagination-button"]}
+                        >
                             <Link
                                 passHref
-                                href={`${currentPath}?page=${page + 1}`}
+                                href={
+                                    page == maxPages
+                                        ? "#"
+                                        : `${currentPath}?page=${page + 1}`
+                                }
                             >
-                                <ButtonContained>{">"}</ButtonContained>
+                                <a
+                                    href="#"
+                                    className={
+                                        styles[
+                                            "store-page__pagination-button-link"
+                                        ]
+                                    }
+                                >
+                                    {">"}
+                                </a>
                             </Link>
-                        )}
+                        </ButtonContained>
                     </div>
-                    <div className={style["store-page__item-list"]}>
+                    <div className={styles["store-page__item-list"]}>
                         {items.map((item) => (
                             <ItemList key={item.id} item={item} />
                         ))}
