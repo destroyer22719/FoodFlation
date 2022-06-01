@@ -7,7 +7,7 @@ import { Store } from "../../global";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import style from "../../styles/StoreList.module.scss";
+import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
 
@@ -38,17 +38,17 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
 
     return (
         <Layout title="Store List">
-            <div className={style["store-list"]}>
+            <div className={styles["store-list"]}>
                 <ButtonOutlined onClick={() => setshowSearch(!showSearch)}>
                     <SearchIcon /> Find a Store
                 </ButtonOutlined>
                 {showSearch && (
-                    <div className={style["store-list__location-field"]}>
+                    <div className={styles["store-list__location-field"]}>
                         {locations.map((loc, i) => (
                             <div
                                 key={i}
                                 className={
-                                    style["store-list__location-prov-col"]
+                                    styles["store-list__location-prov-col"]
                                 }
                             >
                                 <h3>{loc.province}</h3>
@@ -57,7 +57,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                         <div
                                             key={i}
                                             className={
-                                                style[
+                                                styles[
                                                     "store-list__location-city-col"
                                                 ]
                                             }
@@ -78,40 +78,70 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         ))}
                     </div>
                 )}
-                <div className={style["store-list__list"]}>
+                {location && (
+                    <div className={styles["store-list__pagination-buttons"]}>
+                        <ButtonContained
+                            className={styles["store-list__pagination-button"]}
+                            disabled={page == 1}
+                        >
+                            <Link
+                                href={
+                                    page == 1
+                                        ? "#"
+                                        : `/stores?location=${location}&page=${
+                                              page - 1
+                                          }`
+                                }
+                                passHref
+                            >
+                                <a href="#">{"<"}</a>
+                            </Link>
+                        </ButtonContained>
+                        <ButtonContained
+                            className={styles["store-list__pagination-button"]}
+                        >
+                            <a
+                                href="#"
+                                className={
+                                    styles["store-list__pagination-button-link"]
+                                }
+                            >
+                                Page {page}/{maxPages}
+                            </a>
+                        </ButtonContained>
+                        <ButtonContained
+                            className={styles["store-list__pagination-button"]}
+                            disabled={page == maxPages}
+                        >
+                            <Link
+                                href={
+                                    page == maxPages
+                                        ? "#"
+                                        : `/stores?location=${location}&page=${
+                                              page + 1
+                                          }`
+                                }
+                                passHref
+                            >
+                                <a
+                                    href="#"
+                                    className={
+                                        styles[
+                                            "store-list__pagination-button-link"
+                                        ]
+                                    }
+                                >
+                                    {">"}
+                                </a>
+                            </Link>
+                        </ButtonContained>
+                    </div>
+                )}
+                <div className={styles["store-list__list"]}>
                     {stores.map((store) => (
                         <StoreList key={store.id} store={store} />
                     ))}
                 </div>
-                <div className={style["store-list__list-pagination-buttons"]}>
-                    {location && (
-                        <ButtonContained>
-                            Page {page}/{maxPages}
-                        </ButtonContained>
-                    )}
-                    {location && page !== maxPages && (
-                        <Link
-                            href={`/stores?location=${location}&page=${
-                                page + 1
-                            }`}
-                            passHref
-                        >
-                            <a href="#">
-                                <ButtonContained>{">"}</ButtonContained>
-                            </a>
-                        </Link>
-                    )}
-                </div>
-                {location && page !== 1 && (
-                    <Link
-                        href={`/stores?location=${location}&page=${page - 1}`}
-                        passHref
-                    >
-                        <a href="#">
-                            <ButtonContained>{"<"}</ButtonContained>
-                        </a>
-                    </Link>
-                )}
             </div>
         </Layout>
     );
