@@ -7,6 +7,7 @@ import Company from "../model/Company.js";
 
 dotenv.config();
 
+
 const sequelize = new Sequelize({
     database: process.env.DATABASE_NAME,
     dialect: "mysql",
