@@ -5,6 +5,7 @@ import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 import { v4 as uuidv4 } from "uuid";
 import Company from "../model/Company.js";
+import { Address } from "../global.js";
 
 export async function getPricesLoblaws(items: string[], stores: Address[]) {
     console.log(new Date());
