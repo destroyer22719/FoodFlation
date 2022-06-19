@@ -10,6 +10,8 @@ import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
+import { Input } from "@mui/material";
+import InputFilled from "../../components/InputFilled";
 
 type Props = {
     stores: Store[];
@@ -27,7 +29,7 @@ type LocationRes = {
 };
 
 const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
-    const [showSearch, setshowSearch] = useState(true);
+    const [postalCode, setPostalCode] = useState("");
     const router = useRouter();
 
     const location = router.query.location;
@@ -39,45 +41,66 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
     return (
         <Layout title="Store List">
             <div className={styles["store-list"]}>
-                <ButtonOutlined onClick={() => setshowSearch(!showSearch)}>
-                    <SearchIcon /> Find a Store
-                </ButtonOutlined>
-                {showSearch && (
-                    <div className={styles["store-list__location-field"]}>
-                        {locations.map((loc, i) => (
-                            <div
-                                key={i}
-                                className={
-                                    styles["store-list__location-prov-col"]
-                                }
-                            >
-                                <h3>{loc.province}</h3>
-                                <div>
-                                    {loc.cities.map((data, i) => (
-                                        <div
-                                            key={i}
-                                            className={
-                                                styles[
-                                                    "store-list__location-city-col"
-                                                ]
-                                            }
+                <div className={styles["store-list__search"]}>
+                    <InputFilled
+                        className={styles["store-list__search-bar"]}
+                        value={postalCode}
+                        placeholder="Enter Postal Code of Store"
+                        onChange={(e) => {
+                            const input = (
+                                e.target as HTMLInputElement
+                            ).value.toUpperCase();
+                            if (
+                                input.match(
+                                    /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/
+                                )
+                            )
+                                setPostalCode(input);
+                        }}
+                    />
+                    <Link
+                        href={`/store?postalCode=${
+                            postalCode.slice(0, 3) + " " + postalCode.slice(3)
+                        }`}
+                        passHref
+                    >
+                        <ButtonOutlined className={styles["store-list__search-button"]}>
+                            <SearchIcon /> Find a Store
+                        </ButtonOutlined>
+                    </Link>
+                </div>
+                <div className={styles["store-list__location-field"]}>
+                    {locations.map((loc, i) => (
+                        <div
+                            key={i}
+                            className={styles["store-list__location-prov-col"]}
+                        >
+                            <h3>{loc.province}</h3>
+                            <div>
+                                {loc.cities.map((data, i) => (
+                                    <div
+                                        key={i}
+                                        className={
+                                            styles[
+                                                "store-list__location-city-col"
+                                            ]
+                                        }
+                                    >
+                                        <Link
+                                            href={`/store?location=${data.city}`}
+                                            passHref
                                         >
-                                            <Link
-                                                href={`/store?location=${data.city}`}
-                                                passHref
-                                            >
-                                                <ButtonOutlined>
-                                                    {data.city.split(", ")[0]} -{" "}
-                                                    {data.cityCount}
-                                                </ButtonOutlined>
-                                            </Link>
-                                        </div>
-                                    ))}
-                                </div>
+                                            <ButtonOutlined>
+                                                {data.city.split(", ")[0]} -{" "}
+                                                {data.cityCount}
+                                            </ButtonOutlined>
+                                        </Link>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                )}
+                        </div>
+                    ))}
+                </div>
                 {location && (
                     <div className={styles["store-list__pagination-buttons"]}>
                         <ButtonContained
@@ -148,21 +171,22 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({
-    query: { location, page },
+    query: { location, page, postalCode },
 }) => {
     let storeReq,
         stores = [];
 
-    if (location) {
+    if (location || postalCode) {
         storeReq = await fetch(
-            `${API_URL}/stores?search=${location}&page=${page || 1}`
+            `${API_URL}/stores?search=${location || ""}&page=${
+                page || 1
+            }&postalCode=${postalCode || ""}`
         );
         stores = await storeReq.json();
     }
 
     const locationRes = await fetch(`${API_URL}/stores/locations`);
     const locations = await locationRes.json();
-
     return {
         props: {
             locations,

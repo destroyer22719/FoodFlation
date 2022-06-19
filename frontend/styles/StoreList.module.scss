@@ -4,6 +4,22 @@
     background-color: $black;
     border: 5px solid $black;
 
+    &__search {
+        display: flex;
+        align-items: center;
+
+        &-bar {
+            input {
+                height: 40px;
+            }
+            margin-right: 10px;
+        }
+
+        &-button {
+            height: 40px;
+        }
+    }
+
     &__location {
         &-field {
             border: 2px solid $purple-light;
@@ -19,6 +35,10 @@
         &-city-col {
             display: flex;
             flex-direction: column;
+        }
+
+        &-prov-col {
+            margin-right: 10px;
         }
 
         &-city-col {
@@ -52,7 +72,6 @@
         width: 140px;
         padding: 0;
         margin: 10px;
-
 
         &-link {
             font-weight: bold;
