@@ -78,10 +78,11 @@ export const getAllStoreItems = async (
     next: NextFunction
 ) => {
     try {
-        const total = await Item.count({where: {
-            storeId:req.params.storeId
-        }});
-
+        const total = await Item.count({
+            where: {
+                storeId: req.params.storeId,
+            },
+        });
         const [items] = await sequelize.query(
             `
             SELECT
@@ -105,9 +106,14 @@ export const getAllStoreItems = async (
                         1
                 )
             WHERE items.storeId = :storeId
+            ${
+                req.query.search
+                    ? `AND items.name LIKE "%${req.query.search}%"`
+                    : ""
+            }
             LIMIT :pageSize
             OFFSET :offset
-        `,
+            `,
             {
                 replacements: {
                     storeId: req.params.storeId,
@@ -118,8 +124,39 @@ export const getAllStoreItems = async (
                 },
             }
         );
-
-        res.send({total, items});
+        const [resultsFound] = await sequelize.query(
+            `
+        SELECT COUNT(*) AS resultsFound FROM 
+        items 
+        LEFT JOIN prices ON prices.id = (
+            SELECT 
+                id 
+            FROM 
+                prices 
+            WHERE 
+                items.id = prices.itemId 
+            ORDER BY 
+                prices.createdAt 
+            LIMIT 
+                1
+        )
+        WHERE items.storeId = :storeId
+        ${
+            req.query.search
+                ? `AND items.name LIKE "%${req.query.search}%"`
+                : ""
+        }`,
+            {
+                replacements: {
+                    storeId: req.params.storeId,
+                    pageSize,
+                    offset: req.query.page
+                        ? (+req.query.page - 1) * pageSize
+                        : 0,
+                },
+            }
+        );
+        res.send({ total, items, resultsFound });
     } catch (err) {
         next(err);
     }
