@@ -5,6 +5,7 @@ import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 import { v4 as uuidv4 } from "uuid";
 import Company from "../model/Company.js";
+import { Address } from "src/global.js";
 
 export async function getPricesMetro(items: string[], stores: Address[]) {
     console.log(new Date());
@@ -34,7 +35,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
         await page.$eval("#postalCode", (input, pc) => (input as HTMLInputElement).value = (pc as string), postalCode);
         await page.click("#submit");
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(5000);
         await page.click("#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button");
         await page.waitForNavigation();
         for (const item of items) {
@@ -45,6 +46,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
             await page.waitForTimeout(2000);
             const popup = await page.$(".p__close.closeModalLogIn.removeBodyOverFlow");
             if (popup) await popup.click();
+            console.log("popup closed");
             try {
                 await page.waitForSelector(".tile-product__top-section__details", {timeout: 15000});
             } catch (err) {
@@ -78,7 +80,6 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
                 return results;
             });
-            console.log(results);
             //inserts information to database
             let company = await Company.findOne({ where: { name: "Metro" } });
 
