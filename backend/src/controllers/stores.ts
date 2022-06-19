@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import sequelize from "../config/db.js";
 // import Item from "../model/Item.js";
 import Store from "../model/Store.js";
+import Sequelize, { WhereOptions } from "sequelize";
 
 type QueryResult = {
     city: string;
@@ -23,17 +24,18 @@ export const getAllStores = async (
         const pageSize = 15;
 
         let stores: Store[] = [];
-        if (req.query.search) {
-            stores = await Store.findAll({
-                where: {
-                    city: req.query.search?.toString().replace("%20", " "),
-                },
-                limit: pageSize,
-                offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
-            });
-        } else {
-            stores = await Store.findAll();
-        }
+        // if (req.query.search) {
+        const searchQuery: WhereOptions<{ city: string, postalCode: unknown; }> = {};
+
+        if (req.query.search) searchQuery.city = req.query.search.toString().replace("%20", " ");
+        if (req.query.postalCode) searchQuery.postalCode = { [Sequelize.Op.like]: `${req.query.postalCode}%` };
+
+        stores = await Store.findAll({
+            where: searchQuery, 
+            limit: pageSize, 
+            offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
+        });
+
 
         if (stores.length) res.send(stores);
         else
