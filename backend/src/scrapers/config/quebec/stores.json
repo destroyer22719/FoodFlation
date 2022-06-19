@@ -1,0 +1,22 @@
+{
+    "stores": [
+        {
+            "street": "3800 Rue Ontario Est",
+            "postalCode": "H1W 1S4",
+            "city": "Montreal, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street":"3575 Avenue Du Parc, Suite 5100",
+            "postalCode":"H2X 3P9",
+            "city":"Montreal, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street":"1955 Rue Ste-Catherine Est",
+            "postalCode":"H2K 2H6",
+            "city":"Montreal, Quebec",
+            "company": "Metro"
+        }
+    ]
+}
