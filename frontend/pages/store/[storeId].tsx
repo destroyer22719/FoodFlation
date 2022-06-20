@@ -46,11 +46,13 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                             }
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
-                            <ButtonOutlined
-                                className={styles["store-page__search-button"]}
-                            >
-                                <SearchIcon />
-                            </ButtonOutlined>
+                            <a>
+                                <ButtonOutlined
+                                    className={styles["store-page__search-button"]}
+                                >
+                                    <SearchIcon />
+                                </ButtonOutlined>
+                            </a>
                         </Link>
                     </div>
                     <div className={styles["store-page__pagination-buttons"]}>

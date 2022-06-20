@@ -64,9 +64,11 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         }`}
                         passHref
                     >
-                        <ButtonOutlined className={styles["store-list__search-button"]}>
-                            <SearchIcon /> Find a Store
-                        </ButtonOutlined>
+                        <a>
+                            <ButtonOutlined className={styles["store-list__search-button"]}>
+                                <SearchIcon /> Find a Store
+                            </ButtonOutlined>
+                        </a>
                     </Link>
                 </div>
                 <div className={styles["store-list__location-field"]}>
