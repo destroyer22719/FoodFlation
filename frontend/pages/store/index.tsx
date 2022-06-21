@@ -11,7 +11,7 @@ import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import { Input } from "@mui/material";
-import InputFilled from "../../components/InputFilled";
+import InputOutlined from "../../components/InputOutlined";
 
 type Props = {
     stores: Store[];
@@ -42,7 +42,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
         <Layout title="Store List">
             <div className={styles["store-list"]}>
                 <div className={styles["store-list__search"]}>
-                    <InputFilled
+                    <InputOutlined
                         className={styles["store-list__search-bar"]}
                         value={postalCode}
                         placeholder="Enter Postal Code of Store"
@@ -65,7 +65,9 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         passHref
                     >
                         <a>
-                            <ButtonOutlined className={styles["store-list__search-button"]}>
+                            <ButtonOutlined
+                                className={styles["store-list__search-button"]}
+                            >
                                 <SearchIcon /> Find a Store
                             </ButtonOutlined>
                         </a>

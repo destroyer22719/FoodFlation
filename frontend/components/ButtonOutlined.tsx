@@ -33,7 +33,7 @@ const ButtonOutlined: React.FC<Props> = ({
 }) => {
     return (
         <ButtonOutlinedStyled
-            variant="contained"
+            variant="outlined"
             className={className}
             onClick={onClick}
             disabled={disabled}

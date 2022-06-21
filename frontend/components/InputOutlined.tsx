@@ -2,7 +2,7 @@ import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import { ChangeEventHandler } from "react";
 
-const InputFilledStyle = styled(TextField)({
+const InputOutlinedStyle = styled(TextField)({
     "& input:valid + fieldset": {
         borderColor: "#9388A2",
         borderWidth: 2,
@@ -24,14 +24,14 @@ type Props = {
     placeholder?: string;
 };
 
-const InputFilled: React.FC<Props> = ({
+const InputOutlined: React.FC<Props> = ({
     value,
     onChange,
     className,
     placeholder,
 }) => {
     return (
-        <InputFilledStyle
+        <InputOutlinedStyle
             variant="outlined"
             placeholder={placeholder}
             className={className}
@@ -41,4 +41,4 @@ const InputFilled: React.FC<Props> = ({
     );
 };
 
-export default InputFilled;
+export default InputOutlined;

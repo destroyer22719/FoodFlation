@@ -8,7 +8,7 @@ import { Item, Store } from "../../global";
 import styles from "../../styles/Store.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import { useState } from "react";
-import InputFilled from "../../components/InputFilled";
+import InputOutlined from "../../components/InputOutlined";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -37,7 +37,7 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                     </p>
                     <div>{totalItems} Items Tracked</div>
                     <div className={styles["store-page__search"]}>
-                        <InputFilled
+                        <InputOutlined
                             className={styles["store-page__search-bar"]}
                             value={search}
                             placeholder="Enter Postal Code of Store"
@@ -48,7 +48,9 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                         <Link href={`${currentPath}?search=${search}`} passHref>
                             <a>
                                 <ButtonOutlined
-                                    className={styles["store-page__search-button"]}
+                                    className={
+                                        styles["store-page__search-button"]
+                                    }
                                 >
                                     <SearchIcon />
                                 </ButtonOutlined>
@@ -149,7 +151,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             store,
             items: itemsRes.items,
             totalItems: itemsRes.total,
-            found: itemsRes.resultsFound[0].resultsFound
+            found: itemsRes.resultsFound[0].resultsFound,
         },
     };
 };
