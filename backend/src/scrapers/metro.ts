@@ -14,7 +14,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
     await sequelize.sync();
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
     });
 
     const page = await browser.newPage();
@@ -29,26 +29,36 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
     for (const store of stores) {
         const { city, postalCode, street } = store;
 
-        await page.goto(
-            "https://www.metro.ca/en/find-a-grocery"
-        );
+        await page.goto("https://www.metro.ca/en/find-a-grocery");
 
-        await page.$eval("#postalCode", (input, pc) => (input as HTMLInputElement).value = (pc as string), postalCode);
+        await page.$eval(
+            "#postalCode",
+            (input, pc) => ((input as HTMLInputElement).value = pc as string),
+            postalCode
+        );
         await page.click("#submit");
         await page.waitForTimeout(5000);
-        await page.click("#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button");
+        await page.click(
+            "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
+        );
         await page.waitForNavigation();
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
             console.log(`${item} | ${postalCode} | ${new Date()}`);
-            await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {waitUntil: "domcontentloaded"});
+            await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
+                waitUntil: "domcontentloaded",
+            });
             await page.waitForTimeout(2000);
-            const popup = await page.$(".p__close.closeModalLogIn.removeBodyOverFlow");
-            if (popup) await popup.click();
-            console.log("popup closed");
+            const popup = await page.$(
+                ".p__close.closeModalLogIn.removeBodyOverFlow"
+            );
+            if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
             try {
-                await page.waitForSelector(".tile-product__top-section__details", {timeout: 15000});
+                await page.waitForSelector(
+                    ".tile-product__top-section__details",
+                    { timeout: 15000 }
+                );
             } catch (err) {
                 continue;
             }
@@ -56,12 +66,13 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
             //retrieves the value of the first 3 items
             const results = await page.evaluate(() => {
                 const results = [];
-
+                const priceRegex = /(?<=\$)\d*.\d{2}/;
                 const name = document.querySelectorAll(
                     ".tile-product__top-section__details > a > div"
                 );
-                const price = document.querySelectorAll(
-                    ".pi-sale-price:first-child"
+                const price = document.querySelectorAll(".pi--main-price");
+                const prodTile = document.querySelectorAll(
+                    ".products-tile-list__tile"
                 );
                 const img = document.querySelectorAll(
                     ".tile-product__top-section__visuals__img-product.defaultable-picture > img"
@@ -69,11 +80,59 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
                 //finds a maximum of 3 of each item
                 const totalIters = name.length > 3 ? 3 : name.length;
-
                 for (let i = 0; i < totalIters; i++) {
+                    //somes the prices on metro listes as "2 / $9.99" with "or 6.99 ea", this code will get the price of each items
+                    // please Metro can the prices on your website be consistently and displayed in a uniform manner T_T
+                    let priceText = (<HTMLElement>(
+                        price[i].querySelector(
+                            ":scope .pi-sale-price:first-child"
+                        )
+                    )).innerText;
+                    let priceElem: HTMLElement;
+
+                    if (priceText.match(/^\s*(?<!\$)[a-z0-9\s\.]+\//)) {
+                        priceElem = <HTMLElement>(
+                            price[i].querySelector(
+                                ":scope .pi-secondary-price>div"
+                            )
+                        );
+                        if (priceElem)
+                            priceText =
+                                priceElem.innerText.match(priceRegex)![0];
+                        else if (
+                            <HTMLElement>(
+                                prodTile[i].querySelector(
+                                    ":scope .pi-regular-price > .pi-price"
+                                )
+                            )
+                        ) {
+                            priceText = (<HTMLElement>(
+                                prodTile[i].querySelector(
+                                    ":scope .pi-regular-price > .pi-price"
+                                )
+                            )).innerText.match(priceRegex)![0];
+                        } else if (
+                            <HTMLElement>(
+                                prodTile[i].querySelector(
+                                    ":scope .pi-secondary-price > .pi-price"
+                                )
+                            )
+                        ) {
+                            priceText = (<HTMLElement>(
+                                prodTile[i].querySelector(
+                                    ":scope .pi-secondary-price > .pi-price"
+                                )
+                            )).innerText.match(priceRegex)![0];
+                        }
+                    } else {
+                        priceText = (<HTMLElement>price[i]).innerText.match(
+                            priceRegex
+                        )![0];
+                    }
+
                     results.push({
                         name: (<HTMLElement>name[i]).innerText,
-                        price: ((<HTMLElement>price[i]).innerText).split(" ")[0].slice(1),
+                        price: priceText,
                         imgUrl: (<HTMLImageElement>img[i]).src,
                     });
                 }
@@ -123,7 +182,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
                 const itemPrice = new Price({
                     id: uuidv4(),
-                    price: parseFloat(result.price.slice(1)),
+                    price: parseFloat(result.price),
                     itemId: itemObj.id,
                 });
 
