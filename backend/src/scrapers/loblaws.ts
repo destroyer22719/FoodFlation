@@ -45,7 +45,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(`${item} | ${postalCode} | ${new Date()}`);
+            console.log(`${item} | ${postalCode} | ${items.indexOf(item)}-${stores.map(store => store.postalCode).indexOf(postalCode)} | ${new Date()}`);
 
             await page.goto(
                 `https://www.loblaws.ca/search?search-bar=${item.replace(
@@ -55,7 +55,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
             );
 
             try {
-                await page.waitForSelector(".product-tile", {timeout: 15000});
+                await page.waitForSelector(".product-tile", {timeout: 30000});
             } catch (err) {
                 continue;
             }

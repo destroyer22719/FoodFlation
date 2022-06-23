@@ -4,6 +4,9 @@ import { getPricesLoblaws } from "./loblaws";
 import { Address, CompanyName } from "../global";
 import { getPricesMetro } from "./metro";
 
+const itemStart = +process.argv[3].split("=")[1] || 0;
+const storeStart = +process.argv[4].split("=")[1] || 0;
+
 const filterByStore = (array: Address[], company: CompanyName):Address[] => {
     return array.filter(store => store.company === company);
 };
@@ -25,11 +28,10 @@ async function scrapePrices() {
         )
     );
 
-
-    await getPricesLoblaws(items, filterByStore(stores, "Loblaws"));
-    await getPricesMetro(items, filterByStore(stores, "Metro"));
-
+    await getPricesLoblaws(items.slice(itemStart), filterByStore(stores, "Loblaws").slice(storeStart));
+    await getPricesMetro(items.slice(itemStart), filterByStore(stores, "Metro").slice(storeStart));
 }
+
 (async () => {
     await scrapePrices();
     setInterval(() => {
