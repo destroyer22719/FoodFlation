@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { getPricesLoblaws } from "./loblaws";
-import { Address, CompanyName } from "../global";
+import { Address, CompanyName } from "./global";
 import { getPricesMetro } from "./metro";
 
 let itemStart = 0;
