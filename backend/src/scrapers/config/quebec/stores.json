@@ -7,15 +7,45 @@
             "company": "Metro"
         },
         {
-            "street":"3575 Avenue Du Parc, Suite 5100",
-            "postalCode":"H2X 3P9",
-            "city":"Montreal, Quebec",
+            "street": "3575 Avenue Du Parc, Suite 5100",
+            "postalCode": "H2X 3P9",
+            "city": "Montreal, Quebec",
             "company": "Metro"
         },
         {
-            "street":"1955 Rue Ste-Catherine Est",
-            "postalCode":"H2K 2H6",
-            "city":"Montreal, Quebec",
+            "street": "1955 Rue Ste-Catherine Est",
+            "postalCode": "H2K 2H6",
+            "city": "Montreal, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street": "1370 Boul. Pie-Xi Nord",
+            "postalCode": "G3J 1W7",
+            "city": "Québec, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street": "891 Rue Jacques-Bédard",
+            "postalCode": "G2N 1E1",
+            "city": "Québec, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street": "1050 Avenue Larue",
+            "postalCode": "G1C 5N3",
+            "city": "Québec, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street": "2070 Boul. Lemire",
+            "postalCode": "J2B 6X5",
+            "city": "Drummondville, Quebec",
+            "company": "Metro"
+        },
+        {
+            "street": "755 Boul. René-Levesque, local 502",
+            "postalCode": "J2C 6Y7",
+            "city": "Drummondville, Quebec",
             "company": "Metro"
         }
     ]
