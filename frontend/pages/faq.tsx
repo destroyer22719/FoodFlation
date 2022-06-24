@@ -28,11 +28,12 @@ const FaqPage: React.FC<{}> = () => {
                 Attemps have been made to scrape for prices on a larger pool of
                 grocery stores but it's difficult or impossible to do so for
                 some of them. One of the main reasons being that the grocery
-                store's website only contains flyers {"("}Freshco and NoFrills{")"} or
-                there tools to shut down bots {"("}Walmart{")"}. While more stores will
-                hopefully be added the current stores are the most ideal because
-                it's website specifically lists the price of all grocery store
-                items by location.
+                store's website only contains flyers {"("}Freshco and NoFrills
+                {")"} or there tools to shut down bots {"("}Walmart{")"}. While
+                more stores will hopefully be added the current stores are the
+                most ideal because it's website specifically lists the price of
+                all grocery store items by location. If you have a grocery store that
+                fits the criteria for scraping please contact me.
             </p>
             <h3>
                 Why are there only Canadian grocery store prices? Will you add
@@ -40,14 +41,10 @@ const FaqPage: React.FC<{}> = () => {
             </h3>
             <p>
                 I only included included prices of Canadian grocery stores
-                because I live in Canada. While adding the prices of US grocery
-                store would be nice, I am uncertain because of cloud service
-                costs as storage would likely exponentially increase. I would
-                rather have a large amount of data on a small amount of stores,
-                rather than small amounts of data on a large amount of stores. A
-                program like this tracks a lot of data, adding data from a
-                country with ten times Canada's population will get real big
-                real fast.
+                because I live in Canada. I really do hope to add US stores, but
+                a program like this stores a lot of data. This is something I
+                hope to do in the next coming months after carefully observing
+                storage and costs.
             </p>
         </Layout>
     );
