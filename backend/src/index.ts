@@ -4,9 +4,10 @@ import sequelize from "./config/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-import * as afe from "azure-function-express";
+// import serverless from "serverless-http";
+// import * as afe from "azure-function-express";
 
-const {createHandler} = afe;
+// const {createHandler} = afe;
 
 import itemRouter from "./routes/items.js";
 import storeRouter from "./routes/stores.js";
@@ -38,4 +39,5 @@ app.listen(port, async () => {
     console.log(`listening on port ${port}`);
 });
 
-export default createHandler(app);
+// export default createHandler(app);
+// export default serverless(app);
