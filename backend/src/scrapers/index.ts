@@ -4,8 +4,15 @@ import { getPricesLoblaws } from "./loblaws";
 import { Address, CompanyName } from "../global";
 import { getPricesMetro } from "./metro";
 
-const itemStart = +process.argv[3].split("=")[1] || 0;
-const storeStart = +process.argv[4].split("=")[1] || 0;
+let itemStart = 0;
+let storeStart = 0;
+
+if (process.argv[3]) {
+    itemStart = parseInt(process.argv[3].split("=")[1]);
+}
+if (process.argv[4]) {
+    storeStart = parseInt(process.argv[4].split("=")[1]);
+}
 
 const filterByStore = (array: Address[], company: CompanyName):Address[] => {
     return array.filter(store => store.company === company);

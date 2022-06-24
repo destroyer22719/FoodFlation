@@ -5,4 +5,4 @@ interface Address {
     company: CompanyName;
 }
 
-export type CompanyName = "Loblaws" | "Metro"
+export type CompanyName = "Loblaws" | "Metro";
