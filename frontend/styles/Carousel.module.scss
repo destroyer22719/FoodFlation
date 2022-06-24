@@ -1,0 +1,19 @@
+@import "assets/vars";
+
+.carousel {
+    width: 90%;
+    margin: auto;
+
+    @media only screen and (min-width: 600px) {
+        width: 600px;
+    }
+
+    &__item {
+        border-radius: 10px;
+        background-color: $purple-light;
+        width: 60%;
+        padding: 20px;
+        margin: auto;
+        text-align: center;
+    }
+}

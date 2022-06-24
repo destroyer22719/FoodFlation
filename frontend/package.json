@@ -21,6 +21,7 @@
     "react-chartjs-2": "^4.1.0",
     "react-dom": "18.0.0",
     "react-icons": "^4.3.1",
+    "react-material-ui-carousel": "^3.4.2",
     "sass": "^1.50.1"
   },
   "devDependencies": {

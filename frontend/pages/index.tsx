@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
+import CarouselComponent from "../components/CarouselComponent";
 import Layout from "../components/Layout";
 import { API_URL } from "../config";
 import style from "../styles/Index.module.scss";
@@ -15,9 +16,10 @@ const Home: React.FC<Props> = ({ itemCount, storeCount }) => {
                 <h1>FoodFlation</h1>
                 <p>
                     Tracking prices of {itemCount} different items in{" "}
-                    {storeCount} different stores around Canada
+                    {storeCount} different stores across Canada
                 </p>
             </div>
+            <CarouselComponent/>
         </Layout>
     );
 };
