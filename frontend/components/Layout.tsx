@@ -1,10 +1,9 @@
 import Head from "next/head";
 import React, { useEffect } from "react";
 import style from "../styles/Layout.module.scss";
-import nav from "../styles/Nav.module.scss";
-import Link from "next/link";
-import SearchIcon from "@mui/icons-material/Search";
-import ButtonOutlined from "./ButtonOutlined";
+import Footer from "./Footer";
+import Nav from "./Nav";
+
 
 type Props = {
     title: string;
@@ -31,27 +30,9 @@ const Layout: React.FC<Props> = ({ title, children }) => {
                 />
                 <link rel="icon" href="/favicon.png" />
             </Head>
-            <nav className={nav["nav"]}>
-                {/* <SearchBox /> */}
-                <Link href={"/"} passHref>
-                    <a href="#">
-                        <ButtonOutlined>Home</ButtonOutlined>
-                    </a>
-                </Link>
-                <Link href={"/store/"} passHref>
-                    <a href="#">
-                        <ButtonOutlined>
-                            <SearchIcon /> Track Prices
-                        </ButtonOutlined>
-                    </a>
-                </Link>
-                <Link href={"/faq"} passHref>
-                    <a href="#">
-                        <ButtonOutlined>FAQ</ButtonOutlined>
-                    </a>
-                </Link>
-            </nav>
+            <Nav/>
             <div className={style["layout__main"]}>{children}</div>
+            <Footer/>
         </div>
     );
 };

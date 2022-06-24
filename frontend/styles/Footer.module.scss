@@ -1,0 +1,16 @@
+@import "assets/vars";
+
+.footer {
+    display: flex;
+    justify-content: end;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    align-items: center;
+    padding: 10px;
+
+    &__item {
+        fill: $purple-light;
+        font-size: 50px;
+    }
+}
