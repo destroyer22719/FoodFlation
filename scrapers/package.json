@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "scrape": "node ./dist/scrapers/index.js",
+    "scrape:prod": "NODE_ENV=production node ./dist/scrapers/index.js"
+  },
   "dependencies": {
     "dotenv": "^16.0.1",
     "puppeteer": "^15.1.0",
