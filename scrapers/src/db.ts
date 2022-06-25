@@ -4,11 +4,12 @@ import Price from "../../backend/src/model/Price.js";
 import Store from "../../backend/src/model/Store.js";
 import Company from "../../backend/src/model/Company.js";
 import dotenv from "dotenv";
+import path from "path";
 
 if (!process.env.DATABASE_PASSWORD) {
     const dotEnvFile =
-        process.env.NODE_ENV === "production" ? "env.prod" : ".env";
-    dotenv.config({ path: dotEnvFile });
+        process.env.NODE_ENV === "production" ? ".env.prod" : ".env";
+    dotenv.config({ path: path.resolve(__dirname,"../", "../", "../", dotEnvFile)});
 }
 
 const sequelize = new Sequelize({

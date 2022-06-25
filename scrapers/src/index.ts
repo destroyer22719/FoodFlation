@@ -23,14 +23,14 @@ async function scrapePrices() {
 
     const {stores} = JSON.parse(
         fs.readFileSync(
-            path.join(__dirname, "../", "../", "src", "scrapers", "config", province, "stores.json"),
+            path.join(__dirname, "../", "../", "../", "src", "config", province, "stores.json"),
             "utf-8"
         )
     );
     
     const {items} = JSON.parse(
         fs.readFileSync(
-            path.join(__dirname, "../", "../", "src", "scrapers", "config", "items.json"),
+            path.join(__dirname, "../", "../", "../", "src", "config", "items.json"),
             "utf-8"
         )
     );

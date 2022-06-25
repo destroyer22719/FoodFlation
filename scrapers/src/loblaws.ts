@@ -1,11 +1,11 @@
 import puppeteer from "puppeteer";
-import sequelize from "./db.js";
+import sequelize from "../src/db.js";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
 import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
-import { Address } from "./global.js";
+import { Address } from "../src/global.js";
 
 export async function getPricesLoblaws(items: string[], stores: Address[]) {
     console.log(new Date());
