@@ -35,8 +35,12 @@ async function scrapePrices() {
         )
     );
 
-    await getPricesLoblaws(items.slice(itemStart), filterByStore(stores, "Loblaws").slice(storeStart));
-    await getPricesMetro(items.slice(itemStart), filterByStore(stores, "Metro").slice(storeStart));
+    await getPricesLoblaws(items.slice(itemStart), filterByStore(stores.slice(storeStart), "Loblaws"));
+    await getPricesMetro(items.slice(itemStart), filterByStore(stores.slice(storeStart), "Metro"));
+    
+    //we only want to start at a specific item and store once, after that we can start at the beginning
+    itemStart = 0;
+    storeStart = 0;
 }
 
 (async () => {

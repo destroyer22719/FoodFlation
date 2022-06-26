@@ -57,7 +57,8 @@ const ItemPage: React.FC<Props> = ({ item }) => {
         if (price > highest.y) {
             highest.y = price;
             highest.x = date;
-        } else if (price < lowest.y) {
+        } 
+        if (price < lowest.y) {
             lowest.y = price;
             lowest.x = date;
         }
@@ -65,7 +66,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
 
     const parsedPrices: DataSet[] = [];
 
-    for (let i = 0; i < prices!.length; i++) {
+    for (let i = 0; i < yDataset!.length; i++) {
         parsedPrices.push({
             x: xDataset[i],
             y: yDataset[i],
@@ -81,6 +82,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                 backgroundColor: "none",
                 borderColor: "#9388A2",
                 data: parsedPrices,
+                borderWidth: 7.5,
             },
         ],
     };
@@ -118,7 +120,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                         <div>
                             <div>
                                 Latest Price: {"$"}
-                                {parsedPrices[0].y} on {parsedPrices[0].x}
+                                {parsedPrices[parsedPrices.length - 1].y} on {parsedPrices[parsedPrices.length - 1].x}
                             </div>
                             <div>
                                 Highest Price: {"$"}
@@ -134,6 +136,14 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                         <Line
                             data={data}
                             options={{
+                                // @ts-ignore: Unreachable code error - This works even though it is complained that it doesn't
+                                legend: {
+                                    display: true,
+                                    labels: {
+                                        fontSize: 16, //point style's size is based on font style not boxed width.
+                                        usePointStyle:true,
+                                    }
+                                },
                                 responsive: true,
                             }}
                         />
