@@ -48,14 +48,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const lowest: DataSet = { x: "", y: Infinity };
 
     prices!.forEach(({ createdAt, price }) => {
-        const date = new Date(createdAt).toLocaleDateString("en-US", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour12: true,
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+        const date = new Date(createdAt).toISOString().split('T')[0];
 
         if (xDataset.includes(date) && yDataset.includes(price)) return;
         xDataset.push(date);
