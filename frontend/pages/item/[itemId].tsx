@@ -36,6 +36,12 @@ type DataSet = {
     x: string;
     y: number;
 };
+
+ChartJS.defaults.font.size = 20;
+ChartJS.defaults.font.weight ="bold";
+
+
+
 const ItemPage: React.FC<Props> = ({ item }) => {
     const { prices } = item;
 
@@ -48,7 +54,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const lowest: DataSet = { x: "", y: Infinity };
 
     prices!.forEach(({ createdAt, price }) => {
-        const date = new Date(createdAt).toISOString().split('T')[0];
+        const date = new Date(createdAt).toISOString().split("T")[0];
 
         if (xDataset.includes(date) && yDataset.includes(price)) return;
         xDataset.push(date);
@@ -57,7 +63,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
         if (price > highest.y) {
             highest.y = price;
             highest.x = date;
-        } 
+        }
         if (price < lowest.y) {
             lowest.y = price;
             lowest.x = date;
@@ -79,10 +85,9 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             {
                 label: "Item Price",
                 fill: true,
-                backgroundColor: "none",
-                borderColor: "#9388A2",
+                borderColor: "rgb(255,255,255)",
                 data: parsedPrices,
-                borderWidth: 7.5,
+                borderWidth: 5,
             },
         ],
     };
@@ -120,7 +125,9 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                         <div>
                             <div>
                                 Latest Price: {"$"}
-                                {parsedPrices[parsedPrices.length - 1].y} on {parsedPrices[parsedPrices.length - 1].x}
+                                {
+                                    parsedPrices[parsedPrices.length - 1].y
+                                } on {parsedPrices[parsedPrices.length - 1].x}
                             </div>
                             <div>
                                 Highest Price: {"$"}
@@ -140,8 +147,14 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                 legend: {
                                     display: true,
                                     labels: {
-                                        fontSize: 16, //point style's size is based on font style not boxed width.
-                                        usePointStyle:true,
+                                        fontSize: 25, //point style's size is based on font style not boxed width.
+                                        usePointStyle: true,
+                                    },
+                                },
+                                scale: {
+                                    pointLabels: {
+                                        fontSize: 200,
+                                        fontStyle: "bold"
                                     }
                                 },
                                 responsive: true,
