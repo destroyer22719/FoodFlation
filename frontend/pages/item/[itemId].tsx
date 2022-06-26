@@ -91,18 +91,22 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             },
         ],
     };
-    console.log(item);
+
     return (
         <Layout title={item.name || "Item Not Found"}>
             {item.id ? (
                 <>
                     <div className={styles["item-page__header"]}>
                         <Link href={`/store/${item.store.id}`} passHref>
-                            <ButtonOutlined className={styles["item-page__back-button"]}>
-                                {"<"}
-                            </ButtonOutlined>
+                            <a>
+                                <ButtonOutlined
+                                    className={styles["item-page__back-button"]}
+                                >
+                                    {"<"}
+                                </ButtonOutlined>
+                            </a>
                         </Link>
-                        <div >
+                        <div>
                             <h1>{item.name}</h1>
                             <p>
                                 {item.store.street}, {item.store.city}{" "}

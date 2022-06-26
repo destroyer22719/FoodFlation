@@ -14,7 +14,7 @@ const Footer = () => {
                     </IconButton>
                 </a>
             </Link>
-            <Link href="" passHref>
+            <Link href="https://github.com/destroyer22719/FoodFlation" passHref>
                 <a href="#" target="_blank">
                     <IconButton>
                         <GitHubIcon className={styles["footer__item"]} />
