@@ -14,7 +14,7 @@ import storeRouter from "./routes/stores.js";
 import companyRouter from "./routes/companies.js";
 
 const port = process.env.PORT || 4000;
-const dotEnvFile = process.env.NODE_ENV === "production" ? "env.prod": ".env";
+const dotEnvFile = process.env.NODE_ENV === "production" ? ".env.prod": ".env";
 dotenv.config({ path: dotEnvFile });
 
 const app = express();

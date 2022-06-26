@@ -14,6 +14,7 @@ export const getItemById = async (
     try {
         const item = await Item.findByPk(req.params.id, {
             include: [Store, Price],
+            order: [["prices", "createdAt", "ASC"]],
         });
 
         if (!item)

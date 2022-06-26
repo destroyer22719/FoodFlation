@@ -3,11 +3,23 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-    &__header {
+        flex-direction: column;
+        text-align: center;
         & > * {
-            margin-right: 20px;
+            margin-top: 20px;
         }
+
+        @media only screen and (min-width: 500px) {
+            flex-direction: row;
+            & > * {
+                margin-left: 20px;
+
+            }
+        }
+    }
+
+    &__metadata {
+        display: flex;
     }
 
     &__back-button {
