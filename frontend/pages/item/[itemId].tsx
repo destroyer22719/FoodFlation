@@ -39,7 +39,7 @@ type DataSet = {
 
 ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight ="bold";
-
+ChartJS.defaults.color = "white";
 
 
 const ItemPage: React.FC<Props> = ({ item }) => {
@@ -150,12 +150,6 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                         fontSize: 25, //point style's size is based on font style not boxed width.
                                         usePointStyle: true,
                                     },
-                                },
-                                scale: {
-                                    pointLabels: {
-                                        fontSize: 200,
-                                        fontStyle: "bold"
-                                    }
                                 },
                                 responsive: true,
                             }}
