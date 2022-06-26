@@ -141,17 +141,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                         <Line
                             data={data}
                             options={{
-                                scales: {
-                                    // @ts-ignore - I don't know why but ts is telling me it has to be an object while it'll only work if it's an array
-                                    xAxes: [
-                                        {
-                                            type: "time",
-                                            time: {
-                                                parser: "MM/DD/YYYY",
-                                            },
-                                        },
-                                    ],
-                                },
+                                responsive: true,
                             }}
                         />
                     </div>
