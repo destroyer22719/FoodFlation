@@ -51,7 +51,8 @@ export const getAllItems = async (
                     WHERE 
                         items.id = prices.itemId 
                     ORDER BY 
-                        prices.createdAt 
+                        prices.createdAt
+                        DESC
                     LIMIT 
                         1
                 )
@@ -103,6 +104,7 @@ export const getAllStoreItems = async (
                         items.id = prices.itemId 
                     ORDER BY 
                         prices.createdAt 
+                        DESC
                     LIMIT 
                         1
                 )

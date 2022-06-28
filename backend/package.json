@@ -6,9 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test file\"",
     "build": "npx tsc",
-    "start": "node ./dist/index.js",
-    "scrape": "node ./dist/scrapers/index.js",
-    "scrape:prod": "NODE_ENV=production node ./dist/scrapers/index.js"
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
