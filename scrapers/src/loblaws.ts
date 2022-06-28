@@ -7,7 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "../src/global.js";
 
-export async function getPricesLoblaws(items: string[], stores: Address[]) {
+export async function getPricesLoblaws(
+    itemsArray: string[],
+    stores: Address[],
+    itemStart: number = 0
+) {
     console.log(new Date());
     console.log("Starting scraping for Lablaws...");
     console.time("Scraping Lablaws");
@@ -15,7 +19,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
     await sequelize.sync();
     const browser = await puppeteer.launch({
         headless: true,
-        ignoreHTTPSErrors: true
+        ignoreHTTPSErrors: true,
     });
 
     const page = await browser.newPage();
@@ -26,6 +30,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
     ]);
 
     //searches up store postal code directly and set the store location
+    let items = itemsArray.slice(itemStart);
 
     for (const store of stores) {
         const { city, postalCode, street } = store;
@@ -46,7 +51,11 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(`${item} | ${postalCode} | ${items.indexOf(item)}-${stores.map(store => store.postalCode).indexOf(postalCode)} | ${new Date()}`);
+            console.log(
+                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}-${stores
+                    .map((store) => store.postalCode)
+                    .indexOf(postalCode)} | ${new Date()}`
+            );
 
             await page.goto(
                 `https://www.loblaws.ca/search?search-bar=${item.replace(
@@ -56,7 +65,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
             );
 
             try {
-                await page.waitForSelector(".product-tile", {timeout: 30000});
+                await page.waitForSelector(".product-tile", { timeout: 30000 });
             } catch (err) {
                 continue;
             }
@@ -69,7 +78,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
                     "product-name__item product-name__item--name"
                 );
                 const price = document.querySelectorAll(
-                    ".price__value.selling-price-list__item__price.selling-price-list__item__price--now-price.selling-price-list__item__price--__value"
+                    ".selling-price-list__item__price--now-price__value"
                 );
                 const img = document.querySelectorAll(
                     ".product-tile__thumbnail__image > img"
@@ -141,6 +150,7 @@ export async function getPricesLoblaws(items: string[], stores: Address[]) {
 
             console.timeEnd(`Scraping for ${item} at ${postalCode}`);
         }
+        items = itemsArray;
     }
 
     console.log("Finished scraping for Lablaws");

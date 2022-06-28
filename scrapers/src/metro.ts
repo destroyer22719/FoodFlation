@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
 
-export async function getPricesMetro(items: string[], stores: Address[]) {
+export async function getPricesMetro(itemsArray: string[], stores: Address[], itemStart:number = 0) {
     console.log(new Date());
     console.log("Starting scraping for Metro...");
     console.time("Scraping Metro");
@@ -26,6 +26,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
     ]);
 
     //searches up store postal code directly and set the store location
+    let items = itemsArray.slice(itemStart);
 
     for (const store of stores) {
         const { city, postalCode, street } = store;
@@ -46,7 +47,9 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(`${item} | ${postalCode} | ${new Date()}`);
+            console.log(`${item} | ${postalCode} |${itemsArray.indexOf(item)}-${stores
+                .map((store) => store.postalCode)
+                .indexOf(postalCode)} | ${new Date()}`);
             await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
                 waitUntil: "domcontentloaded",
             });
@@ -192,6 +195,7 @@ export async function getPricesMetro(items: string[], stores: Address[]) {
 
             console.timeEnd(`Scraping for ${item} at ${postalCode}`);
         }
+        items = itemsArray
     }
 
     console.log("Finished scraping for Metro");
