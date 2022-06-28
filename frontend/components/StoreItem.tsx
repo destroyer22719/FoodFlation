@@ -18,13 +18,14 @@ const StoreItem: React.FC<Props> = ({ store }) => {
                         href="#"
                         className={style["store-list__store-item--format"]}
                     >
-                            <img
-                                className={
-                                    style["store-list__store-item-image"]
-                                }
+                        <div className={style["store-list__store-item-image"]}>
+                            <Image
                                 src={`/${store.name.toLocaleLowerCase()}-logo.png`}
                                 alt={store.name}
+                                layout="fill"
                             />
+                        </div>
+
                         <div
                             className={style["store-list__store-item-address"]}
                         >

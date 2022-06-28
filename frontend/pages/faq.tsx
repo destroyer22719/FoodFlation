@@ -51,15 +51,15 @@ const FaqPage: React.FC<{}> = () => {
             <p>
                 For the most part I would appreciate if you can spread the word
                 about this website. It takes a lot of effort creating {"("}and
-                dugging{")"} a website like this. I don't use ads, a Patreon or
+                dugging{")"} a website like this. I don{"'"}t use ads, a Patreon or
                 buymeacoffee account, paywalls, and user tracking tools such as Google
-                Analytics. Because I'm not using any using tracking software I
-                don't fully know how popular my website is, which is why I would
+                Analytics. Because I{"'"}m not using any using tracking software I
+                don{"'"}t fully know how popular my website is, which is why I would
                 appreciate even a simple email, which is more than enough for me.
                 You can find my email at the footer on the bottom right side of
                 the site. Hearing the feedback would deeply encourage me to
                 spend more time on this project. If you would like to help out
-                you can submit a pull request on the site's github page. If you
+                you can submit a pull request on the site{"'"}s github page. If you
                 would like to support in other ways please email me.
             </p>
         </Layout>

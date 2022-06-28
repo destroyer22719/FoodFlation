@@ -121,6 +121,7 @@
         &-image {
             width: 80px;
             height: 80px;
+            position: relative;
         }
         & > *:hover {
             background-color: $blue-dark;
