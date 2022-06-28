@@ -12,14 +12,6 @@ type Props = {
 const Home: React.FC<Props> = ({ itemCount, storeCount }) => {
     return (
         <Layout title={"Home"}>
-            <button
-                type="button"
-                onClick={() => {
-                    throw new Error("Sentry Frontend Error");
-                }}
-            >
-                Throw error
-            </button>{" "}
             <div className={style["home"]}>
                 <h1>FoodFlation</h1>
                 <p>
