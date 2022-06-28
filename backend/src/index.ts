@@ -4,10 +4,6 @@ import sequelize from "./config/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-// import serverless from "serverless-http";
-// import * as afe from "azure-function-express";
-
-// const {createHandler} = afe;
 
 import itemRouter from "./routes/items.js";
 import storeRouter from "./routes/stores.js";
@@ -20,10 +16,10 @@ dotenv.config({ path: dotEnvFile });
 const app = express();
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    windowMs: 15 * 60 * 1000,
+    max: 500,
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 
 app.use(cors());
@@ -38,6 +34,3 @@ app.listen(port, async () => {
     await sequelize.sync();
     console.log(`listening on port ${port}`);
 });
-
-// export default createHandler(app);
-// export default serverless(app);
