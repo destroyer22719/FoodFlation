@@ -44,6 +44,11 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                             onChange={(e) =>
                                 setSearch((e.target as HTMLInputElement).value)
                             }
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    router.push(`${currentPath}?search=${search}`);
+                                }
+                            }}
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
                             <a>

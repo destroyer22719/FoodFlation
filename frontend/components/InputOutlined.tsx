@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, KeyboardEventHandler } from "react";
 
 const InputOutlinedStyle = styled(TextField)({
     "& input:valid + fieldset": {
@@ -20,6 +20,7 @@ const InputOutlinedStyle = styled(TextField)({
 type Props = {
     value: string;
     onChange: ChangeEventHandler<Element>;
+    onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
     className?: string;
     placeholder?: string;
 };
@@ -29,6 +30,7 @@ const InputOutlined: React.FC<Props> = ({
     onChange,
     className,
     placeholder,
+    onKeyDown
 }) => {
     return (
         <InputOutlinedStyle
@@ -37,6 +39,7 @@ const InputOutlined: React.FC<Props> = ({
             className={className}
             value={value}
             onChange={onChange}
+            onKeyDown={onKeyDown}
         />
     );
 };

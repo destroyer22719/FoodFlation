@@ -57,6 +57,17 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                             )
                                 setPostalCode(input);
                         }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                router.push(
+                                    `/store?postalCode=${
+                                        postalCode.slice(0, 3) +
+                                        " " +
+                                        postalCode.slice(3)
+                                    }`
+                                );
+                            }
+                        }}
                     />
                     <Link
                         href={`/store?postalCode=${
@@ -94,10 +105,12 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                             href={`/store?location=${data.city}`}
                                             passHref
                                         >
-                                            <ButtonOutlined>
-                                                {data.city.split(", ")[0]} -{" "}
-                                                {data.cityCount}
-                                            </ButtonOutlined>
+                                            <a>
+                                                <ButtonOutlined>
+                                                    {data.city.split(", ")[0]} -{" "}
+                                                    {data.cityCount}
+                                                </ButtonOutlined>
+                                            </a>
                                         </Link>
                                     </div>
                                 ))}
