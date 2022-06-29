@@ -101,14 +101,16 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                             ]
                                         }
                                     >
-                                        <Link
-                                            href={`/store?location=${data.city}`}
-                                        >
-                                            <ButtonOutlined>
-                                                {data.city.split(", ")[0]} -{" "}
-                                                {data.cityCount}
-                                            </ButtonOutlined>
-                                        </Link>
+                                        <ButtonOutlined>
+                                            <Link
+                                                href={`/store?location=${data.city}`}
+                                            >
+                                                <span>
+                                                    {data.city.split(", ")[0]} -{" "}
+                                                    {data.cityCount}
+                                                </span>
+                                            </Link>
+                                        </ButtonOutlined>
                                     </div>
                                 ))}
                             </div>
