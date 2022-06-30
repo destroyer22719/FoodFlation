@@ -47,9 +47,9 @@ export async function getPricesMetro(itemsArray: string[], stores: Address[], it
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(`${item} | ${postalCode} |${itemsArray.indexOf(item)}-${stores
+            console.log(`${item} | ${postalCode} |${itemsArray.indexOf(item)} /${itemsArray.length} - ${stores
                 .map((store) => store.postalCode)
-                .indexOf(postalCode)} | ${new Date()}`);
+                .indexOf(postalCode)} / ${stores.length} | ${new Date()}`);
             await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
                 waitUntil: "domcontentloaded",
             });
