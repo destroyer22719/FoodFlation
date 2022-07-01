@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "/subscriptions/33a60d97-2599-4df4-8c52-545d1725ebb5/microsoft.web/sites/subscriptions/33a60d97-2599-4df4-8c52-545d1725ebb5/resourceGroups/FoodFlation/providers/Microsoft.Web/sites/FoodFlationAPI",
-    "appService.deploySubpath": "./"
-}

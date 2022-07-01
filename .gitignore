@@ -2,3 +2,4 @@
 *.env*
 backend/dist/
 scrapers/dist/
+*/.vscode/*
