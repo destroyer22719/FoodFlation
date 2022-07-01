@@ -17,6 +17,7 @@ import Layout from "../../components/Layout";
 import styles from "../../styles/Item.module.scss";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 ChartJS.register(
     CategoryScale,
@@ -44,7 +45,7 @@ ChartJS.defaults.color = "white";
 
 const ItemPage: React.FC<Props> = ({ item }) => {
     const { prices } = item;
-
+    const router = useRouter();
     //dates
     const xDataset: string[] = [];
     //prices
@@ -97,15 +98,13 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             {item.id ? (
                 <>
                     <div className={styles["item-page__header"]}>
-                        <Link href={`/store/${item.store.id}`} passHref>
-                            <a>
+                        <div onClick={() => router.back()}>
                                 <ButtonOutlined
                                     className={styles["item-page__back-button"]}
                                 >
                                     {"<"}
                                 </ButtonOutlined>
-                            </a>
-                        </Link>
+                        </div>
                         <div>
                             <h1>{item.name}</h1>
                             <p>
