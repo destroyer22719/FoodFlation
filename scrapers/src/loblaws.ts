@@ -52,9 +52,9 @@ export async function getPricesLoblaws(
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
             console.log(
-                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}/${itemsArray.length} - ${stores
+                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}/${itemsArray.length - 1} - ${stores
                     .map((store) => store.postalCode)
-                    .indexOf(postalCode)}/${stores.length} | ${new Date()}`
+                    .indexOf(postalCode)}/${stores.length - 1} | ${new Date()}`
             );
 
             await page.goto(
