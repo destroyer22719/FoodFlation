@@ -39,9 +39,8 @@ type DataSet = {
 };
 
 ChartJS.defaults.font.size = 20;
-ChartJS.defaults.font.weight ="bold";
+ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
-
 
 const ItemPage: React.FC<Props> = ({ item }) => {
     const { prices } = item;
@@ -55,9 +54,15 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const lowest: DataSet = { x: "", y: Infinity };
 
     prices!.forEach(({ createdAt, price }) => {
-        const date = new Date(createdAt).toISOString().split("T")[0];
+        const date = new Date(createdAt).toLocaleString();
 
-        if (xDataset.includes(date) && yDataset.includes(price)) return;
+        if (
+            xDataset
+                .map((x) => new Date(x).toLocaleDateString())
+                .includes(new Date(date).toLocaleDateString()) &&
+            yDataset.includes(price)
+        )
+            return;
         xDataset.push(date);
         yDataset.push(price);
 
@@ -99,11 +104,11 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                 <>
                     <div className={styles["item-page__header"]}>
                         <div onClick={() => router.back()}>
-                                <ButtonOutlined
-                                    className={styles["item-page__back-button"]}
-                                >
-                                    {"<"}
-                                </ButtonOutlined>
+                            <ButtonOutlined
+                                className={styles["item-page__back-button"]}
+                            >
+                                {"<"}
+                            </ButtonOutlined>
                         </div>
                         <div>
                             <h1>{item.name}</h1>
