@@ -9,7 +9,7 @@ import styles from "../styles/Carousel.module.scss";
 const CarouselComponent = () => {
     const items = [
         {
-            imgUrl: "/statistics_canada.jpg",
+            imgUrl: "/inflation_icon.png",
             content: (
                 <div>
                     According to
