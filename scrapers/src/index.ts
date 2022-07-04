@@ -1,46 +1,64 @@
 import fs from "fs";
 import path from "path";
+import yargs from "yargs/yargs";
 import { getPricesLoblaws } from "./loblaws";
 import { Address, CompanyName } from "./global";
 import { getPricesMetro } from "./metro";
 
-let itemStart = 0;
-let storeStart = 0;
+const argv = yargs(process.argv.slice(2))
+    .options({
+        province: { type: "string", demandOption: true },
+        metro: { type: "boolean", demand: false, default: false },
+        loblaws: { type: "boolean", demand: false, default: false },
+    })
+    .parseSync();
 
-if (process.argv[3]) {
-    itemStart = parseInt(process.argv[3].split("=")[1]);
-}
-if (process.argv[4]) {
-    storeStart = parseInt(process.argv[4].split("=")[1]);
-}
-
-const filterByStore = (array: Address[], company: CompanyName):Address[] => {
-    return array.filter(store => store.company === company);
+const filterByStore = (array: Address[], company: CompanyName): Address[] => {
+    return array.filter((store) => store.company === company);
 };
 
 async function scrapePrices() {
-    const province = process.argv[2].split("=")[1];
+    const province = argv.province;
 
-    const {stores} = JSON.parse(
+    const { stores } = JSON.parse(
         fs.readFileSync(
-            path.join(__dirname, "../", "../", "../", "src", "config", province, "stores.json"),
+            path.join(
+                __dirname,
+                "../",
+                "../",
+                "../",
+                "src",
+                "config",
+                province,
+                "stores.json"
+            ),
             "utf-8"
         )
     );
-    
-    const {items} = JSON.parse(
+
+    const { items } = JSON.parse(
         fs.readFileSync(
-            path.join(__dirname, "../", "../", "../", "src", "config", "items.json"),
+            path.join(
+                __dirname,
+                "../",
+                "../",
+                "../",
+                "src",
+                "config",
+                "items.json"
+            ),
             "utf-8"
         )
     );
 
-    await getPricesLoblaws(items, filterByStore(stores.slice(storeStart), "Loblaws"), itemStart);
-    await getPricesMetro(items, filterByStore(stores.slice(storeStart), "Metro"), itemStart);
-    
-    //we only want to start at a specific item and store once, after that we can start at the beginning
-    itemStart = 0;
-    storeStart = 0;
+    if (argv.loblaws) {
+        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"));
+    } else if (argv.metro) {
+        await getPricesMetro(items, filterByStore(stores, "Metro"));
+    } else {
+        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"));
+        await getPricesMetro(items, filterByStore(stores, "Metro"));
+    }
 }
 
 (async () => {
