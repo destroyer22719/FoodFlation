@@ -10,10 +10,12 @@ const argv = yargs(process.argv.slice(2))
         province: { type: "string", demandOption: true },
         metro: { type: "boolean", demand: false, default: false },
         loblaws: { type: "boolean", demand: false, default: false },
+        storeStart: {type: "number", demand: false, default: 0},
+        itemStart: {type: "number", demand: false, default: 0},
     })
     .parseSync();
 
-const filterByStore = (array: Address[], company: CompanyName): Address[] => {
+export const filterByStore = (array: Address[], company: CompanyName): Address[] => {
     return array.filter((store) => store.company === company);
 };
 
@@ -52,12 +54,12 @@ async function scrapePrices() {
     );
 
     if (argv.loblaws) {
-        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"));
+        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"), argv.storeStart, argv.itemStart);
     } else if (argv.metro) {
-        await getPricesMetro(items, filterByStore(stores, "Metro"));
+        await getPricesMetro(items, filterByStore(stores, "Metro"), argv.storeStart, argv.itemStart);
     } else {
-        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"));
-        await getPricesMetro(items, filterByStore(stores, "Metro"));
+        await getPricesLoblaws(items, filterByStore(stores, "Loblaws"), argv.storeStart, argv.itemStart);
+        await getPricesMetro(items, filterByStore(stores, "Metro"), argv.storeStart, argv.itemStart);
     }
 }
 

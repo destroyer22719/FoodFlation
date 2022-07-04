@@ -6,15 +6,19 @@ import Store from "../../backend/src/model/Store.js";
 import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "../src/global.js";
+import { filterByStore } from "./index.js";
 
 export async function getPricesLoblaws(
     itemsArray: string[],
-    stores: Address[],
+    storesArray: Address[],
+    storeStart:number = 0,
     itemStart: number = 0
 ) {
     console.log(new Date());
     console.log("Starting scraping for Lablaws...");
     console.time("Scraping Lablaws");
+
+    const stores = filterByStore(storesArray.slice(storeStart), "Loblaws");
 
     await sequelize.sync();
     const browser = await puppeteer.launch({
@@ -52,9 +56,13 @@ export async function getPricesLoblaws(
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
             console.log(
-                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}/${itemsArray.length - 1} - ${stores
+                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}/${
+                    itemsArray.length - 1
+                } - ${storesArray
                     .map((store) => store.postalCode)
-                    .indexOf(postalCode)}/${stores.length - 1} | ${new Date()}`
+                    .indexOf(postalCode)}/${
+                    storesArray.length - 1
+                } | ${new Date()}`
             );
 
             await page.goto(

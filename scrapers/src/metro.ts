@@ -6,16 +6,24 @@ import Store from "../../backend/src/model/Store.js";
 import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
+import { filterByStore } from "./index.js";
 
-export async function getPricesMetro(itemsArray: string[], stores: Address[], itemStart:number = 0) {
+export async function getPricesMetro(
+    itemsArray: string[],
+    storesArray: Address[],
+    storeStart:number = 0,
+    itemStart: number = 0
+) {
     console.log(new Date());
     console.log("Starting scraping for Metro...");
     console.time("Scraping Metro");
 
+    const stores = filterByStore(storesArray.slice(storeStart), "Metro");
+
     await sequelize.sync();
     const browser = await puppeteer.launch({
         headless: true,
-        ignoreHTTPSErrors: true
+        ignoreHTTPSErrors: true,
     });
 
     const page = await browser.newPage();
@@ -47,9 +55,15 @@ export async function getPricesMetro(itemsArray: string[], stores: Address[], it
         for (const item of items) {
             //searches up the price of each item
             console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(`${item} | ${postalCode} |${itemsArray.indexOf(item)} /${itemsArray.length - 1} - ${stores
-                .map((store) => store.postalCode)
-                .indexOf(postalCode)} / ${stores.length - 1} | ${new Date()}`);
+            console.log(
+                `${item} | ${postalCode} |${itemsArray.indexOf(item)} /${
+                    itemsArray.length - 1
+                } - ${storesArray
+                    .map((store) => store.postalCode)
+                    .indexOf(postalCode)} / ${
+                    storesArray.length - 1
+                } | ${new Date()}`
+            );
             await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
                 waitUntil: "domcontentloaded",
             });
@@ -195,7 +209,7 @@ export async function getPricesMetro(itemsArray: string[], stores: Address[], it
 
             console.timeEnd(`Scraping for ${item} at ${postalCode}`);
         }
-        items = itemsArray
+        items = itemsArray;
     }
 
     console.log("Finished scraping for Metro");
