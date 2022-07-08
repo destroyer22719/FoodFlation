@@ -1,16 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    reactStrictMode: true,
-    images: {
-        domains: [
-            "assets.shop.loblaws.ca",
-            "assets.sellers.loblaw.ca",
-            "product-images.metro.ca",
-            "www.metro.ca",
-        ],
-        formats: ["image/avif", "image/webp", "image/jpeg", "image/png"],
-    },
-};
 // This file sets a custom webpack configuration to use your Next.js app
 // with Sentry.
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
@@ -25,6 +13,7 @@ const moduleExports = {
             "assets.shop.loblaws.ca",
             "assets.sellers.loblaw.ca",
             "product-images.metro.ca",
+            "www.metro.ca"
         ],
     },
 };

@@ -34,11 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# Sentry
-.sentryclirc
-
-# Sentry
-.sentryclirc
-
 #TLS Certs
 certificate*
+# Sentry
+.sentryclirc
