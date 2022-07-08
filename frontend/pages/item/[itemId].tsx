@@ -53,16 +53,20 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const highest: DataSet = { x: "", y: -Infinity };
     const lowest: DataSet = { x: "", y: Infinity };
 
-    prices!.forEach(({ createdAt, price }) => {
-        const date = new Date(createdAt).toLocaleString();
+    prices!.forEach(({ createdAt, price }, i) => {
+        const date = new Date(createdAt).toISOString().split("T")[0];
+
+        let dupeIndex = xDataset.indexOf(date);
 
         if (
-            xDataset
-                .map((x) => new Date(x).toLocaleDateString())
-                .includes(new Date(date).toLocaleDateString()) &&
-            yDataset.includes(price)
+            dupeIndex !== -1 &&
+            yDataset[dupeIndex] === price //check if the dataset already has this date and price
         )
             return;
+        if (xDataset[dupeIndex - 1] === date) {
+            xDataset.splice(dupeIndex - 1, 1); //remove the previous dataset with the same date, so this the graph gets the latest price of that day
+        }
+        
         xDataset.push(date);
         yDataset.push(price);
 

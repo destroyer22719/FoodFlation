@@ -6,7 +6,9 @@ const nextConfig = {
             "assets.shop.loblaws.ca",
             "assets.sellers.loblaw.ca",
             "product-images.metro.ca",
+            "www.metro.ca",
         ],
+        formats: ["image/avif", "image/webp", "image/jpeg", "image/png"],
     },
 };
 // This file sets a custom webpack configuration to use your Next.js app
