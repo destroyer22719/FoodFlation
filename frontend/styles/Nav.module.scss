@@ -10,11 +10,18 @@
     justify-content: space-between;
     color: $purple-light;
     margin-bottom: 10px;
+
+    flex-direction: column;
+    @media only screen and (min-width: 400px) {
+        flex-direction: row;
+    }
+
     &__item {
-        &-center {
-            border:5px solid red;
-            color: $purple-light
+        margin: 8px 0;
+        font-weight: bold;
+
+        &--bold {
+            font-weight: bold;
         }
     }
- 
 }

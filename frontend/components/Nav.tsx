@@ -8,20 +8,20 @@ const Nav = () => {
         <nav className={styles["nav"]}>
             {/* <SearchBox /> */}
             <Link href={"/"} passHref>
-                <a href="#">
-                    <ButtonOutlined>Home</ButtonOutlined>
+                <a href="#" className={styles["nav__item"]}>
+                    <ButtonOutlined className={styles["nav__item--bold"]}>Home</ButtonOutlined>
                 </a>
             </Link>
             <Link href={"/store/"} passHref>
-                <a href="#">
-                    <ButtonOutlined>
+                <a href="#" className={styles["nav__item"]}>
+                    <ButtonOutlined className={styles["nav__item--bold"]}>
                         <SearchIcon /> Track Prices
                     </ButtonOutlined>
                 </a>
             </Link>
             <Link href={"/faq"} passHref>
-                <a href="#">
-                    <ButtonOutlined>FAQ</ButtonOutlined>
+                <a href="#" className={styles["nav__item"]}>
+                    <ButtonOutlined className={styles["nav__item--bold"]}>FAQ</ButtonOutlined>
                 </a>
             </Link>
         </nav>
