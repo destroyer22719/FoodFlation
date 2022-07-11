@@ -151,6 +151,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                     </div>
                     <div>
                         <Line
+                            
                             data={data}
                             options={{
                                 // @ts-ignore: Unreachable code error - This works even though it is complained that it doesn't
@@ -162,7 +163,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                     },
                                 },
                                 responsive: true,
-                            }}
+                            }}z
                         />
                     </div>
                 </>

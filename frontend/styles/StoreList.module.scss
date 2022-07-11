@@ -7,16 +7,24 @@
     &__search {
         display: flex;
         align-items: center;
+        justify-content: center;
+        margin: 20px;
+
+        flex-direction: column;
+        @media only screen and (min-width: 400px) {
+            flex-direction: row;
+        }
 
         &-bar {
             input {
                 height: 40px;
             }
-            margin-right: 10px;
+            margin: 10px 10px;
         }
 
         &-button {
             height: 40px;
+            margin: 10px 10px;
         }
     }
 
@@ -29,16 +37,34 @@
             margin: 20px auto;
             display: flex;
             justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            flex-wrap: wrap;
+            @media only screen and (min-width: 700px) {
+                flex-direction: row;
+            }
+        }
+        
+        &-prov {
+            &--gap {
+                margin: 10px;
+
+            }
+            &-col {
+                width: 250px;
+            }
+            &--format {
+                display: flex;
+                align-items: center;
+                text-align: center;
+            }
         }
 
         &-prov-col,
         &-city-col {
             display: flex;
             flex-direction: column;
-        }
-
-        &-prov-col {
-            margin-right: 10px;
+            align-items: center;
         }
 
         &-city-col {

@@ -10,8 +10,9 @@ import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
-import { Input } from "@mui/material";
+import { Collapse, Divider, Input, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
+import { DriveEtaOutlined, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 type Props = {
     stores: Store[];
@@ -30,6 +31,19 @@ type LocationRes = {
 
 const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
     const [postalCode, setPostalCode] = useState("");
+    const initialArray: boolean[] = [];
+    initialArray.length = locations.length;
+
+    const [open, setOpen] = useState<boolean[]>(initialArray.fill(false, 0));
+
+    const openHandler = (index: number) => {
+        setOpen([
+            ...open.slice(0, index),
+            !open[index],
+            ...open.slice(index + 1),
+        ]);
+    };
+
     const router = useRouter();
 
     const location = router.query.location;
@@ -88,10 +102,48 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                     {locations.map((loc, i) => (
                         <div
                             key={i}
-                            className={styles["store-list__location-prov-col"]}
+                            className={styles["store-list__location-prov-item"]}
                         >
-                            <h3>{loc.province}</h3>
-                            <div>
+                            <div
+                                className={
+                                    styles["store-list__location-prov--gap"]
+                                }
+                            >
+                                <ListItemButton
+                                    onClick={() => {
+                                        openHandler(i);
+                                    }}
+                                >
+                                    <div
+                                        className={
+                                            styles[
+                                                "store-list__location-prov-col"
+                                            ]
+                                        }
+                                    >
+                                        <h3
+                                            className={
+                                                styles[
+                                                    "store-list__location-prov--format"
+                                                ]
+                                            }
+                                        >
+                                            <div>
+                                                {loc.province}{" "}
+                                                {`(${loc.cities.length})`}
+                                            </div>
+                                            <div>
+                                                {open[i] ? (
+                                                    <ExpandLess />
+                                                ) : (
+                                                    <ExpandMore />
+                                                )}
+                                            </div>
+                                        </h3>
+                                    </div>
+                                </ListItemButton>
+                            </div>
+                            <Collapse in={open[i]} timeout="auto" unmountOnExit>
                                 {loc.cities.map((data, i) => (
                                     <div
                                         key={i}
@@ -103,18 +155,18 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                     >
                                         <ButtonOutlined>
                                             <Link
-                                                href={`/store?location=${data.city}`}
+                                                href={`/store?location=${data.city}#storeList`}
                                                 passHref
                                             >
                                                 <span>
-                                                    {data.city.split(", ")[0]} -{" "}
+                                                    {data.city.split(", ")[0]} -
                                                     {data.cityCount}
                                                 </span>
                                             </Link>
                                         </ButtonOutlined>
                                     </div>
                                 ))}
-                            </div>
+                            </Collapse>
                         </div>
                     ))}
                 </div>
@@ -177,7 +229,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         </ButtonContained>
                     </div>
                 )}
-                <div className={styles["store-list__list"]}>
+                <div className={styles["store-list__list"]} id="storeList">
                     {stores.map((store) => (
                         <StoreList key={store.id} store={store} />
                     ))}
