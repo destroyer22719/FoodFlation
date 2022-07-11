@@ -5,8 +5,24 @@ import CarouselItem from "./CarouselItem";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "../styles/Carousel.module.scss";
+import { useEffect, useState } from "react";
 
 const CarouselComponent = () => {
+    const [displayNavButtons, setDisplayNavButtons] = useState(false);
+
+    const updateMedia = () => {
+        if (window.innerWidth < 500) {
+            setDisplayNavButtons(false);
+        } else {
+            setDisplayNavButtons(true);
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("resize", updateMedia);
+        return () => window.removeEventListener("resize", updateMedia);
+      });
+
     const items = [
         {
             imgUrl: "/inflation_icon.png",
@@ -58,6 +74,7 @@ const CarouselComponent = () => {
                         backgroundColor: "#9388A2",
                     },
                 }}
+                navButtonsAlwaysInvisible={!displayNavButtons}
             >
                 {items.map((item, i) => (
                     <CarouselItem key={i} imgUrl={item.imgUrl}>

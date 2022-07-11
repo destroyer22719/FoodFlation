@@ -2,20 +2,22 @@
 
 .carousel {
     width: 90%;
-    margin: auto;
+    margin: 10px auto;
 
     @media only screen and (min-width: 600px) {
         width: 600px;
+        &__item {
+            width: 60%;
+        }
     }
 
+    height: 600px;
     &__item {
         border-radius: 10px;
         background-color: $purple-light;
-        width: 60%;
         padding: 20px;
         margin: auto;
         text-align: center;
-        height: 350px;
 
         &-img {
             position: relative;
