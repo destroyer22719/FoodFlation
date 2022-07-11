@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import React from "react";
+import React, {useEffect} from "react";
 
 const index: React.FC<{}> = () => {
     return <div>This should return an error</div>;
@@ -11,3 +11,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default index;
+
+// export default function index() {
+//     useEffect(() => {
+//         (async () => {
+//             await fetch("localhost:4000/fail")
+//         })();
+//     }, []);
+//     return <div>This should return an error</div>;
+// }

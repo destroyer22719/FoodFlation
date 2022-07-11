@@ -38,6 +38,8 @@ type DataSet = {
     y: number;
 };
 
+//todo: https://foodflation.me/item/07cd59a7-2989-4bf1-8923-15f5cb56b81f
+
 ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
