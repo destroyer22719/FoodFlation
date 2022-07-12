@@ -1,4 +1,3 @@
-import { Paper } from "@mui/material";
 import Link from "next/link";
 import Carousel from "react-material-ui-carousel";
 import CarouselItem from "./CarouselItem";
@@ -18,7 +17,10 @@ const CarouselComponent = () => {
         }
     }
 
+    let test = "";
+
     useEffect(() => {
+        updateMedia();
         window.addEventListener("resize", updateMedia);
         return () => window.removeEventListener("resize", updateMedia);
       });

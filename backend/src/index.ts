@@ -50,6 +50,7 @@ app.use(limiter);
 app.use("/items", itemRouter);
 app.use("/stores", storeRouter);
 app.use("/companies", companyRouter);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.get("/debug-sentry", (_req, _res) => {
     throw new Error("My first Sentry error!");
 });
