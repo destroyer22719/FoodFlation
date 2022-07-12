@@ -38,8 +38,6 @@ type DataSet = {
     y: number;
 };
 
-//todo: https://foodflation.me/item/07cd59a7-2989-4bf1-8923-15f5cb56b81f
-
 ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
@@ -65,8 +63,10 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             yDataset[dupeIndex] === price //check if the dataset already has this date and price
         )
             return;
-        if (xDataset[dupeIndex - 1] === date) {
-            xDataset.splice(dupeIndex - 1, 1); //remove the previous dataset with the same date, so this the graph gets the latest price of that day
+        if ( dupeIndex !== -1 && xDataset[dupeIndex] === date) {
+            //remove the previous dataset with the same date, so this the graph gets the latest price of that day
+            yDataset.splice(dupeIndex, 1);
+            xDataset.splice(dupeIndex, 1); 
         }
         
         xDataset.push(date);
@@ -163,7 +163,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                     },
                                 },
                                 responsive: true,
-                            }}z
+                            }}
                         />
                     </div>
                 </>
