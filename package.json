@@ -1,5 +1,5 @@
 {
     "scripts": {
-        "count-lines": "cloc . --exclude-dir=node_modules,dist,next --exclude-ext=json"
+        "count": "cloc . --exclude-dir=node_modules,dist,next --exclude-ext=json"
     }
 }
