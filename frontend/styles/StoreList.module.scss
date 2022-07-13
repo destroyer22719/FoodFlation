@@ -36,16 +36,23 @@
             overflow-x: auto;
             margin: 20px auto;
             display: flex;
-            justify-content: center;
+            justify-content: space-evenly;
             align-items: center;
             flex-direction: column;
             flex-wrap: wrap;
             @media only screen and (min-width: 700px) {
                 flex-direction: row;
+                align-items: flex-start;
             }
         }
         
         &-prov {
+            &-item {
+                margin: 0 auto;
+                @media only screen and (min-width: 700px) {
+                    margin: 0;
+                }
+            }
             &--gap {
                 margin: 10px;
 
