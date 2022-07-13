@@ -1,5 +1,4 @@
 import React from "react";
-import { Paper } from "@mui/material";
 import Image from "next/image";
 import styles from "../styles/Carousel.module.scss";
 

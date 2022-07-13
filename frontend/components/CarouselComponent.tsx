@@ -17,8 +17,6 @@ const CarouselComponent = () => {
         }
     }
 
-    let test = "";
-
     useEffect(() => {
         updateMedia();
         window.addEventListener("resize", updateMedia);

@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 
-const FaqPage: React.FC<{}> = () => {
+const FaqPage: React.FC<null> = () => {
     return (
         <Layout title="FAQ">
             <h1>FAQ</h1>

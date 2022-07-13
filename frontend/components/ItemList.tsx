@@ -27,9 +27,9 @@ const ItemList: React.FC<Props> = ({ item }) => {
                             </div>
                             <div>
                                 Last Updated:{" "}
-                                {new Date(item.lastUpdated!).toLocaleString(
+                                {item.lastUpdated ? new Date(item.lastUpdated).toLocaleString(
                                     "en-US"
-                                )}
+                                ): "N/A"}
                             </div>
                         </div>
                     </a>

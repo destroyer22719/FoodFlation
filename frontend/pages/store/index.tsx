@@ -10,9 +10,9 @@ import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
-import { Collapse, Divider, Input, ListItemButton } from "@mui/material";
+import { Collapse, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
-import { DriveEtaOutlined, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 type Props = {
     stores: Store[];

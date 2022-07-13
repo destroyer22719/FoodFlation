@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps } from "next";
 import CarouselComponent from "../components/CarouselComponent";
 import Layout from "../components/Layout";
 import { API_URL } from "../config";

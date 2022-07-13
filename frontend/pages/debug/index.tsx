@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import React, {useEffect} from "react";
 
-const index: React.FC<{}> = () => {
+const index: React.FC<null> = () => {
     return <div>This should return an error</div>;
 };
 

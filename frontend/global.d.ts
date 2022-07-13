@@ -21,8 +21,8 @@ export interface Item {
     storeId: string,
     store: Store,
     imgUrl: string,
-    prices?: Price[]
-    price?: number
+    prices: Price[]
+    price: number
     lastUpdated?: Date
 }
 

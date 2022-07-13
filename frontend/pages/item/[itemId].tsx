@@ -16,7 +16,6 @@ import Image from "next/image";
 import Layout from "../../components/Layout";
 import styles from "../../styles/Item.module.scss";
 import ButtonOutlined from "../../components/ButtonOutlined";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 ChartJS.register(
@@ -53,10 +52,10 @@ const ItemPage: React.FC<Props> = ({ item }) => {
     const highest: DataSet = { x: "", y: -Infinity };
     const lowest: DataSet = { x: "", y: Infinity };
 
-    prices!.forEach(({ createdAt, price }, i) => {
+    prices.forEach(({ createdAt, price }) => {
         const date = new Date(createdAt).toISOString().split("T")[0];
 
-        let dupeIndex = xDataset.indexOf(date);
+        const dupeIndex = xDataset.indexOf(date);
 
         if (
             dupeIndex !== -1 &&
@@ -84,7 +83,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
 
     const parsedPrices: DataSet[] = [];
 
-    for (let i = 0; i < yDataset!.length; i++) {
+    for (let i = 0; i < yDataset.length; i++) {
         parsedPrices.push({
             x: xDataset[i],
             y: yDataset[i],
@@ -154,6 +153,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                             
                             data={data}
                             options={{
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore: Unreachable code error - This works even though it is complained that it doesn't
                                 legend: {
                                     display: true,

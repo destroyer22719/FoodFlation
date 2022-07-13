@@ -4,7 +4,6 @@ import style from "../styles/Layout.module.scss";
 import Footer from "./Footer";
 import Nav from "./Nav";
 
-
 type Props = {
     title: string;
     children: React.ReactNode;
@@ -12,12 +11,14 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ title, children }) => {
     useEffect(() => {
-        const body = document.querySelector("body")!;
-        const html = document.querySelector("html")!;
-        body.style.margin = "0";
-        body.style.backgroundColor = "#0E050F";
-        body.style.height = "100vh";
-        html.style.height = "100vh";
+        const body = document.querySelector("body");
+        const html = document.querySelector("html");
+        if (body && html) {
+            body.style.margin = "0";
+            body.style.backgroundColor = "#0E050F";
+            body.style.height = "100vh";
+            html.style.height = "100vh";
+        }
     }, []);
 
     return (
@@ -30,9 +31,9 @@ const Layout: React.FC<Props> = ({ title, children }) => {
                 />
                 <link rel="icon" href="/favicon.png" />
             </Head>
-            <Nav/>
+            <Nav />
             <div className={style["layout__main"]}>{children}</div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };
