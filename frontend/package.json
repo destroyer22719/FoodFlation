@@ -18,12 +18,13 @@
     "@sentry/nextjs": "^7.6.0",
     "chart.js": "^3.7.1",
     "dotenv": "^16.0.1",
-    "next": "^12.2.0",
+    "next": "^12.2.2",
     "react": "18.0.0",
     "react-chartjs-2": "^4.1.0",
     "react-dom": "18.0.0",
     "react-material-ui-carousel": "^3.4.2",
-    "sass": "^1.50.1"
+    "sass": "^1.50.1",
+    "sharp": "^0.30.7"
   },
   "devDependencies": {
     "@types/node": "^18.0.3",
