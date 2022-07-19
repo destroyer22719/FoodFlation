@@ -273,10 +273,10 @@ export async function getPricesMetro(
 
     itemBar.update(itemsArray.length);
 
-    loader.stop();
     storeBar.stop();
     itemBar.stop();
-
+    multiBar.stop();
+    loader.stop();
     await browser.close();
 
     const endTime = Date.now();

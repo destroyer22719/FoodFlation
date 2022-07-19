@@ -80,9 +80,9 @@ export async function getPricesLoblaws(
 
     for (const store of stores) {
         //searches up store postal code directly and set the store location
-
         const { city, postalCode, street } = store;
-
+        loader.color = "green";
+        loader.text = `Scraping ${postalCode}...`;
         await page.goto(
             `https://www.loblaws.ca/store-locator?searchQuery=${
                 postalCode.split(" ")[0]
@@ -211,10 +211,10 @@ export async function getPricesLoblaws(
         itemBar.update(0);
     }
     itemBar.update(itemsArray.length);
-
-    loader.stop();
     storeBar.stop();
     itemBar.stop();
+    multiBar.stop();
+    loader.stop();
 
     await browser.close();
 

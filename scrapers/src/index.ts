@@ -33,7 +33,6 @@ export const msToTime = (ms: number): string => {
 
 async function scrapePrices() {
     const province = argv.province;
-
     const { stores } = JSON.parse(
         fs.readFileSync(
             path.join(__dirname, "src", "config", province, "stores.json"),
