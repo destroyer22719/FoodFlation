@@ -1,12 +1,17 @@
 import puppeteer from "puppeteer";
-import sequelize from "./db.js";
+import ora from "ora";
+import colors from "ansi-colors";
+import cliProgress from "cli-progress";
 import { v4 as uuidv4 } from "uuid";
+
+import sequelize from "./db.js";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
 import { filterByStore } from "./index.js";
+import { msToTime } from "./index.js";
 
 export async function getPricesMetro(
     itemsArray: string[],
@@ -15,14 +20,18 @@ export async function getPricesMetro(
     itemStart: number = 1
 ) {
     const stores = filterByStore(storesArray.slice(storeStart), "Metro");
+
     if (stores.length === 0) {
         console.log("No Metro stores found");
         return;
     }
 
+    let items = itemsArray.slice(itemStart);
+
     const startTime = Date.now();
-    
+
     await sequelize.sync();
+
     const browser = await puppeteer.launch({
         headless: true,
         ignoreHTTPSErrors: true,
@@ -35,12 +44,50 @@ export async function getPricesMetro(
         "geolocation",
     ]);
 
-    //searches up store postal code directly and set the store location
-    let items = itemsArray.slice(itemStart);
+    const multiBar = new cliProgress.MultiBar(
+        {
+            clearOnComplete: false,
+            hideCursor: true,
+        },
+        cliProgress.Presets.shades_grey
+    );
+
+    const storeBar = multiBar.create(
+        stores.length,
+        storeStart - 1,
+        {},
+        {
+            format:
+                "Loblaws |" +
+                colors.cyan("{bar}") +
+                "| {percentage}% | {value}/{total} Stores",
+            hideCursor: true,
+        }
+    );
+
+    const itemBar = multiBar.create(
+        itemsArray.length,
+        itemStart - 1,
+        {},
+        {
+            format:
+                "Items   |" +
+                colors.magenta("{bar}") +
+                "| {percentage}% | {value}/{total} Items",
+            hideCursor: true,
+        }
+    );
+
+    //this is a cheap workaround for combining multiple bars with ora spinners
+    multiBar.create(0, 0);
+
+    const loader = ora("Scraping Loblaws...").start();
 
     for (const store of stores) {
+        //searches up store postal code directly and set the store location
         const { city, postalCode, street } = store;
-
+        loader.color = "green";
+        loader.text = `Scraping ${postalCode}...`;
         await page.goto("https://www.metro.ca/en/find-a-grocery");
 
         await page.$eval(
@@ -56,19 +103,18 @@ export async function getPricesMetro(
         await page.waitForNavigation();
         for (const item of items) {
             //searches up the price of each item
-            console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(
-                `${item} | ${postalCode} |${itemsArray.indexOf(item)} /${
-                    itemsArray.length - 1
-                } - ${storesArray
-                    .map((store) => store.postalCode)
-                    .indexOf(postalCode)} / ${
-                    storesArray.length - 1
-                } | ${new Date()}`
-            );
+            loader.color = "green";
+            loader.text = `${itemsArray.indexOf(item)}/${
+                itemsArray.length - 1
+            } - ${storesArray
+                .map((store) => store.postalCode)
+                .indexOf(postalCode)}/${
+                storesArray.length - 1
+            }| ${item} at ${postalCode}`;
             await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
                 waitUntil: "domcontentloaded",
             });
+
             await page.waitForTimeout(2000);
             const popup = await page.$(
                 ".p__close.closeModalLogIn.removeBodyOverFlow"
@@ -184,6 +230,16 @@ export async function getPricesMetro(
             }
 
             for (const result of results) {
+                loader.text = `${itemsArray.indexOf(item)}/${
+                    itemsArray.length - 1
+                } - ${storesArray
+                    .map((store) => store.postalCode)
+                    .indexOf(postalCode)}/${
+                    storesArray.length - 1
+                }|${item} at ${postalCode} |(${result.name} for ${
+                    result.price
+                })`;
+
                 console.log(`${result.name} - ${result.price}`);
                 let itemObj = await Item.findOne({
                     where: { name: result.name, storeId: store.id },
@@ -208,16 +264,24 @@ export async function getPricesMetro(
 
                 await itemPrice.save();
             }
-
-            console.timeEnd(`Scraping for ${item} at ${postalCode}`);
+            itemBar.increment(1);
         }
         items = itemsArray;
+        storeBar.increment(1);
+        itemBar.update(0);
     }
 
-    console.log("Finished scraping for Metro");
-    console.timeEnd("Scraping Metro");
-    console.log(new Date());
+    itemBar.update(itemsArray.length);
+
+    loader.stop();
+    storeBar.stop();
+    itemBar.stop();
+
     await browser.close();
+
+    const endTime = Date.now();
+    const timeTaken = endTime - startTime;
+    console.log(msToTime(timeTaken));
 }
 
 // getPricesMetro(["eggs"], [{city: "", street: "",postalCode: "M1P 5B7"}]);

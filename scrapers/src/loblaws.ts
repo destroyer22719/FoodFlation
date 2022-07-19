@@ -37,7 +37,6 @@ export async function getPricesLoblaws(
         "geolocation",
     ]);
 
-    //searches up store postal code directly and set the store location
     let items = itemsArray.slice(itemStart - 1);
 
     const multiBar = new cliProgress.MultiBar(
@@ -80,6 +79,8 @@ export async function getPricesLoblaws(
     const loader = ora("Scraping Loblaws...").start();
 
     for (const store of stores) {
+        //searches up store postal code directly and set the store location
+
         const { city, postalCode, street } = store;
 
         await page.goto(
@@ -97,7 +98,13 @@ export async function getPricesLoblaws(
 
         for (const item of items) {
             loader.color = "green";
-            loader.text = `|${item} at ${postalCode}`;
+            loader.text = `${itemsArray.indexOf(item)}/${
+                itemsArray.length - 1
+            } - ${storesArray
+                .map((store) => store.postalCode)
+                .indexOf(postalCode)}/${
+                storesArray.length - 1
+            }| ${item} at ${postalCode}`;
             await page.goto(
                 `https://www.loblaws.ca/search?search-bar=${item.replace(
                     " ",
@@ -164,7 +171,15 @@ export async function getPricesLoblaws(
             }
 
             for (const result of results) {
-                loader.text = `${postalCode} | ${item} - (${result.name} | ${result.price})`;
+                loader.text = `${itemsArray.indexOf(item)}/${
+                    itemsArray.length - 1
+                } - ${storesArray
+                    .map((store) => store.postalCode)
+                    .indexOf(postalCode)}/${
+                    storesArray.length - 1
+                }|${item} at ${postalCode} |(${result.name} for ${
+                    result.price
+                })`;
 
                 let itemObj = await Item.findOne({
                     where: { name: result.name, storeId: store.id },
@@ -195,6 +210,8 @@ export async function getPricesLoblaws(
         storeBar.increment(1);
         itemBar.update(0);
     }
+    itemBar.update(itemsArray.length);
+
     loader.stop();
     storeBar.stop();
     itemBar.stop();
