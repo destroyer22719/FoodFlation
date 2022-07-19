@@ -1,24 +1,28 @@
 import puppeteer from "puppeteer";
 import sequelize from "../src/db.js";
+import { v4 as uuidv4 } from "uuid";
+import cliProgress from "cli-progress";
+import ora from "ora";
+import colors from "ansi-colors";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
-import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "../src/global.js";
-import { filterByStore } from "./index.js";
+import { filterByStore, msToTime } from "./index.js";
 
 export async function getPricesLoblaws(
     itemsArray: string[],
     storesArray: Address[],
-    storeStart:number = 0,
-    itemStart: number = 0
+    storeStart: number = 1,
+    itemStart: number = 1
 ) {
-    console.log(new Date());
-    console.log("Starting scraping for Lablaws...");
-    console.time("Scraping Lablaws");
+    const stores = filterByStore(storesArray.slice(storeStart - 1), "Loblaws");
+    if (stores.length === 0) {
+        console.log("No Loblaws stores found");
+    }
 
-    const stores = filterByStore(storesArray.slice(storeStart), "Loblaws");
+    const startTime = Date.now();
 
     await sequelize.sync();
     const browser = await puppeteer.launch({
@@ -34,7 +38,46 @@ export async function getPricesLoblaws(
     ]);
 
     //searches up store postal code directly and set the store location
-    let items = itemsArray.slice(itemStart);
+    let items = itemsArray.slice(itemStart - 1);
+
+    const multiBar = new cliProgress.MultiBar(
+        {
+            clearOnComplete: false,
+            hideCursor: true,
+        },
+        cliProgress.Presets.shades_grey
+    );
+
+    const storeBar = multiBar.create(
+        stores.length,
+        storeStart - 1,
+        {},
+        {
+            format:
+                "Loblaws |" +
+                colors.cyan("{bar}") +
+                "| {percentage}% | {value}/{total} Stores",
+            hideCursor: true,
+        }
+    );
+
+    const itemBar = multiBar.create(
+        itemsArray.length,
+        itemStart - 1,
+        {},
+        {
+            format:
+                "Items   |" +
+                colors.magenta("{bar}") +
+                "| {percentage}% | {value}/{total} Items",
+            hideCursor: true,
+        }
+    );
+
+    //this is a cheap workaround for combining multiple bars with ora spinners
+    multiBar.create(0, 0);
+
+    const loader = ora("Scraping Loblaws...").start();
 
     for (const store of stores) {
         const { city, postalCode, street } = store;
@@ -53,18 +96,8 @@ export async function getPricesLoblaws(
         await page.click(".fulfillment-location-confirmation__actions__button");
 
         for (const item of items) {
-            //searches up the price of each item
-            console.time(`Scraping for ${item} at ${postalCode}`);
-            console.log(
-                `${item} | ${postalCode} | ${itemsArray.indexOf(item)}/${
-                    itemsArray.length - 1
-                } - ${storesArray
-                    .map((store) => store.postalCode)
-                    .indexOf(postalCode)}/${
-                    storesArray.length - 1
-                } | ${new Date()}`
-            );
-
+            loader.color = "green";
+            loader.text = `|${item} at ${postalCode}`;
             await page.goto(
                 `https://www.loblaws.ca/search?search-bar=${item.replace(
                     " ",
@@ -131,7 +164,8 @@ export async function getPricesLoblaws(
             }
 
             for (const result of results) {
-                console.log(`${result.name} - ${result.price}`);
+                loader.text = `${postalCode} | ${item} - (${result.name} | ${result.price})`;
+
                 let itemObj = await Item.findOne({
                     where: { name: result.name, storeId: store.id },
                 });
@@ -155,14 +189,19 @@ export async function getPricesLoblaws(
 
                 await itemPrice.save();
             }
-
-            console.timeEnd(`Scraping for ${item} at ${postalCode}`);
+            itemBar.increment(1);
         }
         items = itemsArray;
+        storeBar.increment(1);
+        itemBar.update(0);
     }
+    loader.stop();
+    storeBar.stop();
+    itemBar.stop();
 
-    console.log("Finished scraping for Lablaws");
-    console.timeEnd("Scraping Lablaws");
-    console.log(new Date());
     await browser.close();
+
+    const endTime = Date.now();
+    const timeTaken = endTime - startTime;
+    console.log(msToTime(timeTaken));
 }

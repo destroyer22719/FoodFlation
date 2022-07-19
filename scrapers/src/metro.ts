@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer";
 import sequelize from "./db.js";
+import { v4 as uuidv4 } from "uuid";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
-import { v4 as uuidv4 } from "uuid";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
 import { filterByStore } from "./index.js";
@@ -11,15 +11,17 @@ import { filterByStore } from "./index.js";
 export async function getPricesMetro(
     itemsArray: string[],
     storesArray: Address[],
-    storeStart:number = 0,
-    itemStart: number = 0
+    storeStart: number = 1,
+    itemStart: number = 1
 ) {
-    console.log(new Date());
-    console.log("Starting scraping for Metro...");
-    console.time("Scraping Metro");
-
     const stores = filterByStore(storesArray.slice(storeStart), "Metro");
+    if (stores.length === 0) {
+        console.log("No Metro stores found");
+        return;
+    }
 
+    const startTime = Date.now();
+    
     await sequelize.sync();
     const browser = await puppeteer.launch({
         headless: true,

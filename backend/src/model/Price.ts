@@ -29,7 +29,7 @@ export default class Price extends Model {
     price: number;
 
     @BelongsTo(() => Item)
-    item: Item;
+    item: Awaited<Item>;
 
     @ForeignKey(() => Item)
     @Column
