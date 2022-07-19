@@ -19,7 +19,7 @@
     "@sentry/nextjs": "^7.6.0",
     "chart.js": "^3.7.1",
     "dotenv": "^16.0.1",
-    "next": "^12.2.2",
+    "next": "^12.2.3-canary.14",
     "react": "18.0.0",
     "react-chartjs-2": "^4.1.0",
     "react-dom": "18.0.0",
