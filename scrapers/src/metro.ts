@@ -58,7 +58,7 @@ export async function getPricesMetro(
         {},
         {
             format:
-                "Loblaws |" +
+                "Metro |" +
                 colors.cyan("{bar}") +
                 "| {percentage}% | {value}/{total} Stores",
             hideCursor: true,
@@ -71,7 +71,7 @@ export async function getPricesMetro(
         {},
         {
             format:
-                "Items   |" +
+                "Items |" +
                 colors.magenta("{bar}") +
                 "| {percentage}% | {value}/{total} Items",
             hideCursor: true,
@@ -240,7 +240,6 @@ export async function getPricesMetro(
                     result.price
                 })`;
 
-                console.log(`${result.name} - ${result.price}`);
                 let itemObj = await Item.findOne({
                     where: { name: result.name, storeId: store.id },
                 });
