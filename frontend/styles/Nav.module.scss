@@ -9,14 +9,25 @@
     padding: 20px;
     justify-content: space-between;
     color: $purple-light;
-
+    width: 100%;
     flex-direction: column;
-    @media only screen and (min-width: 400px) {
+
+    @media only screen and (min-width: 500px) {
         flex-direction: row;
     }
 
+    &__section {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        width: 170px;
+        @media only screen and (min-width: 500px) {
+            justify-content: left;
+        }
+    }
+
     &__item {
-        margin: 8px 0;
+        margin: 8px 5px;
         font-weight: bold;
 
         &--bold {

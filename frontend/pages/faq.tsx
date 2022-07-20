@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Layout from "../components/Layout";
 
 const FaqPage: React.FC<null> = () => {
@@ -41,26 +42,42 @@ const FaqPage: React.FC<null> = () => {
                 US grocery store prices?
             </h3>
             <p>
-                I only included included prices of Canadian grocery stores
-                because I live in Canada. I really do hope to add US stores, but
-                a program like this stores a lot of data. This is something I
-                hope to do in the next coming months after carefully observing
-                storage and costs.
+                Stay tuned for more updates! FoodFlation is still new and plans
+                to include more stores from more countries are on the way! It's
+                still not too late to track prices of new grocery stores as
+                unfortunately inflation is still raging on in the economy with
+                no end in sight.
             </p>
             <h3>How can I support FoodFlation?</h3>
             <p>
                 For the most part I would appreciate if you can spread the word
                 about this website. It takes a lot of effort creating {"("}and
-                dugging{")"} a website like this. I don{"'"}t use ads, a Patreon or
-                buymeacoffee account, paywalls, and user tracking tools such as Google
-                Analytics. Because I{"'"}m not using any using tracking software I
-                don{"'"}t fully know how popular my website is, which is why I would
-                appreciate even a simple email, which is more than enough for me.
-                You can find my email at the footer on the bottom right side of
-                the site. Hearing the feedback would deeply encourage me to
-                spend more time on this project. If you would like to help out
-                you can submit a pull request on the site{"'"}s github page. If you
-                would like to support in other ways please email me.
+                dugging{")"} a website like this. I don{"'"}t use ads, a Patreon
+                or buymeacoffee account, paywalls, and privacy invasive tracking
+                like Google Analytics. You can find my email at the footer on
+                the bottom right side of the site. Hearing the feedback would
+                deeply encourage me to spend more time on this project. If you
+                would like to help out you can submit a pull request on the site
+                {"'"}s github page. If you would like to support in other ways
+                please email me.
+            </p>
+            <h3>Does FoodFlation respect my privacy?</h3>
+            <p>
+                FoodFlation itself does keep of any user data from its users, so
+                there is no personal information to sell to third parties in the
+                first place. However, FoodFlation does use 2 main third-party
+                tools to monitor the state of the website. The first is Sentry
+                which is a monitoring tool for error logging. Sentry does use
+                cookies. The second tool is TinyAnalytics, which was
+                specifically chosen as an alternative to Google Analytics to
+                respect the privacy of users. TinyAnalytics {"doesn't"} use
+                cookies. Both of these are used with good intentions and are
+                100% anonymous data which are used to improve the website. You
+                can read the privacy policy of{" "}
+                <Link href={"https://sentry.io/privacy/"}>Sentry</Link> and{" "}
+                <Link href={"https://tinyanalytics.io/privacy-policy"}>
+                    TinyAnalytics
+                </Link> for more information.
             </p>
         </Layout>
     );

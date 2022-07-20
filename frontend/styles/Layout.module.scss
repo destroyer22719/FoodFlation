@@ -3,13 +3,16 @@
 .layout {
     margin: 0;
     background-color: $black;
-    // height: calc(100vh - 2px);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 
-    a {
-        text-decoration: none;
+    a:hover {
+        font-weight: bold;
+    }
+
+    a:visited {
+        color: white;
     }
 
     * {
@@ -23,9 +26,13 @@
     }
 
     &__main {
-        width: 98%;
+        width: 90%;
         margin: auto;
         flex: 1;
+
+        @media only screen and (min-width: 500px) {
+            width: 100%;
+        }
     }
 }
 
