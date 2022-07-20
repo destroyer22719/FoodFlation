@@ -6,6 +6,8 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
+import helmet from "helmet";
+import compression from "compression";
 
 import itemRouter from "./routes/items.js";
 import storeRouter from "./routes/stores.js";
@@ -46,6 +48,8 @@ const limiter = rateLimit({
 app.use(cors());
 app.use(morgan("tiny"));
 app.use(limiter);
+app.use(helmet());
+app.use(compression());
 
 app.use("/items", itemRouter);
 app.use("/stores", storeRouter);
