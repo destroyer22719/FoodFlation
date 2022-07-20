@@ -49,7 +49,7 @@ const FaqPage: React.FC<null> = () => {
                 <p>
                     Stay tuned for more updates! FoodFlation is still new and
                     plans to include more stores from more countries are on the
-                    way! It's still not too late to track prices of new grocery
+                    way! {"It's"} still not too late to track prices of new grocery
                     stores as unfortunately inflation is still raging on in the
                     economy with no end in sight.
                 </p>

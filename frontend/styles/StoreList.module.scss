@@ -11,7 +11,7 @@
         margin: 20px;
 
         flex-direction: column;
-        @media only screen and (min-width: 400px) {
+        @media only screen and (min-width: 500px) {
             flex-direction: row;
         }
 
@@ -23,6 +23,7 @@
         }
 
         &-button {
+            font-weight: bold;
             height: 40px;
             margin: 10px 10px;
         }

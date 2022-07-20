@@ -159,7 +159,7 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                                 passHref
                                             >
                                                 <span>
-                                                    {data.city.split(", ")[0]} -
+                                                    {data.city.split(", ")[0]} -{" "}
                                                     {data.cityCount}
                                                 </span>
                                             </Link>
