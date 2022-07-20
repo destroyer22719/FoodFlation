@@ -1,6 +1,7 @@
 # *
 User-agent: *
 Allow: /
+disallow: /debug
 
 # Host
 Host: https://foodflation.me
