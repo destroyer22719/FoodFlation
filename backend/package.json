@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test file\"",
     "build": "npx tsc",
-    "start": "node ./dist/index.js",
-    "pre-deploy": "rm -rf dist && rm -rf node_modules"
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
