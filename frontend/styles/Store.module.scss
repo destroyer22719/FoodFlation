@@ -31,12 +31,11 @@
         }
     }
 
-    &__pagination-button {
+    &__pagination-button, &__back-to-top-button {
         background-color: $purple;
         width: 140px;
         padding: 0;
         margin: 10px;
-
 
         &-link {
             font-weight: bold;
@@ -50,11 +49,11 @@
     &__pagination-button:disabled {
         background-color: $black;
         a {
-            color: $black;
+            color: $black !important;
         }
     }
 
-    &__pagination-button:hover {
+    &__pagination-button:hover, &__back-to-top-button:hover {
         background-color: lighten($color: $purple, $amount: 10);
     }
 

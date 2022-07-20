@@ -25,13 +25,13 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
     const pageSize = 15;
     const page = router.query.page ? +router.query.page : 1;
     const maxPages = Math.ceil(found / pageSize);
-    const currentPath = router.asPath.split("?")[0];
-
+    const currentPath = router.asPath.split("?")[0].split("#")[0];
+    const currentPathWithPage = router.asPath.split("#")[0];
     return (
         <Layout title={store.name || "Store Not Found"}>
             {store.id ? (
                 <div className={styles["store-page"]}>
-                    <h1>{store.name}</h1>
+                    <h1 id="header">{store.name}</h1>
                     <p>
                         {store.street}, {store.city} {store.postalCode}
                     </p>
@@ -46,7 +46,9 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                             }
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {
-                                    router.push(`${currentPath}?search=${search}`);
+                                    router.push(
+                                        `${currentPath}?search=${search}`
+                                    );
                                 }
                             }}
                         />
@@ -130,6 +132,22 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                             <ItemList key={item.id} item={item} />
                         ))}
                     </div>
+                    <ButtonContained
+                        className={styles["store-page__back-to-top-button"]}
+                    >
+                        <Link href={`${currentPathWithPage}#header`}>
+                            <a
+                                href="#"
+                                className={
+                                    styles[
+                                        "store-page__back-to-top-button-link"
+                                    ]
+                                }
+                            >
+                                Back to top
+                            </a>
+                        </Link>
+                    </ButtonContained>
                 </div>
             ) : (
                 <div>
