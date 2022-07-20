@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postBuild": "next-sitemap",
+    "post-build": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "pre-deploy": "rm -rf node_modules/ && rm -rf .next/"
