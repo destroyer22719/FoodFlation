@@ -21,7 +21,7 @@ export const getAllStores = async (
     next: NextFunction
 ) => {
     try {
-        const pageSize = 15;
+        const pageSize = 10;
 
         let stores: Store[] = [];
         // if (req.query.search) {
@@ -30,14 +30,15 @@ export const getAllStores = async (
         if (req.query.search) searchQuery.city = req.query.search.toString().replace("%20", " ");
         if (req.query.postalCode) searchQuery.postalCode = { [Sequelize.Op.like]: `${req.query.postalCode}%` };
 
-        stores = await Store.findAll({
+        const queryResult = await Store.findAndCountAll({
             where: searchQuery, 
             limit: pageSize, 
             offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
         });
 
+        stores = queryResult.rows;
 
-        if (stores.length) res.send(stores);
+        if (stores.length) res.send({stores, total: queryResult.count});
         else
             res.status(404).send({
                 message: `No store found with city of ${req.query.search}`,

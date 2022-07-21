@@ -1,5 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
+// import dotenv from "dotenv";
+// dotenv.config();
 
-export const API_URL = process.env.API_URL ? process.env.API_URL : "http://localhost:4000";
-export const SENTRY_DSN = process.env.SENTRY_DSN ? process.env.SENTRY_DSN : "";
+let API_URL = "";
+
+if (process.env.API_URL) {
+    API_URL = process.env.API_URL;
+} else if (process.env.NEXT_PUBLIC_API_URL) {
+    API_URL = process.env.NEXT_PUBLIC_API_URL;
+}
+
+export {API_URL};

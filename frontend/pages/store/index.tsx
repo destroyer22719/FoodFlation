@@ -1,21 +1,19 @@
 import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import StoreList from "../../components/StoreItem";
 import { API_URL } from "../../config";
 import { Store } from "../../global";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
-import { Collapse, ListItemButton } from "@mui/material";
+import { CircularProgress, Collapse, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 type Props = {
-    stores: Store[];
     locations: Location[];
 };
 
@@ -29,7 +27,7 @@ type LocationRes = {
     cityCount: number;
 };
 
-const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
+const StoresPage: React.FC<Props> = ({ locations }) => {
     const [postalCode, setPostalCode] = useState("");
     const initialArray: boolean[] = [];
     initialArray.length = locations.length;
@@ -46,11 +44,41 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
 
     const router = useRouter();
 
-    const location = router.query.location;
+    const [location, setLocation] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalStores, setTotalStores] = useState(1);
+    const pageSize = 10;
+    const maxPages = Math.ceil(totalStores / pageSize);
+    const [stores, setStores] = useState<Store[]>([]);
+    const navigatePages = (pageChange: number) => {
+        if (pageChange < 0 && page === 1) {
+            return;
+        } else if (pageChange > 0 && page === maxPages) {
+            return;
+        }
+        setPage(page + pageChange);
+    };
 
-    const pageSize = 15;
-    const page = router.query.page ? +router.query.page : 1;
-    const maxPages = Math.ceil(page / pageSize);
+    const searchByPostalCode = async () => {
+        const res = await fetch(`${API_URL}/stores?postalCode=${postalCode}`);
+        const data = await res.json();
+        setStores(data);
+    };
+
+    useEffect(() => {
+        (async () => {
+            if (page && location) {
+                setStores([]);
+                setTotalStores(1);
+                const storeReq = await fetch(
+                    `${API_URL}/stores?page=${page}&search=${location}`
+                );
+                const storeRes = await storeReq.json();
+                setStores(storeRes.stores);
+                setTotalStores(storeRes.total);
+            }
+        })();
+    }, [page, location]);
 
     return (
         <Layout title="Store List">
@@ -83,20 +111,13 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                             }
                         }}
                     />
-                    <Link
-                        href={`/store?postalCode=${
-                            postalCode.slice(0, 3) + " " + postalCode.slice(3)
-                        }`}
-                        passHref
+
+                    <ButtonOutlined
+                        className={styles["store-list__search-button"]}
+                        onClick={() => searchByPostalCode()}
                     >
-                        <a>
-                            <ButtonOutlined
-                                className={styles["store-list__search-button"]}
-                            >
-                                <SearchIcon /> Find a Store
-                            </ButtonOutlined>
-                        </a>
-                    </Link>
+                        <SearchIcon /> Find a Store
+                    </ButtonOutlined>
                 </div>
                 <div className={styles["store-list__location-field"]}>
                     {locations.map((loc, i) => (
@@ -153,16 +174,15 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                                             ]
                                         }
                                     >
-                                        <ButtonOutlined>
-                                            <Link
-                                                href={`/store?location=${data.city}#storeList`}
-                                                passHref
-                                            >
-                                                <span>
-                                                    {data.city.split(", ")[0]} -{" "}
-                                                    {data.cityCount}
-                                                </span>
-                                            </Link>
+                                        <ButtonOutlined
+                                            onClick={() =>
+                                                setLocation(data.city)
+                                            }
+                                        >
+                                            <span>
+                                                {data.city.split(", ")[0]} -{" "}
+                                                {data.cityCount}
+                                            </span>
                                         </ButtonOutlined>
                                     </div>
                                 ))}
@@ -175,91 +195,82 @@ const StoresPage: React.FC<Props> = ({ stores = [], locations }) => {
                         <ButtonContained
                             className={styles["store-list__pagination-button"]}
                             disabled={page == 1}
+                            onClick={() => navigatePages(-1)}
                         >
-                            <Link
-                                href={
-                                    page == 1
-                                        ? "#"
-                                        : `/stores?location=${location}&page=${
-                                              page - 1
-                                          }`
+                            <div
+                                className={
+                                    styles["store-list__pagination-button-link"]
                                 }
-                                passHref
                             >
-                                <a href="#">{"<"}</a>
-                            </Link>
+                                {"<"}
+                            </div>
                         </ButtonContained>
                         <ButtonContained
                             className={styles["store-list__pagination-button"]}
                         >
-                            <a
-                                href="#"
+                            <div
                                 className={
                                     styles["store-list__pagination-button-link"]
                                 }
                             >
                                 Page {page}/{maxPages}
-                            </a>
+                            </div>
                         </ButtonContained>
                         <ButtonContained
                             className={styles["store-list__pagination-button"]}
                             disabled={page == maxPages}
+                            onClick={() => navigatePages(1)}
                         >
-                            <Link
-                                href={
-                                    page == maxPages
-                                        ? "#"
-                                        : `/stores?location=${location}&page=${
-                                              page + 1
-                                          }`
+                            <div
+                                className={
+                                    styles["store-list__pagination-button-link"]
                                 }
-                                passHref
                             >
-                                <a
-                                    href="#"
-                                    className={
-                                        styles[
-                                            "store-list__pagination-button-link"
-                                        ]
-                                    }
-                                >
-                                    {">"}
-                                </a>
-                            </Link>
+                                {">"}
+                            </div>
                         </ButtonContained>
                     </div>
                 )}
-                <div className={styles["store-list__list"]} id="storeList">
-                    {stores.map((store) => (
-                        <StoreList key={store.id} store={store} />
-                    ))}
-                </div>
+                {postalCode || location ? (
+                    stores.length ? (
+                        <div
+                            className={styles["store-list__list"]}
+                            id="storeList"
+                        >
+                            {stores.map((store) => (
+                                <StoreList key={store.id} store={store} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className={styles["store-list__loader"]}>
+                            <CircularProgress />
+                        </div>
+                    )
+                ) : (
+                    <div></div>
+                )}
             </div>
         </Layout>
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-    query: { location, page, postalCode },
-}) => {
-    let storeReq,
-        stores = [];
-
-    if (location || postalCode) {
-        storeReq = await fetch(
-            `${API_URL}/stores?search=${location || ""}&page=${
-                page || 1
-            }&postalCode=${postalCode || ""}`
-        );
-        stores = await storeReq.json();
-    }
+export const getServerSideProps: GetServerSideProps = async () => {
+    // const stores: Store[] = [];
+    // if (location || postalCode) {
+    //     storeReq = await fetch(
+    //         `${API_URL}/stores?search=${location || ""}&page=${
+    //             page || 1
+    //         }&postalCode=${postalCode || ""}`
+    //     );
+    //     stores = await storeReq.json();
+    // }
 
     const locationRes = await fetch(`${API_URL}/stores/locations`);
     const locations = await locationRes.json();
+
     return {
         props: {
             locations,
-            stores,
         },
     };
 };
