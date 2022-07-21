@@ -255,16 +255,6 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    // const stores: Store[] = [];
-    // if (location || postalCode) {
-    //     storeReq = await fetch(
-    //         `${API_URL}/stores?search=${location || ""}&page=${
-    //             page || 1
-    //         }&postalCode=${postalCode || ""}`
-    //     );
-    //     stores = await storeReq.json();
-    // }
-
     const locationRes = await fetch(`${API_URL}/stores/locations`);
     const locations = await locationRes.json();
 
