@@ -155,9 +155,9 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                                             </div>
                                             <div>
                                                 {open[i] ? (
-                                                    <ExpandLess />
+                                                    <div>{"▼"}</div>
                                                 ) : (
-                                                    <ExpandMore />
+                                                    <div>{"▲"}</div>
                                                 )}
                                             </div>
                                         </h3>
