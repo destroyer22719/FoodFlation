@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import sequelize from "./config/db.js";
+import {getSequelize as sequelize, connect} from "./config/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -61,7 +61,12 @@ app.get("/debug-sentry", (_req, _res) => {
 
 app.use(Sentry.Handlers.errorHandler());
 
-app.listen(port, async () => {
-    await sequelize.sync();
-    console.log(`listening on port ${port}`);
-});
+(async () => {
+    if (!sequelize()) {
+        await connect();
+    }
+    app.listen(port, async () => {
+        await sequelize().sync();
+        console.log(`listening on port ${port}`);
+    });
+})();

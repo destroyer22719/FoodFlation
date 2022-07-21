@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import sequelize from "../config/db.js";
+import {getSequelize as sequelize} from "../config/db.js";
 import Item from "../model/Item.js";
 import Price from "../model/Price.js";
 import Store from "../model/Store.js";
@@ -33,7 +33,7 @@ export const getAllItems = async (
     next: NextFunction
 ) => {
     try {
-        const [items] = await sequelize.query(
+        const [items] = await sequelize().query(
             `
             SELECT 
                 items.id, 
@@ -85,7 +85,7 @@ export const getAllStoreItems = async (
                 storeId: req.params.storeId,
             },
         });
-        const [items] = await sequelize.query(
+        const [items] = await sequelize().query(
             `
             SELECT
                 items.id,
@@ -127,7 +127,7 @@ export const getAllStoreItems = async (
                 },
             }
         );
-        const [resultsFound] = await sequelize.query(
+        const [resultsFound] = await sequelize().query(
             `
         SELECT COUNT(*) AS resultsFound FROM 
         items 
