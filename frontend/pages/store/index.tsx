@@ -11,7 +11,6 @@ import ButtonContained from "../../components/ButtonContained";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import { CircularProgress, Collapse, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 type Props = {
     locations: Location[];
@@ -60,7 +59,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
     };
 
     const searchByPostalCode = async () => {
-        const res = await fetch(`${API_URL}/stores?postalCode=${postalCode}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores?postalCode=${postalCode}`);
         const data = await res.json();
         setStores(data);
     };
@@ -71,7 +70,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                 setStores([]);
                 setTotalStores(1);
                 const storeReq = await fetch(
-                    `${API_URL}/stores?page=${page}&search=${location}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/stores?page=${page}&search=${location}`
                 );
                 const storeRes = await storeReq.json();
                 setStores(storeRes.stores);
@@ -255,16 +254,6 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    // const stores: Store[] = [];
-    // if (location || postalCode) {
-    //     storeReq = await fetch(
-    //         `${API_URL}/stores?search=${location || ""}&page=${
-    //             page || 1
-    //         }&postalCode=${postalCode || ""}`
-    //     );
-    //     stores = await storeReq.json();
-    // }
-
     const locationRes = await fetch(`${API_URL}/stores/locations`);
     const locations = await locationRes.json();
 
