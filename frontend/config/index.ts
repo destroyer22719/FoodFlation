@@ -1,6 +1,3 @@
-// import dotenv from "dotenv";
-// dotenv.config();
-
 let API_URL = "";
 
 if (process.env.API_URL) {
