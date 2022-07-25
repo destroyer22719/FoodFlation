@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 // import Price from "../model/Price.js";
-import sequelize from "../config/db.js";
+import {getSequelize as sequelize} from "../config/db.js";
 // import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 import Sequelize, { WhereOptions } from "sequelize";
@@ -72,7 +72,7 @@ export const getAllLocations = async (
     next: NextFunction
 ) => {
     try {
-        const [queryResults] = await sequelize.query(`
+        const [queryResults] = await sequelize().query(`
             SELECT city, COUNT(city) AS cityCount FROM stores GROUP BY city
         `);
 
