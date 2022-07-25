@@ -70,3 +70,5 @@ app.use(Sentry.Handlers.errorHandler());
         console.log(`listening on port ${port}`);
     });
 })();
+
+export default app;
