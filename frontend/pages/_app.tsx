@@ -1,9 +1,9 @@
-import * as React from "react";
 import type { AppProps } from "next/app";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 
 import createEmotionCache from "../util/createEmotionCache";
+
 interface MyAppProps extends AppProps {
     emotionCache?: EmotionCache;
 }

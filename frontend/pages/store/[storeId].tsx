@@ -103,7 +103,7 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                             </a>
                         </ButtonContained>
                         <ButtonContained
-                            disabled={page == maxPages}
+                            disabled={page >= maxPages}
                             className={styles["store-page__pagination-button"]}
                         >
                             <Link
@@ -128,26 +128,32 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                         </ButtonContained>
                     </div>
                     <div className={styles["store-page__item-list"]}>
-                        {items.map((item) => (
-                            <ItemList key={item.id} item={item} />
-                        ))}
+                        {items.length > 0 ? (
+                            items.map((item) => (
+                                <ItemList key={item.id} item={item} />
+                            ))
+                        ) : (
+                            <div>No stores found </div>
+                        )}
                     </div>
-                    <ButtonContained
-                        className={styles["store-page__back-to-top-button"]}
-                    >
-                        <Link href={`${currentPathWithPage}#header`}>
-                            <a
-                                href="#"
-                                className={
-                                    styles[
-                                        "store-page__back-to-top-button-link"
-                                    ]
-                                }
-                            >
-                                Back to top
-                            </a>
-                        </Link>
-                    </ButtonContained>
+                    {items.length >= 8 && (
+                        <ButtonContained
+                            className={styles["store-page__back-to-top-button"]}
+                        >
+                            <Link href={`${currentPathWithPage}#header`}>
+                                <a
+                                    href="#"
+                                    className={
+                                        styles[
+                                            "store-page__back-to-top-button-link"
+                                        ]
+                                    }
+                                >
+                                    Back to top
+                                </a>
+                            </Link>
+                        </ButtonContained>
+                    )}
                 </div>
             ) : (
                 <div>

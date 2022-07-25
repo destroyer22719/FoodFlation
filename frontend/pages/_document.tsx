@@ -14,6 +14,7 @@ export default class MyDocument extends Document {
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
                     />
                     <script
+                    id="tinyAnalytics"
                         defer
                         src={process.env.NEXT_PUBLIC_TINYANALYTICS_URI}
                     ></script>
