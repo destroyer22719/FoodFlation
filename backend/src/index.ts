@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import {getSequelize as sequelize, connect} from "./config/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -10,6 +9,7 @@ import helmet from "helmet";
 import compression from "compression";
 
 import itemRouter from "./routes/items.js";
+import {getSequelize as sequelize, connect} from "./config/db.js";
 import storeRouter from "./routes/stores.js";
 import companyRouter from "./routes/companies.js";
 
