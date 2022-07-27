@@ -37,12 +37,12 @@ const Layout: React.FC<Props> = ({ title, children }) => {
                 />
                 <meta charSet="UTF-8" />
                 <link rel="icon" href="/favicon.png" />
-                <Script
-                    id="tinyAnalytics"
-                    defer
-                    src={process.env.NEXT_PUBLIC_TINYANALYTICS_URI}
-                />
             </Head>
+            <Script
+                id="tinyAnalytics"
+                defer
+                src={process.env.NEXT_PUBLIC_TINYANALYTICS_URI}
+            />
             <Nav />
             <div className={style["layout__main"]}>{children}</div>
             <Footer />
