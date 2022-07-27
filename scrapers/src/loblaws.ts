@@ -17,7 +17,7 @@ export async function getPricesLoblaws(
     storeStart: number = 1,
     itemStart: number = 1
 ) {
-    const stores = filterByStore(storesArray.slice(storeStart - 1), "Loblaws");
+    const stores = storesArray.slice(storeStart - 1);
     if (stores.length === 0) {
         console.log("No Loblaws stores found");
         return;

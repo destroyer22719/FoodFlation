@@ -19,7 +19,7 @@ export async function getPricesMetro(
     storeStart: number = 1,
     itemStart: number = 1
 ) {
-    const stores = filterByStore(storesArray.slice(storeStart), "Metro");
+    const stores = storesArray.slice(storeStart);
 
     if (stores.length === 0) {
         console.log("No Metro stores found");

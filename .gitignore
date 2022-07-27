@@ -3,3 +3,4 @@
 backend/dist/
 scrapers/dist/
 */.vscode/*
+.vercel/

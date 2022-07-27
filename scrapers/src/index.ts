@@ -50,14 +50,14 @@ async function scrapePrices() {
     if (argv.loblaws) {
         await getPricesLoblaws(
             items,
-            stores,
+            filterByStore(stores, "Loblaws"),
             argv.storeStart,
             argv.itemStart
         );
     } else if (argv.metro) {
         await getPricesMetro(
             items,
-            stores,
+            filterByStore(stores, "Metro"),
             argv.storeStart,
             argv.itemStart
         );
