@@ -9,7 +9,7 @@ import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "../src/global.js";
-import { filterByStore, msToTime } from "./index.js";
+import {  msToTime } from "./index.js";
 
 export async function getPricesLoblaws(
     itemsArray: string[],
