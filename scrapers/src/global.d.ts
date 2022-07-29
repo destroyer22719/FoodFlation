@@ -6,3 +6,4 @@ interface Address {
 }
 
 export type CompanyName = "Loblaws" | "Metro";
+export type Province = "alberta" | "british_columbia" | "ontario" | "quebec";
