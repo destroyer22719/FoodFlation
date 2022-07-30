@@ -39,7 +39,11 @@ async function scrapeAll() {
         "ontario",
         "quebec",
     ];
-    
+
+    provinces.slice(
+        argv.province ? provinces.indexOf(argv.province as Province) : 0
+    );
+
     for (const province of provinces) {
         console.log(province);
 
