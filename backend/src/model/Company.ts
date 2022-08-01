@@ -7,7 +7,7 @@ import {
     AllowNull,
     HasMany,
 } from "sequelize-typescript";
-import Store from "./Store.js";
+import Store from "./Store";
 
 @Table({
     timestamps: true,

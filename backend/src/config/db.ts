@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
-import Item from "../model/Item.js";
-import Price from "../model/Price.js";
-import Store from "../model/Store.js";
-import Company from "../model/Company.js";
+import Item from "../model/Item";
+import Price from "../model/Price";
+import Store from "../model/Store";
+import Company from "../model/Company";
 import dotenv from "dotenv";
 
 if (!process.env.DATABASE_PASSWORD) {

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import {getSequelize as sequelize} from "../config/db.js";
-import Item from "../model/Item.js";
-import Price from "../model/Price.js";
-import Store from "../model/Store.js";
+import { getSequelize as sequelize } from "../config/db";
+import Item from "../model/Item";
+import Price from "../model/Price";
+import Store from "../model/Store";
 
 const pageSize = 15;
 

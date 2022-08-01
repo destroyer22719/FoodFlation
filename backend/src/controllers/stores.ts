@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-// import Price from "../model/Price.js";
-import {getSequelize as sequelize} from "../config/db.js";
-// import Item from "../model/Item.js";
-import Store from "../model/Store.js";
+// import Price from "../model/Price";
+import { getSequelize as sequelize } from "../config/db";
+// import Item from "../model/Item";
+import Store from "../model/Store";
 import Sequelize, { WhereOptions } from "sequelize";
 
 type QueryResult = {
@@ -25,20 +25,25 @@ export const getAllStores = async (
 
         let stores: Store[] = [];
         // if (req.query.search) {
-        const searchQuery: WhereOptions<{ city: string, postalCode: unknown; }> = {};
+        const searchQuery: WhereOptions<{ city: string; postalCode: unknown }> =
+            {};
 
-        if (req.query.search) searchQuery.city = req.query.search.toString().replace("%20", " ");
-        if (req.query.postalCode) searchQuery.postalCode = { [Sequelize.Op.like]: `${req.query.postalCode}%` };
+        if (req.query.search)
+            searchQuery.city = req.query.search.toString().replace("%20", " ");
+        if (req.query.postalCode)
+            searchQuery.postalCode = {
+                [Sequelize.Op.like]: `${req.query.postalCode}%`,
+            };
 
         const queryResult = await Store.findAndCountAll({
-            where: searchQuery, 
-            limit: pageSize, 
+            where: searchQuery,
+            limit: pageSize,
             offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
         });
 
         stores = queryResult.rows;
 
-        if (stores.length) res.send({stores, total: queryResult.count});
+        if (stores.length) res.send({ stores, total: queryResult.count });
         else
             res.status(404).send({
                 message: `No store found with city of ${req.query.search}`,

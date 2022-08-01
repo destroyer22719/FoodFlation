@@ -9,7 +9,7 @@ import {
     ForeignKey,
     DataType,
 } from "sequelize-typescript";
-import Item from "./Item.js";
+import Item from "./Item";
 
 @Table({
     timestamps: true,

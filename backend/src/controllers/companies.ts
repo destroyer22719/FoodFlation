@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Company from "../model/Company.js";
-import Store from "../model/Store.js";
+import Company from "../model/Company";
+import Store from "../model/Store";
 
 export const getAllCompanies = async (
     _req: Request,
@@ -32,7 +32,6 @@ export const getCompanyById = async (
             res.status(404).send({
                 message: `No company found with id of ${req.params.id}`,
             });
-
         else res.send(company);
     } catch (err) {
         next(err);

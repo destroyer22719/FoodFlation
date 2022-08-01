@@ -8,10 +8,10 @@ import * as Tracing from "@sentry/tracing";
 import helmet from "helmet";
 import compression from "compression";
 
-import itemRouter from "./routes/items.js";
-import {getSequelize as sequelize, connect} from "./config/db.js";
-import storeRouter from "./routes/stores.js";
-import companyRouter from "./routes/companies.js";
+import itemRouter from "./routes/items";
+import { getSequelize as sequelize, connect } from "./config/db";
+import storeRouter from "./routes/stores";
+import companyRouter from "./routes/companies";
 
 const port = process.env.PORT || 4000;
 const dotEnvFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env";
