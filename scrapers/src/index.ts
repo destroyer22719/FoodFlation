@@ -26,21 +26,24 @@ export const filterByStore = (
 };
 
 export const msToTime = (ms: number): string => {
-    let seconds = Math.floor(ms / 1000);
-    let minutes = Math.floor(ms / (1000 * 60));
-    let hours = Math.floor(ms / (1000 * 60 * 60));
-    return `${hours > 0 ? `${hours}h` : ""} ${minutes}m ${seconds}s`;
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms % 3600000) / 60000);
+    const seconds = Math.floor(((ms % 3600000) % 60000) / 1000);
+
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
 };
 
 async function scrapeAll() {
-    const provinces: Province[] = [
+    let provinces: Province[] = [
         "alberta",
         "british_columbia",
         "ontario",
         "quebec",
     ];
 
-    provinces.slice(
+    provinces = provinces.slice(
         argv.province ? provinces.indexOf(argv.province as Province) : 0
     );
 
