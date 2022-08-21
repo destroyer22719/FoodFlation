@@ -41,4 +41,7 @@ export default class Item extends Model {
     @IsUrl
     @Column
     imgUrl: string;
+
+    @Column
+    category: string;
 }
