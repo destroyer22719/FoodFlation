@@ -31,6 +31,7 @@ export default class Price extends Model {
     @BelongsTo(() => Item)
     item: Awaited<Item>;
 
+    @AllowNull(false)
     @ForeignKey(() => Item)
     @Column
     itemId: string;

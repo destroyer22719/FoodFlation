@@ -43,6 +43,7 @@ export default class Store extends Model {
     items: Item[];
 
     @ForeignKey(() => Company)
+    @AllowNull(false)
     @Column
     companyId: string;
 
