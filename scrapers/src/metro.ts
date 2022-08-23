@@ -264,7 +264,6 @@ export async function getPricesMetro(
                     itemObj.category !== item2category[item]
                 ) {
                     itemObj.category = item2category[item];
-                    console.log(item2category[item])
                     await itemObj.save();
                 }
 
