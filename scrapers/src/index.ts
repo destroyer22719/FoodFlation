@@ -12,8 +12,8 @@ const argv = yargs(process.argv.slice(2))
         province: { type: "string", demandOption: false },
         metro: { type: "boolean", demand: false, default: false },
         loblaws: { type: "boolean", demand: false, default: false },
-        storeStart: { type: "number", demand: false, default: 1 },
-        itemStart: { type: "number", demand: false, default: 1 },
+        storeStart: { type: "number", demand: false, default: 0 },
+        itemStart: { type: "number", demand: false, default: 0 },
         all: { type: "boolean", demand: false, default: false },
     })
     .parseSync();

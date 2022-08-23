@@ -5,8 +5,6 @@ import Price from "../model/Price.js";
 import Store from "../model/Store.js";
 import Company from "../model/Company.js";
 
-// const __dirname = path.resolve();
-
 if (!process.env.DATABASE_PASSWORD) {
     const dotEnvFile =
         process.env.NODE_ENV === "production" ? ".env.prod" : ".env";

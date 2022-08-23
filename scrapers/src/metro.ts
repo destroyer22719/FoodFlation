@@ -3,7 +3,8 @@ import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
 import { v4 as uuidv4 } from "uuid";
-
+import fs from "fs";
+import path from "path";
 import sequelize from "./db.js";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
@@ -15,8 +16,8 @@ import { msToTime } from "./index.js";
 export async function getPricesMetro(
     itemsArray: string[],
     storesArray: Address[],
-    storeStart: number = 1,
-    itemStart: number = 1
+    storeStart: number = 0,
+    itemStart: number = 0
 ) {
     const stores = storesArray.slice(storeStart);
 
@@ -53,7 +54,7 @@ export async function getPricesMetro(
 
     const storeBar = multiBar.create(
         storesArray.length,
-        storeStart - 1,
+        storeStart,
         {},
         {
             format:
@@ -66,7 +67,7 @@ export async function getPricesMetro(
 
     const itemBar = multiBar.create(
         itemsArray.length,
-        itemStart - 1,
+        itemStart,
         {},
         {
             format:
@@ -81,6 +82,13 @@ export async function getPricesMetro(
     multiBar.create(0, 0);
 
     const loader = ora("Scraping Loblaws...").start();
+
+    const item2category = JSON.parse(
+        fs.readFileSync(
+            path.join(__dirname, "src", "config", "item2category.json"),
+            "utf-8"
+        )
+    );
 
     for (const store of stores) {
         //searches up store postal code directly and set the store location
@@ -104,11 +112,11 @@ export async function getPricesMetro(
             //searches up the price of each item
             loader.color = "green";
             loader.text = `${itemsArray.indexOf(item)}/${
-                itemsArray.length - 1
+                itemsArray.length
             } - ${storesArray
                 .map((store) => store.postalCode)
                 .indexOf(postalCode)}/${
-                storesArray.length - 1
+                storesArray.length
             }| ${item} at ${postalCode}`;
             await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
                 waitUntil: "domcontentloaded",
@@ -230,11 +238,11 @@ export async function getPricesMetro(
 
             for (const result of results) {
                 loader.text = `${itemsArray.indexOf(item)}/${
-                    itemsArray.length - 1
+                    itemsArray.length
                 } - ${storesArray
                     .map((store) => store.postalCode)
                     .indexOf(postalCode)}/${
-                    storesArray.length - 1
+                    storesArray.length
                 }|${item} at ${postalCode} |(${result.name} for ${
                     result.price
                 })`;
@@ -251,6 +259,12 @@ export async function getPricesMetro(
                         imgUrl: result.imgUrl,
                     });
 
+                    await itemObj.save();
+                } else if (
+                    itemObj.category !== item2category[item]
+                ) {
+                    itemObj.category = item2category[item];
+                    console.log(item2category[item])
                     await itemObj.save();
                 }
 
