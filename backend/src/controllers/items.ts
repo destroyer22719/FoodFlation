@@ -38,7 +38,8 @@ export const getAllItems = async (
             SELECT 
                 items.id, 
                 items.name, 
-                items.imgUrl, 
+                items.imgUrl,
+                items.category, 
                 prices.price, 
                 prices.createdAt AS lastUpdated 
             FROM 
@@ -91,6 +92,7 @@ export const getAllStoreItems = async (
                 items.id,
                 items.name, 
                 items.imgUrl, 
+                items.category,
                 prices.price, 
                 prices.createdAt AS lastUpdated
             FROM 
