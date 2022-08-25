@@ -4,7 +4,11 @@ import Item from "../model/Item.js";
 import Price from "../model/Price.js";
 import Store from "../model/Store.js";
 
-const pageSize = 15;
+const pageSize = 10;
+
+type ResultsFound = [{
+    resultsFound: number;
+}]
 
 export const getItemById = async (
     req: Request,
@@ -116,6 +120,11 @@ export const getAllStoreItems = async (
                     ? `AND items.name LIKE "%${req.query.search}%"`
                     : ""
             }
+            ${
+                req.query.category
+                    ? `AND items.category = "${req.query.category}"`
+                    : ""
+            }
             LIMIT :pageSize
             OFFSET :offset
             `,
@@ -129,6 +138,7 @@ export const getAllStoreItems = async (
                 },
             }
         );
+
         const [resultsFound] = await sequelize.query(
             `
         SELECT COUNT(*) AS resultsFound FROM 
@@ -146,11 +156,13 @@ export const getAllStoreItems = async (
                 1
         )
         WHERE items.storeId = :storeId
+        ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
         ${
-            req.query.search
-                ? `AND items.name LIKE "%${req.query.search}%"`
+            req.query.category
+                ? `AND items.category = "${req.query.category}"`
                 : ""
-        }`,
+        }
+        `,
             {
                 replacements: {
                     storeId: req.params.storeId,
@@ -161,7 +173,8 @@ export const getAllStoreItems = async (
                 },
             }
         );
-        res.send({ total, items, resultsFound });
+
+        res.send({ total, items, resultsFound: (resultsFound as ResultsFound)[0].resultsFound});
     } catch (err) {
         next(err);
     }

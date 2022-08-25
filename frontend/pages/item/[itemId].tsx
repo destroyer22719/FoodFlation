@@ -17,6 +17,7 @@ import Layout from "../../components/Layout";
 import styles from "../../styles/Item.module.scss";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import { useRouter } from "next/router";
+import ButtonContained from "../../components/ButtonContained";
 
 ChartJS.register(
     CategoryScale,
@@ -42,6 +43,7 @@ ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
 const ItemPage: React.FC<Props> = ({ item }) => {
+    
     const { prices } = item;
     const router = useRouter();
     //dates
@@ -62,12 +64,12 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             yDataset[dupeIndex] === price //check if the dataset already has this date and price
         )
             return;
-        if ( dupeIndex !== -1 && xDataset[dupeIndex] === date) {
+        if (dupeIndex !== -1 && xDataset[dupeIndex] === date) {
             //remove the previous dataset with the same date, so this the graph gets the latest price of that day
             yDataset.splice(dupeIndex, 1);
-            xDataset.splice(dupeIndex, 1); 
+            xDataset.splice(dupeIndex, 1);
         }
-        
+
         xDataset.push(date);
         yDataset.push(price);
 
@@ -132,25 +134,36 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                             alt={item.name}
                         />
                         <div>
-                            <div>
-                                Latest Price: {"$"}
-                                {
-                                    parsedPrices[parsedPrices.length - 1].y
-                                } on {parsedPrices[parsedPrices.length - 1].x}
+                            <div className={styles["item-page__price-info"]}>
+                                <div>
+                                    Latest Price: {"$"}
+                                    {
+                                        parsedPrices[parsedPrices.length - 1].y
+                                    } on{" "}
+                                    {parsedPrices[parsedPrices.length - 1].x}
+                                </div>
+                                <div>
+                                    Highest Price: {"$"}
+                                    {highest.y} on {highest.x}
+                                </div>
+                                <div>
+                                    Lowest Price: {"$"}
+                                    {lowest.y} on {lowest.x}
+                                </div>
                             </div>
-                            <div>
-                                Highest Price: {"$"}
-                                {highest.y} on {highest.x}
-                            </div>
-                            <div>
-                                Lowest Price: {"$"}
-                                {lowest.y} on {lowest.x}
-                            </div>
+                            <ButtonContained
+                                className={
+                                    styles[
+                                        `item-page__category-${item.category.toLowerCase().replaceAll(" ", "-")}`
+                                    ]
+                                }
+                            >
+                                {item.category}
+                            </ButtonContained>
                         </div>
                     </div>
                     <div>
                         <Line
-                            
                             data={data}
                             options={{
                                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

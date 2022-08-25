@@ -180,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             store,
             items: itemsRes.items,
             totalItems: itemsRes.total,
-            found: itemsRes.resultsFound[0].resultsFound,
+            found: itemsRes.resultsFound,
         },
     };
 };

@@ -13,6 +13,8 @@ import Company from "../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
 import { msToTime } from "./index.js";
 
+const __dirname = path.resolve();
+
 export async function getPricesMetro(
     itemsArray: string[],
     storesArray: Address[],
