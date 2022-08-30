@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import ItemList from "../../components/ItemList";
+import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
 import { Item, Store } from "../../global";
@@ -130,7 +130,7 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                     <div className={styles["store-page__item-list"]}>
                         {items.length > 0 ? (
                             items.map((item) => (
-                                <ItemList key={item.id} item={item} />
+                                <ItemCard key={item.id} item={item} />
                             ))
                         ) : (
                             <div>No stores found </div>
