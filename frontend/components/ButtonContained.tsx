@@ -5,8 +5,6 @@ import { MouseEventHandler } from "react";
 const ButtonContainedStyles = styled(Button)({
   backgroundColor: "#9388A2",
   border: "none",
-  width: "100%",
-  height: "100%",
   "&:hover": {
     backgroundColor: "#9388A2",
     borderColor: "#9388A2",
