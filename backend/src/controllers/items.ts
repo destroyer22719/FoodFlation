@@ -6,9 +6,11 @@ import Store from "../model/Store.js";
 
 const pageSize = 10;
 
-type ResultsFound = [{
-    resultsFound: number;
-}]
+type ResultsFound = [
+    {
+        resultsFound: number;
+    }
+];
 
 export const getItemById = async (
     req: Request,
@@ -90,6 +92,7 @@ export const getAllStoreItems = async (
                 storeId: req.params.storeId,
             },
         });
+
         const [items] = await sequelize.query(
             `
             SELECT
@@ -174,7 +177,29 @@ export const getAllStoreItems = async (
             }
         );
 
-        res.send({ total, items, resultsFound: (resultsFound as ResultsFound)[0].resultsFound});
+        const [categoryData] = await sequelize.query(
+            `SELECT 
+                COUNT(category) as categoryCount, category 
+            FROM 
+                items 
+            WHERE 
+                storeId = :storeId
+            GROUP BY 
+                category 
+            `,
+            {
+                replacements: {
+                    storeId: req.params.storeId,
+                },
+            }
+        );
+
+        res.send({
+            total,
+            resultsFound: (resultsFound as ResultsFound)[0].resultsFound,
+            categoryData,
+            items,
+        });
     } catch (err) {
         next(err);
     }
