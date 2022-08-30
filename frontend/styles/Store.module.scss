@@ -64,10 +64,34 @@
         margin-bottom: 25px;
     }
 
+    &__category-list {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 25px 0;
+
+        & > * {
+            margin: 5px;
+        }
+    }
+
     &__item {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 10px;
         width: 325px;
-        height: 350px;
-        margin: 10px;
+        height: 460px;
+
+        &-button {
+            margin-bottom: 10px;
+            height: 400px;
+        }
+
+        &-category {
+            height: 100%;
+            width: 100%;
+        }
 
         &-price {
             font-weight: bold;
