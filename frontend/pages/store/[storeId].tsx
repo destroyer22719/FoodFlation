@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
@@ -10,8 +11,8 @@ import { Category, Item, Store } from "../../global";
 import styles from "../../styles/Store.module.scss";
 import ButtonContained from "../../components/ButtonContained";
 import InputOutlined from "../../components/InputOutlined";
-import ButtonOutlined from "../../components/ButtonOutlined";
 import CategoryButton from "../../components/CategoryButton";
+import { IconButton } from "@mui/material";
 
 type Props = {
     store: Store;
@@ -44,6 +45,8 @@ const StorePage: React.FC<Props> = ({
     const query = { ...router.query };
     query.storeId = undefined;
     query.page = undefined;
+
+    const showClear = !!(router.query.search || router.query.category);
 
     return (
         <Layout title={store.name || "Store Not Found"}>
@@ -83,6 +86,15 @@ const StorePage: React.FC<Props> = ({
                         </Link>
                     </div>
                     <div className={styles["store-page__category-list"]}>
+                            <Link href={showClear ? `${currentPath}?page=${page}`: "#"} passHref>
+                                <a href="#">
+                                    <IconButton disabled={!showClear}>
+                                        <CloseIcon 
+                                            sx={{ fill: showClear ? "white": "transparent" }}
+                                        />
+                                    </IconButton>
+                                </a>
+                            </Link>
                         <ButtonContained>{found} Items Found</ButtonContained>
                         {categoryData.map(({ category, categoryCount }) => (
                             <CategoryButton

@@ -74,6 +74,10 @@
         & > * {
             margin: 5px;
         }
+
+        & > *:nth-child(2) {
+            width: 200px;
+        }
     }
 
     &__item {
