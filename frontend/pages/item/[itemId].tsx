@@ -15,8 +15,8 @@ import {
 import Image from "next/image";
 import Layout from "../../components/Layout";
 import styles from "../../styles/Item.module.scss";
-import ButtonOutlined from "../../components/ButtonOutlined";
 import { useRouter } from "next/router";
+import CategoryButton from "../../components/CategoryButton";
 import ButtonContained from "../../components/ButtonContained";
 
 ChartJS.register(
@@ -43,7 +43,6 @@ ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
 const ItemPage: React.FC<Props> = ({ item }) => {
-    
     const { prices } = item;
     const router = useRouter();
     //dates
@@ -151,15 +150,7 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                                     {lowest.y} on {lowest.x}
                                 </div>
                             </div>
-                            <ButtonContained
-                                className={
-                                    styles[
-                                        `item-page__category-${item.category.toLowerCase().replaceAll(" ", "-")}`
-                                    ]
-                                }
-                            >
-                                {item.category}
-                            </ButtonContained>
+                            <CategoryButton category={item.category} />
                         </div>
                     </div>
                     <div>
