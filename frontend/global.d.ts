@@ -4,7 +4,7 @@ export interface Company {
     stores: Store[];
 }
 
-export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Canned Food" | "Miscellaneous";
+export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Miscellaneous";
 
 export interface Store {
     id: string;

@@ -7,4 +7,4 @@ interface Address {
 
 export type CompanyName = "Loblaws" | "Metro";
 
-export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Canned Food" | "Miscellaneous";
+export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Miscellaneous";
