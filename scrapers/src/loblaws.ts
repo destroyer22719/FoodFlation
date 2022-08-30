@@ -4,20 +4,24 @@ import { v4 as uuidv4 } from "uuid";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
+import fs from "fs";
+import path from "path";
 import Price from "../../backend/src/model/Price.js";
 import Item from "../../backend/src/model/Item.js";
 import Store from "../../backend/src/model/Store.js";
 import Company from "../../backend/src/model/Company.js";
 import { Address } from "../src/global.js";
-import {  msToTime } from "./index.js";
+import { msToTime } from "./index.js";
+
+const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
     itemsArray: string[],
     storesArray: Address[],
-    storeStart: number = 1,
-    itemStart: number = 1
+    storeStart: number = 0,
+    itemStart: number = 0
 ) {
-    const stores = storesArray.slice(storeStart - 1);
+    const stores = storesArray.slice(storeStart);
     if (stores.length === 0) {
         console.log("No Loblaws stores found");
         return;
@@ -38,7 +42,7 @@ export async function getPricesLoblaws(
         "geolocation",
     ]);
 
-    let items = itemsArray.slice(itemStart - 1);
+    let items = itemsArray.slice(itemStart);
 
     const multiBar = new cliProgress.MultiBar(
         {
@@ -50,7 +54,7 @@ export async function getPricesLoblaws(
 
     const storeBar = multiBar.create(
         storesArray.length,
-        storeStart - 1,
+        storeStart,
         {},
         {
             format:
@@ -63,7 +67,7 @@ export async function getPricesLoblaws(
 
     const itemBar = multiBar.create(
         itemsArray.length,
-        itemStart - 1,
+        itemStart,
         {},
         {
             format:
@@ -78,6 +82,13 @@ export async function getPricesLoblaws(
     multiBar.create(0, 0);
 
     const loader = ora("Scraping Loblaws...").start();
+
+    const item2category = JSON.parse(
+        fs.readFileSync(
+            path.join(__dirname, "src", "config", "item2category.json"),
+            "utf-8"
+        )
+    );
 
     for (const store of stores) {
         //searches up store postal code directly and set the store location
@@ -100,11 +111,11 @@ export async function getPricesLoblaws(
         for (const item of items) {
             loader.color = "green";
             loader.text = `${itemsArray.indexOf(item)}/${
-                itemsArray.length - 1
+                itemsArray.length
             } - ${storesArray
                 .map((store) => store.postalCode)
                 .indexOf(postalCode)}/${
-                storesArray.length - 1
+                storesArray.length
             }| ${item} at ${postalCode}`;
             await page.goto(
                 `https://www.loblaws.ca/search?search-bar=${item.replace(
@@ -173,11 +184,11 @@ export async function getPricesLoblaws(
 
             for (const result of results) {
                 loader.text = `${itemsArray.indexOf(item)}/${
-                    itemsArray.length - 1
+                    itemsArray.length
                 } - ${storesArray
                     .map((store) => store.postalCode)
                     .indexOf(postalCode)}/${
-                    storesArray.length - 1
+                    storesArray.length
                 }|${item} at ${postalCode} |(${result.name} for ${
                     result.price
                 })`;
@@ -194,6 +205,11 @@ export async function getPricesLoblaws(
                         imgUrl: result.imgUrl,
                     });
 
+                    await itemObj.save();
+                } else if (
+                    itemObj.category !== item2category[item]
+                ) {
+                    itemObj.category = item2category[item];
                     await itemObj.save();
                 }
 

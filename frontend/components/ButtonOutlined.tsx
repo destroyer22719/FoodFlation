@@ -4,7 +4,7 @@ import { MouseEventHandler } from "react";
 
 const ButtonOutlinedStyled = styled(Button)({
     border: "2px solid #9388A2",
-    backgroundColor: "#9388A2",
+    backgroundColor: "rgb(147, 136, 162, 0.5)",
     "&:hover": {
         backgroundColor: "rgb(147, 136, 162, 0.5)",
         border: "2px solid #9388A2",

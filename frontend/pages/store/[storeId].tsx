@@ -1,32 +1,50 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import ItemList from "../../components/ItemList";
+import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
+import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
-import { Item, Store } from "../../global";
+import { Category, Item, Store } from "../../global";
 import styles from "../../styles/Store.module.scss";
 import ButtonContained from "../../components/ButtonContained";
-import { useState } from "react";
 import InputOutlined from "../../components/InputOutlined";
 import ButtonOutlined from "../../components/ButtonOutlined";
-import SearchIcon from "@mui/icons-material/Search";
+import CategoryButton from "../../components/CategoryButton";
 
 type Props = {
     store: Store;
     items: Item[];
     totalItems: number;
     found: number;
+    categoryData: {
+        category: Category;
+        categoryCount: number;
+    }[];
 };
 
-const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
+const StorePage: React.FC<Props> = ({
+    store,
+    items,
+    totalItems,
+    found,
+    categoryData,
+}) => {
     const router = useRouter();
+
     const [search, setSearch] = useState("");
     const pageSize = 15;
     const page = router.query.page ? +router.query.page : 1;
     const maxPages = Math.ceil(found / pageSize);
+
     const currentPath = router.asPath.split("?")[0].split("#")[0];
-    const currentPathWithPage = router.asPath.split("#")[0];
+    const currentPathWithoutID = router.asPath.split("#")[0];
+
+    const query = { ...router.query };
+    query.storeId = undefined;
+    query.page = undefined;
+
     return (
         <Layout title={store.name || "Store Not Found"}>
             {store.id ? (
@@ -54,15 +72,28 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
                             <a>
-                                <ButtonOutlined
+                                <ButtonContained
                                     className={
                                         styles["store-page__search-button"]
                                     }
                                 >
                                     <SearchIcon />
-                                </ButtonOutlined>
+                                </ButtonContained>
                             </a>
                         </Link>
+                    </div>
+                    <div className={styles["store-page__category-list"]}>
+                        <ButtonContained>
+                            {found} Items Found
+                        </ButtonContained>
+                        {categoryData.map(({ category, categoryCount }) => (
+                            <CategoryButton
+                                key={category}
+                                category={category}
+                                count={categoryCount}
+                                linkTo={`${currentPath}?category=${category}`}
+                            />
+                        ))}
                     </div>
                     <div className={styles["store-page__pagination-buttons"]}>
                         <ButtonContained
@@ -74,7 +105,13 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                                 href={
                                     page == 1
                                         ? "#"
-                                        : `${currentPath}?page=${page - 1}`
+                                        : {
+                                              pathname: currentPath,
+                                              query: {
+                                                  ...query,
+                                                  page: page - 1,
+                                              },
+                                          }
                                 }
                             >
                                 <a
@@ -111,7 +148,13 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                                 href={
                                     page == maxPages
                                         ? "#"
-                                        : `${currentPath}?page=${page + 1}`
+                                        : {
+                                              pathname: currentPath,
+                                              query: {
+                                                  ...query,
+                                                  page: page + 1,
+                                              },
+                                          }
                                 }
                             >
                                 <a
@@ -130,7 +173,7 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                     <div className={styles["store-page__item-list"]}>
                         {items.length > 0 ? (
                             items.map((item) => (
-                                <ItemList key={item.id} item={item} />
+                                <ItemCard key={item.id} item={item} />
                             ))
                         ) : (
                             <div>No stores found </div>
@@ -140,7 +183,7 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                         <ButtonContained
                             className={styles["store-page__back-to-top-button"]}
                         >
-                            <Link href={`${currentPathWithPage}#header`}>
+                            <Link href={`${currentPathWithoutID}#header`}>
                                 <a
                                     href="#"
                                     className={
@@ -165,14 +208,17 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({
-    query: { storeId, page, search },
+    query: { storeId, page, search, category },
 }) => {
     const storeReq = await fetch(`${API_URL}/stores/${storeId}`);
     const itemsReq = await fetch(
         `${API_URL}/items/store/${storeId}?page=${page ? +page : 1}&search=${
             search || ""
+        }&category=${
+            category ? (category as string).replaceAll("&", "%26") : ""
         }`
     );
+
     const store: Store = await storeReq.json();
     const itemsRes = await itemsReq.json();
     return {
@@ -180,7 +226,8 @@ export const getServerSideProps: GetServerSideProps = async ({
             store,
             items: itemsRes.items,
             totalItems: itemsRes.total,
-            found: itemsRes.resultsFound[0].resultsFound,
+            found: itemsRes.resultsFound,
+            categoryData: itemsRes.categoryData,
         },
     };
 };

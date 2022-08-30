@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "../styles/Nav.module.scss";
 import ButtonOutlined from "./ButtonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import ButtonContained from "./ButtonContained";
 
 const Nav = () => {
     return (
@@ -17,9 +18,9 @@ const Nav = () => {
             </div>
             <Link href={"/store/"} passHref>
                 <a href="#" className={styles["nav__item"]}>
-                    <ButtonOutlined className={styles["nav__item--bold"]}>
+                    <ButtonContained className={styles["nav__item--bold"]}>
                         <SearchIcon /> Track Prices
-                    </ButtonOutlined>
+                    </ButtonContained>
                 </a>
             </Link>
             <div className={styles["nav__section"]}>

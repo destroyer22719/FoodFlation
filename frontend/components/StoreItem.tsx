@@ -11,7 +11,7 @@ type Props = {
 const StoreItem: React.FC<Props> = ({ store }) => {
     return (
         <div className={style["store-list__store-item"]}>
-            <ButtonContained>
+            <ButtonContained className={style["store-list__store-item-btn"]}>
                 <Link href={`/store/${store.id}`} passHref>
                     <a
                         href="#"

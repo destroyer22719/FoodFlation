@@ -4,6 +4,8 @@ export interface Company {
     stores: Store[];
 }
 
+export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Miscellaneous";
+
 export interface Store {
     id: string;
     name: string;
@@ -24,6 +26,7 @@ export interface Item {
     prices: Price[]
     price: number
     lastUpdated?: Date
+    category: Category
 }
 
 export interface Price {

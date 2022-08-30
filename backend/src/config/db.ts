@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
+import dotenv from "dotenv";
 import Item from "../model/Item.js";
 import Price from "../model/Price.js";
 import Store from "../model/Store.js";
 import Company from "../model/Company.js";
-import dotenv from "dotenv";
 
 if (!process.env.DATABASE_PASSWORD) {
     const dotEnvFile =

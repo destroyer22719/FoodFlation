@@ -9,6 +9,7 @@ import {
     IsUrl,
     BelongsTo,
     ForeignKey,
+    Default,
 } from "sequelize-typescript";
 import Price from "./Price.js";
 import Store from "./Store.js";
@@ -31,6 +32,7 @@ export default class Item extends Model {
     @HasMany(() => Price)
     prices: Price[];
 
+    @AllowNull(false)
     @ForeignKey(() => Store)
     @Column
     storeId: string;
@@ -41,4 +43,8 @@ export default class Item extends Model {
     @IsUrl
     @Column
     imgUrl: string;
+
+    @Default("Miscellaneous")
+    @Column
+    category: string;
 }
