@@ -1,0 +1,48 @@
+@import "assets/vars";
+
+.category {
+    width: 100%;
+    height: 100%;
+
+    &__meat {
+        background: #ff1744;
+        &:hover, &:active {
+            background: lighten($color: #ff1744, $amount: 10);
+        }
+    }
+
+    &__miscellaneous {
+        background: #3f51b5;
+        &:hover, &:active {
+            background: lighten($color: #3f51b5, $amount: 10);
+        }
+    }
+
+    &__fruits-and-vegetables {
+        background: #4caf50;
+        &:hover, &:active {
+            background: lighten($color: #4caf50, $amount: 10);
+        }
+    }
+
+    &__dairy {
+        background: #ff5722;
+        &:hover, &:active {
+            background: lighten($color: #ff5722, $amount: 10);
+        }
+    }
+
+    &__starches-and-grains {
+        background: #6d4c41;
+        &:hover, &:active, &:active {
+            background: lighten($color: #6d4c41, $amount: 10);
+        }
+    }
+
+    &__canned-food {
+        background: #c62828;
+        &:hover, &:active {
+            background: lighten($color: #c62828, $amount: 10);
+        }
+    }
+}
