@@ -111,11 +111,11 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                 <>
                     <div className={styles["item-page__header"]}>
                         <div onClick={() => router.back()}>
-                            <ButtonOutlined
+                            <ButtonContained
                                 className={styles["item-page__back-button"]}
                             >
                                 {"<"}
-                            </ButtonOutlined>
+                            </ButtonContained>
                         </div>
                         <div>
                             <h1>{item.name}</h1>

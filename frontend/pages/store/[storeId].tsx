@@ -54,13 +54,13 @@ const StorePage: React.FC<Props> = ({ store, items, totalItems, found }) => {
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
                             <a>
-                                <ButtonOutlined
+                                <ButtonContained
                                     className={
                                         styles["store-page__search-button"]
                                     }
                                 >
                                     <SearchIcon />
-                                </ButtonOutlined>
+                                </ButtonContained>
                             </a>
                         </Link>
                     </div>
