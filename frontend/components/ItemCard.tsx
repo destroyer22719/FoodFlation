@@ -22,7 +22,9 @@ const ItemCard: React.FC<Props> = ({ item }) => {
     const query = { ...router.query };
     if (!query.category) {
         query.page = "1";
-        query.category = item.category;
+        query.category = item.category
+            .replaceAll(" ", "%20")
+            .replaceAll("&", "%26");
         query.storeId = undefined;
     }
 

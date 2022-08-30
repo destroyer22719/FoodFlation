@@ -83,15 +83,15 @@ const StorePage: React.FC<Props> = ({
                         </Link>
                     </div>
                     <div className={styles["store-page__category-list"]}>
-                        <ButtonContained>
-                            {found} Items Found
-                        </ButtonContained>
+                        <ButtonContained>{found} Items Found</ButtonContained>
                         {categoryData.map(({ category, categoryCount }) => (
                             <CategoryButton
                                 key={category}
                                 category={category}
                                 count={categoryCount}
-                                linkTo={`${currentPath}?category=${category}`}
+                                linkTo={`${currentPath}?category=${category
+                                    .replaceAll(" ", "%20")
+                                    .replaceAll("&", "%26")}`}
                             />
                         ))}
                     </div>
@@ -215,7 +215,11 @@ export const getServerSideProps: GetServerSideProps = async ({
         `${API_URL}/items/store/${storeId}?page=${page ? +page : 1}&search=${
             search || ""
         }&category=${
-            category ? (category as string).replaceAll("&", "%26") : ""
+            category
+                ? (category as string)
+                      .replaceAll(" ", "%20")
+                      .replaceAll("&", "%26")
+                : ""
         }`
     );
 
