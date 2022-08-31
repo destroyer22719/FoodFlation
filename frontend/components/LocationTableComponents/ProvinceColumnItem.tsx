@@ -6,6 +6,7 @@ import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import { StoreData } from "../../pages/store";
 import ButtonContained from "../CustomButtonComponents/ButtonContained";
+import { useStoreContext } from "../../providers/storeContext";
 
 type Prop = {
     prov: StoreData;
@@ -14,6 +15,7 @@ type Prop = {
 
 const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
     const [open, setOpen] = useState(false);
+    const { updateStoreList } = useStoreContext();
 
     const handleClick = () => {
         setOpen(!open);
@@ -29,24 +31,23 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <div className={styles["store-list__location-city"]}>
                     {prov.stores.map((store) => (
-                        <Link
-                            href={`/store?city=${store.city}&${
-                                isCanada
-                                    ? `province=${prov.province}`
-                                    : `state=${prov.state}`
-                            }`}
+                        <ButtonContained
                             key={store.city}
+                            className={styles["store-list__location-city-item"]}
+                            onClick={() =>
+                                updateStoreList({
+                                    citySearch: store.city,
+                                    stateSearch: isCanada
+                                        ? undefined
+                                        : prov.state!,
+                                    provinceSearch: isCanada
+                                        ? prov.province!
+                                        : undefined,
+                                })
+                            }
                         >
-                            <a href="#">
-                                <ButtonContained
-                                    className={
-                                        styles["store-list__location-city-item"]
-                                    }
-                                >
-                                    {store.city} - {store.cityCount}
-                                </ButtonContained>
-                            </a>
-                        </Link>
+                            {store.city} - {store.cityCount}
+                        </ButtonContained>
                     ))}
                 </div>
             </Collapse>

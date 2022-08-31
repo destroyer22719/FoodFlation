@@ -36,15 +36,32 @@ export const getAllStores = async (
 
         let stores: Store[] = [];
         // if (req.query.search) {
-        const searchQuery: WhereOptions<{ city: string; postalCode: unknown }> =
-            {};
+        const searchQuery: WhereOptions<{
+            city?: string;
+            postalCode?: string;
+            state?: string;
+            province?: string;
+            zipCode?: string;
+        }> = {};
 
-        if (req.query.search)
-            searchQuery.city = req.query.search.toString().replace("%20", " ");
+        if (req.query.city)
+            searchQuery.city = {
+                [Sequelize.Op.like]: `%${req.query.city
+                    .toString()
+                    .replace("%20", " ")}%`,
+            };
         if (req.query.postalCode)
             searchQuery.postalCode = {
                 [Sequelize.Op.like]: `${req.query.postalCode}%`,
             };
+        if (req.query.zipCode)
+            searchQuery.zipCode = {
+                [Sequelize.Op.like]: `${req.query.zipCode}%`,
+            };
+        if (req.query.state) searchQuery.state = req.query.state as string;
+
+        if (req.query.province)
+            searchQuery.province = req.query.province as string;
 
         const queryResult = await Store.findAndCountAll({
             where: searchQuery,
@@ -57,7 +74,7 @@ export const getAllStores = async (
         if (stores.length) res.send({ stores, total: queryResult.count });
         else
             res.status(404).send({
-                message: `No store found with city of ${req.query.search}`,
+                message: `No stores found with the search criteria`,
             });
     } catch (err) {
         next(err);

@@ -12,6 +12,7 @@ import ButtonOutlined from "../../components/CustomButtonComponents/ButtonOutlin
 import { CircularProgress, Collapse, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
 import LocationTable from "../../components/LocationTableComponents/LocationTable";
+import { useStoreContext } from "../../providers/storeContext";
 
 type Props = {
     locations: Location[];
@@ -44,50 +45,27 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
 
     const router = useRouter();
 
-    const [city, setCity] = useState(router.query.city || "");
-    const [state, setState] = useState(router.query.state || "");
-    const [province, setProvince] = useState(router.query.province || "");
+    const { stores, searchByCode, loading, totalStores, updateStoreList } =
+        useStoreContext();
 
     const [page, setPage] = useState(1);
-    const [totalStores, setTotalStores] = useState(1);
     const pageSize = 10;
     const maxPages = Math.ceil(totalStores / pageSize);
-    const [stores, setStores] = useState<Store[]>([]);
+
     const navigatePages = (pageChange: number) => {
         if (pageChange < 0 && page === 1) {
             return;
         } else if (pageChange > 0 && page === maxPages) {
             return;
         }
+
+        updateStoreList({
+            changePage: true,
+            pageInc: pageChange,
+        });
+
         setPage(page + pageChange);
     };
-
-    const searchByPostalCode = async () => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/stores?postalCode=${postalCode}`
-        );
-        const data = await res.json();
-        setStores(data);
-    };
-
-    useEffect(() => {
-        (async () => {
-            if (page && city && (state || province)) {
-                setStores([]);
-                setTotalStores(1);
-                const storeReq = await fetch(
-                    `${
-                        process.env.NEXT_PUBLIC_API_URL
-                    }/stores?page=${page}&city=${city}&state=${
-                        state || ""
-                    }&province=${province || ""}`
-                );
-                const storeRes = await storeReq.json();
-                setStores(storeRes.stores);
-                setTotalStores(storeRes.total);
-            }
-        })();
-    }, [page, city, state, province]);
 
     return (
         <Layout title="Store List">
@@ -106,25 +84,30 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                         }}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                router.push(
-                                    `/store?postalCode=${
-                                        postalCode.slice(0, 3) +
-                                        " " +
-                                        postalCode.slice(3)
-                                    }`
+                                searchByCode(
+                                    `${postalCode.slice(
+                                        0,
+                                        3
+                                    )} ${postalCode.slice(3)}`
                                 );
                             }
                         }}
                     />
                     <ButtonOutlined
                         className={styles["store-list__search-button"]}
-                        onClick={() => searchByPostalCode()}
+                        onClick={() =>
+                            searchByCode(
+                                `${postalCode.slice(0, 3)} ${postalCode.slice(
+                                    3
+                                )}`
+                            )
+                        }
                     >
                         <SearchIcon /> Find a Store
                     </ButtonOutlined>
                 </div>
                 <LocationTable locations={locations} />
-                {(city && (state || province)) && (
+                {stores.length > 0 && (
                     <div className={styles["store-list__pagination-buttons"]}>
                         <ButtonContained
                             className={styles["store-list__pagination-button"]}
@@ -165,23 +148,16 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                         </ButtonContained>
                     </div>
                 )}
-                {postalCode || (city && (state || province)) ? (
-                    stores.length ? (
-                        <div
-                            className={styles["store-list__list"]}
-                            id="storeList"
-                        >
-                            {stores.map((store) => (
-                                <StoreList key={store.id} store={store} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className={styles["store-list__loader"]}>
-                            <CircularProgress />
-                        </div>
-                    )
+                {loading ? (
+                    <div className={styles["store-list__loader"]}>
+                        <CircularProgress />
+                    </div>
                 ) : (
-                    <div></div>
+                    <div className={styles["store-list__list"]} id="storeList">
+                        {stores.map((store) => (
+                            <StoreList key={store.id} store={store} />
+                        ))}
+                    </div>
                 )}
             </div>
         </Layout>

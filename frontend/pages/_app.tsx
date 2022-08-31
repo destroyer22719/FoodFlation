@@ -3,6 +3,7 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 
 import createEmotionCache from "../util/createEmotionCache";
+import StoreContextProvider from "../providers/storeContext";
 
 interface MyAppProps extends AppProps {
     emotionCache?: EmotionCache;
@@ -20,7 +21,9 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
     return (
         <CacheProvider value={emotionCache}>
             <CssBaseline />
-            <Component {...pageProps} />
+            <StoreContextProvider>
+                <Component {...pageProps} />
+            </StoreContextProvider>
         </CacheProvider>
     );
 };

@@ -127,7 +127,7 @@
 
     &__pagination-button:disabled {
         background-color: $black;
-        a {
+        div {
             color: $black;
         }
     }
