@@ -19,6 +19,9 @@ const sequelize = new Sequelize({
     models: [Item, Price, Store, Company],
     host: process.env.DATABASE_HOST || "localhost",
     logging: false,
+    dialectOptions: {
+        multipleStatements: true,
+    }
 });
 
 export default sequelize;
