@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import yargs from "yargs/yargs";
-import { getPricesLoblaws } from "./loblaws.js";
+import { getPricesLoblaws } from "./stores/loblaws.js";
 import { Address, CompanyName, Province } from "./global.js";
-import { getPricesMetro } from "./metro.js";
+import { getPricesMetro } from "./stores/metro.js";
 
 const __dirname = path.resolve();
 

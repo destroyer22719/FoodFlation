@@ -5,13 +5,13 @@ import cliProgress from "cli-progress";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path";
-import sequelize from "./db.js";
-import Price from "../../backend/src/model/Price.js";
-import Item from "../../backend/src/model/Item.js";
-import Store from "../../backend/src/model/Store.js";
-import Company from "../../backend/src/model/Company.js";
+import sequelize from "../db.js";
+import Price from "../../../backend/src/model/Price.js";
+import Item from "../../../backend/src/model/Item.js";
+import Store from "../../../backend/src/model/Store.js";
+import Company from "../../../backend/src/model/Company.js";
 import { Address } from "src/global.js";
-import { msToTime } from "./index.js";
+import { msToTime } from "../index.js";
 
 const __dirname = path.resolve();
 

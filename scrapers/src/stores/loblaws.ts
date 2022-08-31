@@ -1,17 +1,17 @@
 import puppeteer from "puppeteer";
-import sequelize from "../src/db.js";
+import sequelize from "../../src/db.js";
 import { v4 as uuidv4 } from "uuid";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
 import fs from "fs";
 import path from "path";
-import Price from "../../backend/src/model/Price.js";
-import Item from "../../backend/src/model/Item.js";
-import Store from "../../backend/src/model/Store.js";
-import Company from "../../backend/src/model/Company.js";
-import { Address } from "../src/global.js";
-import { msToTime } from "./index.js";
+import Price from "../../../backend/src/model/Price.js";
+import Item from "../../../backend/src/model/Item.js";
+import Store from "../../../backend/src/model/Store.js";
+import Company from "../../../backend/src/model/Company.js";
+import { Address } from "../../src/global.js";
+import { msToTime } from "../index.js";
 
 const __dirname = path.resolve();
 
