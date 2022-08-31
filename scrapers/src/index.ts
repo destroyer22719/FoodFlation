@@ -52,7 +52,7 @@ async function scrapeAll() {
 
         const { stores } = JSON.parse(
             fs.readFileSync(
-                path.join(__dirname, "src", "config", province, "stores.json"),
+                path.join(__dirname, "src", "config", "canada", province, "stores.json"),
                 "utf-8"
             )
         );
