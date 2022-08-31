@@ -88,8 +88,9 @@ const StorePage: React.FC<Props> = ({
                     <div className={styles["store-page__category-list"]}>
                             <Link href={showClear ? `${currentPath}?page=${page}`: "#"} passHref>
                                 <a href="#">
-                                    <IconButton disabled={!showClear}>
-                                        <CloseIcon 
+                                    <IconButton disabled={!showClear} className={styles["store-page__category-clear"]}>
+                                        <CloseIcon
+                                         className={styles["store-page__category-clear-icon"]}
                                             sx={{ fill: showClear ? "white": "transparent" }}
                                         />
                                     </IconButton>
