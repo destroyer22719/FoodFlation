@@ -7,10 +7,11 @@ import { Store } from "../../global";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import styles from "../../styles/StoreList.module.scss";
-import ButtonContained from "../../components/ButtonContained";
-import ButtonOutlined from "../../components/ButtonOutlined";
+import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
+import ButtonOutlined from "../../components/CustomButtonComponents/ButtonOutlined";
 import { CircularProgress, Collapse, ListItemButton } from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
+import LocationTable from "../../components/LocationTableComponents/LocationTable";
 
 type Props = {
     locations: Location[];
@@ -102,7 +103,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                             ).value.toUpperCase();
                             if (
                                 input.match(
-                                    /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/
+                                    postalCodeRegex
                                 )
                             )
                                 setPostalCode(input);
@@ -119,7 +120,6 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                             }
                         }}
                     />
-
                     <ButtonOutlined
                         className={styles["store-list__search-button"]}
                         onClick={() => searchByPostalCode()}
@@ -127,77 +127,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                         <SearchIcon /> Find a Store
                     </ButtonOutlined>
                 </div>
-                <div className={styles["store-list__location-field"]}>
-                    {locations.map((loc, i) => (
-                        <div
-                            key={i}
-                            className={styles["store-list__location-prov-item"]}
-                        >
-                            <div
-                                className={
-                                    styles["store-list__location-prov--gap"]
-                                }
-                            >
-                                <ListItemButton
-                                    onClick={() => {
-                                        openHandler(i);
-                                    }}
-                                >
-                                    <div
-                                        className={
-                                            styles[
-                                                "store-list__location-prov-col"
-                                            ]
-                                        }
-                                    >
-                                        <h3
-                                            className={
-                                                styles[
-                                                    "store-list__location-prov--format"
-                                                ]
-                                            }
-                                        >
-                                            <div>
-                                                {loc.province}{" "}
-                                                {`(${loc.cities.length})`}
-                                            </div>
-                                            <div>
-                                                {open[i] ? (
-                                                    <div>{"▼"}</div>
-                                                ) : (
-                                                    <div>{"▲"}</div>
-                                                )}
-                                            </div>
-                                        </h3>
-                                    </div>
-                                </ListItemButton>
-                            </div>
-                            <Collapse in={open[i]} timeout="auto" unmountOnExit>
-                                {loc.cities.map((data, i) => (
-                                    <div
-                                        key={i}
-                                        className={
-                                            styles[
-                                                "store-list__location-city-col"
-                                            ]
-                                        }
-                                    >
-                                        <ButtonOutlined
-                                            onClick={() =>
-                                                setLocation(data.city)
-                                            }
-                                        >
-                                            <span>
-                                                {data.city.split(", ")[0]} -{" "}
-                                                {data.cityCount}
-                                            </span>
-                                        </ButtonOutlined>
-                                    </div>
-                                ))}
-                            </Collapse>
-                        </div>
-                    ))}
-                </div>
+                <LocationTable locations={locations} />
                 {location && (
                     <div className={styles["store-list__pagination-buttons"]}>
                         <ButtonContained
