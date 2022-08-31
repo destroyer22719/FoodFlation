@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Store } from "../global";
-import ButtonContained from "./ButtonContained";
+import ButtonContained from "./CustomButtonComponents/ButtonContained";
 import style from "../styles/StoreList.module.scss";
 
 type Props = {

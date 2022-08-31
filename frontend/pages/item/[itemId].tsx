@@ -16,8 +16,8 @@ import Image from "next/image";
 import Layout from "../../components/Layout";
 import styles from "../../styles/Item.module.scss";
 import { useRouter } from "next/router";
-import CategoryButton from "../../components/CategoryButton";
-import ButtonContained from "../../components/ButtonContained";
+import CategoryButton from "../../components/CustomButtonComponents/CategoryButton";
+import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 
 ChartJS.register(
     CategoryScale,

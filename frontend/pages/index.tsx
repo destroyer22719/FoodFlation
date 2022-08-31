@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from "next";
-import CarouselComponent from "../components/CarouselComponent";
+import CarouselComponent from "../components/CarouselComponent/CarouselComponent";
 import Layout from "../components/Layout";
 import { API_URL } from "../config";
 import style from "../styles/Index.module.scss";

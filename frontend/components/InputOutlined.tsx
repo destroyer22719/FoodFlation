@@ -11,7 +11,6 @@ const InputOutlinedStyle = styled(TextField)({
         borderColor: "#9388A2",
     },
     "& input:valid:focus + fieldset": {
-        borderLeftWidth: 6,
         padding: "4px !important", // override inline-style,
         borderColor: "#9388A2",
     },

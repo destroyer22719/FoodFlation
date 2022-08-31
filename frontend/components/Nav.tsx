@@ -1,8 +1,8 @@
 import Link from "next/link";
 import styles from "../styles/Nav.module.scss";
-import ButtonOutlined from "./ButtonOutlined";
+import ButtonOutlined from "./CustomButtonComponents/ButtonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import ButtonContained from "./ButtonContained";
+import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
 const Nav = () => {
     return (
