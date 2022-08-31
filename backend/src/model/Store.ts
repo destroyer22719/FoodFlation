@@ -35,9 +35,21 @@ export default class Store extends Model {
     @Column
     city: string;
 
+    @Column
+    province: string;
+
+    @Column
+    state: string
+
     @AllowNull(false)
     @Column
+    country: string;
+
+    @Column
     postalCode: string;
+
+    @Column
+    zipCode: string;
 
     @HasMany(() => Item)
     items: Item[];
