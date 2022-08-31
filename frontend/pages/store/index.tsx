@@ -34,26 +34,20 @@ export type Location = {
     country: Country;
     storeData: StoreData[];
 };
-const postalCodeRegex: RegExp = /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/;
+const postalCodeRegex: RegExp =
+    /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/;
 
 const StoresPage: React.FC<Props> = ({ locations }) => {
     const [postalCode, setPostalCode] = useState("");
     const initialArray: boolean[] = [];
     initialArray.length = locations.length;
 
-    const [open, setOpen] = useState<boolean[]>(initialArray.fill(false, 0));
-
-    const openHandler = (index: number) => {
-        setOpen([
-            ...open.slice(0, index),
-            !open[index],
-            ...open.slice(index + 1),
-        ]);
-    };
-
     const router = useRouter();
 
-    const [location, setLocation] = useState("");
+    const [city, setCity] = useState(router.query.city || "");
+    const [state, setState] = useState(router.query.state || "");
+    const [province, setProvince] = useState(router.query.province || "");
+
     const [page, setPage] = useState(1);
     const [totalStores, setTotalStores] = useState(1);
     const pageSize = 10;
@@ -69,25 +63,31 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
     };
 
     const searchByPostalCode = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores?postalCode=${postalCode}`);
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/stores?postalCode=${postalCode}`
+        );
         const data = await res.json();
         setStores(data);
     };
 
     useEffect(() => {
         (async () => {
-            if (page && location) {
+            if (page && city && (state || province)) {
                 setStores([]);
                 setTotalStores(1);
                 const storeReq = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/stores?page=${page}&search=${location}`
+                    `${
+                        process.env.NEXT_PUBLIC_API_URL
+                    }/stores?page=${page}&city=${city}&state=${
+                        state || ""
+                    }&province=${province || ""}`
                 );
                 const storeRes = await storeReq.json();
                 setStores(storeRes.stores);
                 setTotalStores(storeRes.total);
             }
         })();
-    }, [page, location]);
+    }, [page, city, state, province]);
 
     return (
         <Layout title="Store List">
@@ -101,11 +101,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                             const input = (
                                 e.target as HTMLInputElement
                             ).value.toUpperCase();
-                            if (
-                                input.match(
-                                    postalCodeRegex
-                                )
-                            )
+                            if (input.match(postalCodeRegex))
                                 setPostalCode(input);
                         }}
                         onKeyDown={(e) => {
@@ -128,7 +124,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                     </ButtonOutlined>
                 </div>
                 <LocationTable locations={locations} />
-                {location && (
+                {(city && (state || province)) && (
                     <div className={styles["store-list__pagination-buttons"]}>
                         <ButtonContained
                             className={styles["store-list__pagination-button"]}
@@ -169,7 +165,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
                         </ButtonContained>
                     </div>
                 )}
-                {postalCode || location ? (
+                {postalCode || (city && (state || province)) ? (
                     stores.length ? (
                         <div
                             className={styles["store-list__list"]}

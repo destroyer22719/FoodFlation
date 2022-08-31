@@ -11,7 +11,9 @@ export interface Store {
     name: string;
     street: string;
     city: string;
-    postalCode: string;
+    postalCode?: string;
+    zipCode?: string;
+    country: string;
     companyId: string;
     company: Company;
     items: Item[]

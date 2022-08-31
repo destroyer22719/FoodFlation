@@ -3,7 +3,7 @@ import Carousel from "react-material-ui-carousel";
 import CarouselItem from "./CarouselItem";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import styles from "../styles/Carousel.module.scss";
+import styles from "../../styles/Carousel.module.scss";
 import { useEffect, useState } from "react";
 
 const CarouselComponent = () => {

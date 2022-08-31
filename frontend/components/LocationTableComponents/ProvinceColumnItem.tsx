@@ -2,6 +2,7 @@ import { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
+import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import { StoreData } from "../../pages/store";
 import ButtonContained from "../CustomButtonComponents/ButtonContained";
@@ -28,9 +29,24 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <div className={styles["store-list__location-city"]}>
                     {prov.stores.map((store) => (
-                        <ButtonContained className={styles["store-list__location-city-item"]}>
-                            {store.city} - {store.cityCount}
-                        </ButtonContained>
+                        <Link
+                            href={`/store?city=${store.city}&${
+                                isCanada
+                                    ? `province=${prov.province}`
+                                    : `state=${prov.state}`
+                            }`}
+                            key={store.city}
+                        >
+                            <a href="#">
+                                <ButtonContained
+                                    className={
+                                        styles["store-list__location-city-item"]
+                                    }
+                                >
+                                    {store.city} - {store.cityCount}
+                                </ButtonContained>
+                            </a>
+                        </Link>
                     ))}
                 </div>
             </Collapse>

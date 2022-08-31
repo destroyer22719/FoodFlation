@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { IconButton } from "@mui/material";
 import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
@@ -12,7 +13,6 @@ import styles from "../../styles/Store.module.scss";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import InputOutlined from "../../components/InputOutlined";
 import CategoryButton from "../../components/CustomButtonComponents/CategoryButton";
-import { IconButton } from "@mui/material";
 
 type Props = {
     store: Store;
@@ -54,7 +54,7 @@ const StorePage: React.FC<Props> = ({
                 <div className={styles["store-page"]}>
                     <h1 id="header">{store.name}</h1>
                     <p>
-                        {store.street}, {store.city} {store.postalCode}
+                        {store.street}, {store.city}, {store.country} | {store.postalCode ? store.postalCode : store.zipCode}
                     </p>
                     <div>{totalItems} Items Tracked</div>
                     <div className={styles["store-page__search"]}>
