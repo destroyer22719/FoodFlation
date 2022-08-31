@@ -9,9 +9,9 @@ import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
 import { Category, Item, Store } from "../../global";
 import styles from "../../styles/Store.module.scss";
-import ButtonContained from "../../components/ButtonContained";
+import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import InputOutlined from "../../components/InputOutlined";
-import CategoryButton from "../../components/CategoryButton";
+import CategoryButton from "../../components/CustomButtonComponents/CategoryButton";
 import { IconButton } from "@mui/material";
 
 type Props = {

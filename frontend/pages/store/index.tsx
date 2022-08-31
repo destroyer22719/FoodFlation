@@ -16,15 +16,24 @@ type Props = {
     locations: Location[];
 };
 
-type Location = {
-    province: string;
-    cities: LocationRes[];
-};
+export type Country = "Canada" | "United States";
 
-type LocationRes = {
+export type CityData = {
     city: string;
     cityCount: number;
 };
+
+export type StoreData = {
+    state?: string;
+    province?: string;
+    stores: CityData[];
+};
+
+export type Location = {
+    country: Country;
+    storeData: StoreData[];
+};
+const postalCodeRegex: RegExp = /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/;
 
 const StoresPage: React.FC<Props> = ({ locations }) => {
     const [postalCode, setPostalCode] = useState("");

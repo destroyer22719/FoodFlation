@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-// import Price from "../model/Price.js";
 import sequelize from "../config/db.js";
-// import Item from "../model/Item.js";
 import Store from "../model/Store.js";
 import Sequelize, { WhereOptions } from "sequelize";
 
@@ -17,14 +15,15 @@ type CityCountResult = {
     cityCount: number;
 };
 
+type StoreData = {
+    state?: string;
+    province?: string;
+    stores: CityCountResult[];
+};
+
 type ResponseParsed = {
     country: string;
-    stores: {
-        city: string;
-        cityCount: number;
-        state?: string;
-        province?: string;
-    }[];
+    storeData: StoreData[];
 };
 
 export const getAllStores = async (
@@ -94,8 +93,6 @@ export const getAllLocations = async (
             SELECT COUNT(city) AS cityCount, city FROM stores GROUP BY city;
         `);
 
-        console.log(queryResults);
-
         const addresses: StoreAddressResult[] =
             (queryResults[0] as StoreAddressResult[]) || [];
         const cityCounts: CityCountResult[] =
@@ -106,25 +103,36 @@ export const getAllLocations = async (
             const addressData: Partial<ResponseParsed> = {};
 
             if (!response.find((r) => r.country === address.country)) {
+                //Add the country to the response object if it doesn't already exist
                 addressData.country = address.country;
                 if (address.country === "Canada") {
-                    addressData.stores = [
+                    addressData.storeData = [
                         {
-                            city: address.city,
                             province: address.province,
-                            cityCount:
-                                cityCounts.find((c) => c.city === address.city)
-                                    ?.cityCount || 0,
+                            stores: [
+                                {
+                                    city: address.city,
+                                    cityCount:
+                                        cityCounts.find(
+                                            (c) => c.city === address.city
+                                        )?.cityCount || 0,
+                                },
+                            ],
                         },
                     ];
                 } else if (address.country === "United States") {
-                    addressData.stores = [
+                    addressData.storeData = [
                         {
-                            city: address.city,
                             state: address.state,
-                            cityCount:
-                                cityCounts.find((c) => c.city === address.city)
-                                    ?.cityCount || 0,
+                            stores: [
+                                {
+                                    city: address.city,
+                                    cityCount:
+                                        cityCounts.find(
+                                            (c) => c.city === address.city
+                                        )?.cityCount || 0,
+                                },
+                            ],
                         },
                     ];
                 }
@@ -132,23 +140,68 @@ export const getAllLocations = async (
                 return;
             }
 
-            const countryData = response.find((r) => r.country === address.country)!;
+            const countryData = response.find(
+                (r) => r.country === address.country
+            )!;
+
             if (address.country === "Canada") {
-                countryData.stores.push({
-                    city: address.city,
-                    province: address.province,
-                    cityCount:
-                        cityCounts.find((c) => c.city === address.city)
-                            ?.cityCount || 0,
-                });
+                // If the province doesn't exist on the response object, then add it
+                if (
+                    !countryData.storeData.find(
+                        (p) => p.province === address.province
+                    )
+                ) {
+                    const provData: Partial<StoreData> = {};
+                    provData.province = address.province;
+                    provData.stores = [
+                        {
+                            city: address.city,
+                            cityCount:
+                                cityCounts.find((c) => c.city === address.city)
+                                    ?.cityCount || 0,
+                        },
+                    ];
+                    countryData.storeData.push(provData as StoreData);
+                } else {
+                    // If the province exists on the response object, then add the city data to the storeData array
+                    countryData.storeData
+                        .find((r) => r.province === address.province)!
+                        .stores.push({
+                            city: address.city,
+                            cityCount:
+                                cityCounts.find((c) => c.city === address.city)
+                                    ?.cityCount || 0,
+                        });
+                }
             } else if (address.country === "United States") {
-                countryData.stores.push({
-                    city: address.city,
-                    state: address.state,
-                    cityCount:
-                        cityCounts.find((c) => c.city === address.city)
-                            ?.cityCount || 0,
-                });
+                // If the states doesn't exist on the response object, then add it
+                if (
+                    !countryData.storeData.find(
+                        (p) => p.state === address.state
+                    )
+                ) {
+                    const provData: Partial<StoreData> = {};
+                    provData.state = address.state;
+                    provData.stores = [
+                        {
+                            city: address.city,
+                            cityCount:
+                                cityCounts.find((c) => c.city === address.city)
+                                    ?.cityCount || 0,
+                        },
+                    ];
+                    countryData.storeData.push(provData as StoreData);
+                } else {
+                    // If the state exists on the response object, then add the city data to the storeData array
+                    countryData.storeData
+                        .find((r) => r.state === address.state)!
+                        .stores.push({
+                            city: address.city,
+                            cityCount:
+                                cityCounts.find((c) => c.city === address.city)
+                                    ?.cityCount || 0,
+                        });
+                }
             }
         });
 
