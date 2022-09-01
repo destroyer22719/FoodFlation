@@ -1,20 +1,5 @@
 {
     "stores": [
-        {
-            "zipCode": "90005",
-            "street": "670 S Western Ave",
-            "city": "Los Angeles",
-            "state": "California",
-            "country": "United States",
-            "company": "Kroger"
-        },
-        {
-            "zipCode": "90020",
-            "street": "3410 W 3Rd St",
-            "city": "Los Angeles",
-            "state": "California",
-            "country": "United States",
-            "company": "Kroger"
-        }
+        {}
     ]
 }
