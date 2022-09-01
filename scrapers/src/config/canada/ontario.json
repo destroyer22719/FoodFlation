@@ -3,49 +3,64 @@
         {
             "postalCode": "M5B 1L1",
             "street": "60 Carlton Street",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4K 2P1",
             "street": "720 Broadview Ave",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
             "company": "Loblaws"
         },
         {
             "postalCode": "M5E 1Z2",
             "street": "10 Lower Jarvis St",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4E 3W2",
             "street": "50 Musgrave St",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4H 1P6",
             "street": "11 Redway Rd",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4M 3H9",
             "street": "17 Leslie St",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4K 2P1",
             "street": "720 Broadview Ave",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4P 1H4",
             "street": "101 Eglinton Ave E Unit 1",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
@@ -57,85 +72,113 @@
         {
             "postalCode": "M4T 1L7",
             "street": "12 St Clair Ave E",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "M4P 1P1",
             "street": "656 Eglinton Ave. E",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         },
         {
             "postalCode": "M5S 1X6",
             "street": "425 Bloor St. W",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         },
         {
             "postalCode": "M6G 1C5",
             "street": "735 College St.",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         },
         {
             "postalCode": "M5B 2H4",
             "street": "444 Yonge St.",
-            "city": "Toronto, Ontario",
+            "city": "Toronto",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         },
         {
             "postalCode": "K1J 9L3",
             "street": "1980 Ogilvie Rd",
-            "city": "Ottawa, Ontario",
+            "city": "Ottawa",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "K1L 8H5",
             "street": "100 McArthur Rd",
-            "city": "Ottawa, Ontario",
+            "city": "Ottawa",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "K1N 5Y6",
             "street": "363 Rideau St",
-            "city": "Ottawa, Ontario",
+            "city": "Ottawa",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "K7L 5G8",
             "street": "1100 Princess St",
-            "city": "Kingston, Ontario",
+            "city": "Kingston",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "K7P 2X9",
             "street": "1048 Midland Ave",
-            "city": "Kingston, Ontario",
+            "city": "Kingston",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "N5X 2S7",
             "street": "1740 Richmond St N",
-            "city": "London, Ontario",
+            "city": "London",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "N6L 1A6",
             "street": "3040 Wonderland Rd S",
-            "city": "London, Ontario",
+            "city": "London",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Loblaws"
         },
         {
             "postalCode": "P4N 1A9",
             "street": "140 Algonquin Blvd W.",
-            "city": "Timmins, Ontario",
+            "city": "Timmins",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         },
         {
             "postalCode": "P3A 5W8",
             "street": "900 Lasalle Boulevard",
-            "city": "Sudbury, Ontario",
+            "city": "Sudbury",
+            "province": "Ontario",
+            "country": "Canada",
             "company": "Metro"
         }
     ]

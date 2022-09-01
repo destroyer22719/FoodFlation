@@ -1,20 +1,28 @@
 {
-    "stores": [{
-        "postalCode": "V7T 1H9",
-        "street": "861-845 Park Royal N",
-        "city": "Vancouver, British Columbia",
-        "company": "Loblaws"
-    },
-    {
-        "postalCode": "V7M 2J3",
-        "street": "1650 Lonsdale Ave",
-        "city": "Vancouver, British Columbia",
-        "company": "Loblaws"
-    },
-    {
-        "postalCode": "V6J 3Z3",
-        "street": "3185 Arbutus St",
-        "city": "Vancouver, British Columbia",
-        "company": "Loblaws"
-    }]
+    "stores": [
+        {
+            "postalCode": "V7T 1H9",
+            "street": "861-845 Park Royal N",
+            "city": "Vancouver",
+            "province": "British Columbia",
+            "country": "Canada",
+            "company": "Loblaws"
+        },
+        {
+            "postalCode": "V7M 2J3",
+            "street": "1650 Lonsdale Ave",
+            "city": "Vancouver",
+            "province": "British Columbia",
+            "country": "Canada",
+            "company": "Loblaws"
+        },
+        {
+            "postalCode": "V6J 3Z3",
+            "street": "3185 Arbutus St",
+            "city": "Vancouver",
+            "province": "British Columbia",
+            "country": "Canada",
+            "company": "Loblaws"
+        }
+    ]
 }

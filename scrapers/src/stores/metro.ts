@@ -94,7 +94,12 @@ export async function getPricesMetro(
 
     for (const store of stores) {
         //searches up store postal code directly and set the store location
-        const { city, postalCode, street } = store;
+        let { city, postalCode, province, country, street } = store;
+        
+        postalCode = postalCode as string;
+        province = province as string;
+        country = country as string;
+
         loader.color = "green";
         loader.text = `Scraping ${postalCode}...`;
         await page.goto("https://www.metro.ca/en/find-a-grocery");
@@ -231,6 +236,8 @@ export async function getPricesMetro(
                     name: "Metro",
                     street,
                     city,
+                    province,
+                    country,
                     postalCode,
                     companyId: company.id,
                 });

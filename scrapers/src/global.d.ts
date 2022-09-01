@@ -1,7 +1,11 @@
 interface Address {
     street: string;
     city: string;
-    postalCode: string;
+    postalCode?: string;
+    zipCode?: string;
+    country: string;
+    province?: string;
+    state?: string;
     company: CompanyName;
 }
 

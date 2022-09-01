@@ -3,7 +3,9 @@
         {
             "postalCode": "T5K 0T3",
             "street": "101-12060 104th Ave NW",
-            "city": "Edmonton, Alberta",
+            "city": "Edmonton",
+            "province": "Alberta",
+            "country": "Canada",
             "company": "Loblaws"
         }
     ]
