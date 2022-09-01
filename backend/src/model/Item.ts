@@ -10,6 +10,7 @@ import {
     BelongsTo,
     ForeignKey,
     Default,
+    DataType,
 } from "sequelize-typescript";
 import Price from "./Price.js";
 import Store from "./Store.js";
@@ -41,7 +42,7 @@ export default class Item extends Model {
     store: Store;
 
     @IsUrl
-    @Column
+    @Column(DataType.STRING(500))
     imgUrl: string;
 
     @Default("Miscellaneous")
