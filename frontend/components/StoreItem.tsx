@@ -9,6 +9,7 @@ type Props = {
 };
 
 const StoreItem: React.FC<Props> = ({ store }) => {
+    console.log(store.name)
     return (
         <div className={style["store-list__store-item"]}>
             <ButtonContained className={style["store-list__store-item-btn"]}>
@@ -19,7 +20,7 @@ const StoreItem: React.FC<Props> = ({ store }) => {
                     >
                         <div className={style["store-list__store-item-image"]}>
                             <Image
-                                src={`/${store.name.toLocaleLowerCase()}-logo.png`}
+                                src={`/store-logos/${store.name.toLocaleLowerCase().replaceAll(" ", "_")}-logo.png`}
                                 alt={store.name}
                                 layout="fill"
                             />
