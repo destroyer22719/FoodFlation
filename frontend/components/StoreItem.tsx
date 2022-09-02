@@ -9,7 +9,6 @@ type Props = {
 };
 
 const StoreItem: React.FC<Props> = ({ store }) => {
-    console.log(store.name)
     return (
         <div className={style["store-list__store-item"]}>
             <ButtonContained className={style["store-list__store-item-btn"]}>
