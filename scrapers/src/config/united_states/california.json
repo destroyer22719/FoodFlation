@@ -1,5 +1,36 @@
 {
     "stores": [
-        {}
+        {
+            "street": "2520 Glendale Blvd",
+            "city": "Los Angeles",
+            "state": "California",
+            "zipCode": "90039",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "788 S Grand Ave",
+            "city": "Las Angeles",
+            "state": "California",
+            "zipCode": "90017",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "711 University Ave",
+            "city": "San Diego",
+            "state": "California",
+            "zipCode": "92103",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "399 4th St",
+            "city": "San Francisco",
+            "state": "California",
+            "zipCode": "94107",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        }
     ]
 }
