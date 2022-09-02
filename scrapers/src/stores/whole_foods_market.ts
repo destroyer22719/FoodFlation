@@ -112,13 +112,14 @@ export async function getPricesWholeFoodsMarket(
         await zipInput?.type(zipCode);
         await zipInput?.press("Enter");
 
+        
         //clicking on the right store
         await page.waitForTimeout(2500);
         await page.waitForSelector(
             "wfm-store-list li:nth-child(1) wfm-store-selector > span",
             {
                 visible: true,
-                timeout: 2500,
+                timeout: 5000,
             }
         );
 
@@ -129,11 +130,29 @@ export async function getPricesWholeFoodsMarket(
         await page.waitForSelector(".w-mystore");
 
         for (const item of items) {
+            loader.color = "green";
+            loader.text = `${itemsArray.indexOf(item)}/${
+                itemsArray.length
+            } - ${storesArray
+                .map((store) => store.zipCode)
+                .indexOf(zipCode)}/${
+                storesArray.length
+            }| ${item} at ${zipCode}`;
+
             await page.goto(
                 `https://www.wholefoodsmarket.com/search?text=${item}`, {
                     waitUntil: "domcontentloaded",
                 }
             );
+            
+            await page.waitForNavigation();
+
+            if (await page.$(`img[alt="No results found"`)) continue;
+
+            await page.waitForSelector(".w-pie--product-tile__image", {
+                visible: true,
+                timeout: 15000,
+            });
 
             const results = await page.evaluate(() => {
                 const prices = Array.from(
