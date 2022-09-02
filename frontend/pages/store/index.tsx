@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import ButtonOutlined from "../../components/CustomButtonComponents/ButtonOutlined";
-import { CircularProgress, Collapse, ListItemButton } from "@mui/material";
+import { CircularProgress} from "@mui/material";
 import InputOutlined from "../../components/InputOutlined";
 import LocationTable from "../../components/LocationTableComponents/LocationTable";
 import { useStoreContext } from "../../providers/storeContext";
@@ -33,7 +33,8 @@ export type Location = {
     country: Country;
     storeData: StoreData[];
 };
-const postalCodeRegex: RegExp =
+
+const postalCodeRegex =
     /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/;
 
 const StoresPage: React.FC<Props> = ({ locations }) => {

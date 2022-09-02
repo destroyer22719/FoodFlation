@@ -2,7 +2,6 @@ import { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
-import Link from "next/link";
 import styles from "../../styles/StoreList.module.scss";
 import { StoreData } from "../../pages/store";
 import ButtonContained from "../CustomButtonComponents/ButtonContained";
@@ -39,9 +38,9 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
                                     citySearch: store.city,
                                     stateSearch: isCanada
                                         ? undefined
-                                        : prov.state!,
+                                        : prov.state as string,
                                     provinceSearch: isCanada
-                                        ? prov.province!
+                                        ? prov.province as string
                                         : undefined,
                                 })
                             }

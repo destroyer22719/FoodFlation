@@ -16,7 +16,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
 
     const [date, setDate] = useState<string | null>(null);
     useState(() => {
-        setDate(new Date(item.lastUpdated!).toISOString().split("T")[0]);
+        setDate(new Date(item.lastUpdated as Date).toISOString().split("T")[0]);
     });
 
     const query = { ...router.query };
