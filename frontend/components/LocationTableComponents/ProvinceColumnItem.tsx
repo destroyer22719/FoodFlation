@@ -25,7 +25,7 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
         <div className={styles["store-list__location-prov-item"]}>
             <ListItemButton onClick={handleClick}>
                 <h3 key={isCanada ? prov.province : prov.state}>
-                    {prov.province} {open ? <ExpandLess /> : <ExpandMore />}
+                {isCanada ? prov.province : prov.state} {open ? <ExpandLess /> : <ExpandMore />}
                 </h3>
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
