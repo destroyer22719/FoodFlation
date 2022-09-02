@@ -13,7 +13,8 @@ const moduleExports = {
             "assets.shop.loblaws.ca",
             "assets.sellers.loblaw.ca",
             "product-images.metro.ca",
-            "www.metro.ca"
+            "www.metro.ca",
+            "m.media-amazon.com"
         ],
     },
 };
