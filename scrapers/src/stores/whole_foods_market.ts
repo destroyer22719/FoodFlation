@@ -141,12 +141,10 @@ export async function getPricesWholeFoodsMarket(
 
             await page.goto(
                 `https://www.wholefoodsmarket.com/search?text=${item}`, {
-                    waitUntil: "domcontentloaded",
+                    waitUntil: "domcontentloaded",    
                 }
             );
             
-            await page.waitForNavigation();
-
             if (await page.$(`img[alt="No results found"`)) continue;
 
             await page.waitForSelector(".w-pie--product-tile__image", {
