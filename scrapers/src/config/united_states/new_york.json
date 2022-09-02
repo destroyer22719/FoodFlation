@@ -1,0 +1,36 @@
+{
+    "stores": [
+        {
+            "street": "270 Greenwich St",
+            "city": "New York",
+            "state": "New York",
+            "zipCode": "10007",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "4 Union Square S",
+            "city": "New York",
+            "state": "New York",
+            "zipCode": "10003",
+            "company": "Whole Foods Market",
+            "country": "United States"  
+        },
+        {
+            "street": "95 East Houston St",
+            "city": "New York",
+            "state": "New York",
+            "zipCode": "10001",
+            "company": "Whole Foods Market",
+            "country": "United States"  
+        },
+        {
+            "street": "292 Ashland Pl",
+            "city": "Brooklyn",
+            "state": "New York",
+            "zipCode": "11217",
+            "company": "Whole Foods Market",
+            "country": "United States"  
+        }
+    ]
+}
