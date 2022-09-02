@@ -10,8 +10,8 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address } from "src/global.js";
-import { msToTime } from "../index.js";
+import { Address } from "../global.js";
+import { msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
@@ -95,7 +95,7 @@ export async function getPricesMetro(
     for (const store of stores) {
         //searches up store postal code directly and set the store location
         let { city, postalCode, province, country, street } = store;
-        
+
         postalCode = postalCode as string;
         province = province as string;
         country = country as string;
@@ -269,9 +269,7 @@ export async function getPricesMetro(
                     });
 
                     await itemObj.save();
-                } else if (
-                    itemObj.category !== item2category[item]
-                ) {
+                } else if (itemObj.category !== item2category[item]) {
                     itemObj.category = item2category[item];
                     await itemObj.save();
                 }
@@ -303,5 +301,3 @@ export async function getPricesMetro(
     const timeTaken = endTime - startTime;
     console.log(msToTime(timeTaken));
 }
-
-// getPricesMetro(["eggs"], [{city: "", street: "",postalCode: "M1P 5B7"}]);

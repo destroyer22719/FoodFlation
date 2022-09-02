@@ -4,7 +4,12 @@ export interface Company {
     stores: Store[];
 }
 
-export type Category = "Fruits & Vegetables" | "Meat" | "Dairy" | "Starches & Grains" | "Miscellaneous";
+export type Category =
+    | "Fruits & Vegetables"
+    | "Meat"
+    | "Dairy"
+    | "Starches & Grains"
+    | "Miscellaneous";
 
 export interface Store {
     id: string;
@@ -16,25 +21,25 @@ export interface Store {
     country: string;
     companyId: string;
     company: Company;
-    items: Item[]
+    items: Item[];
 }
 
 export interface Item {
-    id: string,
-    name: string,
-    storeId: string,
-    store: Store,
-    imgUrl: string,
-    prices: Price[]
-    price: number
-    lastUpdated?: Date
-    category: Category
+    id: string;
+    name: string;
+    storeId: string;
+    store: Store;
+    imgUrl: string;
+    prices: Price[];
+    price: number;
+    lastUpdated?: Date;
+    category: Category;
 }
 
 export interface Price {
-    id: string,
-    price: number,
-    item: Item,
-    itemId: string
-    createdAt: string
+    id: string;
+    price: number;
+    item: Item;
+    itemId: string;
+    createdAt: string;
 }

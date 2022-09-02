@@ -1,11 +1,9 @@
 import { GetServerSideProps } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "../../components/Layout";
 import StoreList from "../../components/StoreItem";
 import { API_URL } from "../../config";
-import { Store } from "../../global";
 import SearchIcon from "@mui/icons-material/Search";
-import { useRouter } from "next/router";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import ButtonOutlined from "../../components/CustomButtonComponents/ButtonOutlined";
@@ -42,8 +40,6 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
     const [postalCode, setPostalCode] = useState("");
     const initialArray: boolean[] = [];
     initialArray.length = locations.length;
-
-    const router = useRouter();
 
     const { stores, searchByCode, loading, totalStores, updateStoreList } =
         useStoreContext();
@@ -167,7 +163,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
     const locationRes = await fetch(`${API_URL}/stores/locations`);
     const locations = await locationRes.json();
-
+    
     return {
         props: {
             locations,
