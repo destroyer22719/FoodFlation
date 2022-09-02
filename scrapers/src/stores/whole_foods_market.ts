@@ -130,7 +130,9 @@ export async function getPricesWholeFoodsMarket(
 
         for (const item of items) {
             await page.goto(
-                `https://www.wholefoodsmarket.com/search?text=${item}`
+                `https://www.wholefoodsmarket.com/search?text=${item}`, {
+                    waitUntil: "domcontentloaded",
+                }
             );
 
             const results = await page.evaluate(() => {

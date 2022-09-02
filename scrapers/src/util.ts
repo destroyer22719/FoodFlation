@@ -135,7 +135,7 @@ export async function scrapeAll({
             )
         );
 
-        storeScrape(items, stores, {
+        await storeScrape(items, stores, {
             itemStart,
             storeStart,
             loblaws,
@@ -148,12 +148,12 @@ export async function scrapeAll({
 
         const { stores } = JSON.parse(
             fs.readFileSync(
-                path.join(__dirname, "src", "config", "usa", `${st}.json`),
+                path.join(__dirname, "src", "config", "united_states", `${st}.json`),
                 "utf-8"
             )
         );
 
-        storeScrape(items, stores, {
+        await storeScrape(items, stores, {
             itemStart,
             storeStart,
             wholeFoodsMarket,
