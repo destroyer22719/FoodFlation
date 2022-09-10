@@ -64,7 +64,7 @@ export async function scrapeAmerica({
         )
     );
 
-    let states: State[] = state ? [state] : ["new_york"];
+    let states: State[] = state ? [state] : ["new_york", "california"];
 
     for (const st of states) {
         console.log(st);
