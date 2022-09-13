@@ -117,7 +117,7 @@ export async function scrapeAll({
         "quebec",
     ];
 
-    let states: State[] = ["new_york"];
+    let states: State[] = ["new_york", "california"];
 
     provinces = provinces.slice(
         province ? provinces.indexOf(province as Province) : 0
