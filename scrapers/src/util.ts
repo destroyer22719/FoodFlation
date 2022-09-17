@@ -42,7 +42,7 @@ export async function scrapeCanada({
             )
         );
 
-        storeScrape(items, stores, { itemStart, storeStart, metro, loblaws });
+        await storeScrape(items, stores, { itemStart, storeStart, metro, loblaws });
     }
 }
 
@@ -82,7 +82,7 @@ export async function scrapeAmerica({
             )
         );
 
-        storeScrape(items, stores, { itemStart, storeStart, wholeFoodsMarket });
+        await storeScrape(items, stores, { itemStart, storeStart, wholeFoodsMarket });
     }
 }
 
