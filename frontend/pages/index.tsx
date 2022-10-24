@@ -16,7 +16,7 @@ const Home: React.FC<Props> = ({ itemCount, storeCount }) => {
                 <h1>FoodFlation</h1>
                 <p>
                     Tracking prices of {itemCount} different items in{" "}
-                    {storeCount} different stores across Canada
+                    {storeCount} different stores across Canada and the US
                 </p>
             </div>
             <CarouselComponent />

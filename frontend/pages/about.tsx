@@ -9,8 +9,8 @@ const AboutPage: React.FC = () => {
                 <h1>About Food Flation</h1>
                 <div>
                     Food flation is made to track price history of items in a
-                    variety of different grocery stores across Canada from
-                    companies including Loblaws and Metro with more on the way.
+                    variety of different grocery stores Canada and now the USA from companies
+                    including Loblaws and Metro with more on the way.
                     FoodFlation is made to help people gauge the reality of
                     inflation of grocery store items, beyond just a simple
                     number because economics is more complicated than that. For
