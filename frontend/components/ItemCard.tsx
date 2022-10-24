@@ -6,6 +6,7 @@ import { Item } from "../global";
 import styles from "../styles/Store.module.scss";
 import ButtonOutlined from "./CustomButtonComponents/ButtonOutlined";
 import CategoryButton from "./CustomButtonComponents/CategoryButton";
+import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
 type Props = {
     item: Item;
@@ -30,7 +31,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
 
     return (
         <div className={styles["store-page__item"]}>
-            <ButtonOutlined className={styles["store-page__item-button"]}>
+            <ButtonContained className={styles["store-page__item-button"]}>
                 <Link href={`/item/${item.id}`} passHref>
                     <a href="#">
                         <div>
@@ -49,7 +50,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
                         </div>
                     </a>
                 </Link>
-            </ButtonOutlined>
+            </ButtonContained>
             <CategoryButton
                 category={item.category}
                 className={styles["store-page__item-category"]}
