@@ -19,7 +19,7 @@
     "@mui/material": "^5.10.3",
     "@sentry/nextjs": "^7.12.1",
     "chart.js": "^3.9.1",
-    "next": "^12.2.5",
+    "next": "^12.3.3",
     "next-sitemap": "^3.1.21",
     "react": "^18.2.0",
     "react-chartjs-2": "^4.3.1",
