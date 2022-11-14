@@ -33,22 +33,20 @@ const ItemCard: React.FC<Props> = ({ item }) => {
         <div className={styles["store-page__item"]}>
             <ButtonContained className={styles["store-page__item-button"]}>
                 <Link href={`/item/${item.id}`} passHref>
-                    <a href="#">
-                        <div>
-                            <h3>{item.name}</h3>
-                            <Image
-                                width={125}
-                                height={125}
-                                src={item.imgUrl}
-                                alt={`Image of ${item.name}`}
-                            />
-                            <div className={styles["store-page__item-price"]}>
-                                {"$"}
-                                {item.price}
-                            </div>
-                            <div>Last Updated: {date}</div>
+                    <div>
+                        <h3>{item.name}</h3>
+                        <Image
+                            width={125}
+                            height={125}
+                            src={item.imgUrl}
+                            alt={`Image of ${item.name}`}
+                        />
+                        <div className={styles["store-page__item-price"]}>
+                            {"$"}
+                            {item.price}
                         </div>
-                    </a>
+                        <div>Last Updated: {date}</div>
+                    </div>
                 </Link>
             </ButtonContained>
             <CategoryButton

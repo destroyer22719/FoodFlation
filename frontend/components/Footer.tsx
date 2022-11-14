@@ -7,19 +7,20 @@ import Link from "next/link";
 const Footer = () => {
     return (
         <div className={styles["footer"]}>
-            <Link href="mailto:nathan.cai.ca@gmail.com" passHref>
-                <a href="#" title="Email">
-                    <IconButton>
-                        <EmailIcon className={styles["footer__item"]} />
-                    </IconButton>
-                </a>
+            <Link href="mailto:nathan.cai.ca@gmail.com" passHref title="Email">
+                <IconButton>
+                    <EmailIcon className={styles["footer__item"]} />
+                </IconButton>
             </Link>
-            <Link href="https://github.com/destroyer22719/FoodFlation" passHref>
-                <a href="#" target="_blank" title="GitHub Repo">
-                    <IconButton>
-                        <GitHubIcon className={styles["footer__item"]} />
-                    </IconButton>
-                </a>
+            <Link
+                href="https://github.com/destroyer22719/FoodFlation"
+                passHref
+                target="_blank"
+                title="GitHub Repo"
+            >
+                <IconButton>
+                    <GitHubIcon className={styles["footer__item"]} />
+                </IconButton>
             </Link>
         </div>
     );

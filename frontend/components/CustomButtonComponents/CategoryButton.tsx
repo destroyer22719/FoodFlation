@@ -19,20 +19,18 @@ const CategoryButton: React.FC<Props> = ({
 }) => {
     return (
         <Link href={linkTo ? linkTo : "#"} passHref>
-            <a href="#">
-                <ButtonContained
-                    className={`${className || ""} ${
-                        styles[
-                            `category__${category
-                                .toLowerCase()
-                                .replaceAll(" ", "-")
-                                .replaceAll("&", "and")}`
-                        ]
-                    }`}
-                >
-                    {category} {count !== undefined ? `- ${count}` : ""}
-                </ButtonContained>
-            </a>
+            <ButtonContained
+                className={`${className || ""} ${
+                    styles[
+                        `category__${category
+                            .toLowerCase()
+                            .replaceAll(" ", "-")
+                            .replaceAll("&", "and")}`
+                    ]
+                }`}
+            >
+                {category} {count !== undefined ? `- ${count}` : ""}
+            </ButtonContained>
         </Link>
     );
 };

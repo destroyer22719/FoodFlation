@@ -54,7 +54,8 @@ const StorePage: React.FC<Props> = ({
                 <div className={styles["store-page"]}>
                     <h1 id="header">{store.name}</h1>
                     <p>
-                        {store.street}, {store.city}, {store.country} | {store.postalCode ? store.postalCode : store.zipCode}
+                        {store.street}, {store.city}, {store.country} |{" "}
+                        {store.postalCode ? store.postalCode : store.zipCode}
                     </p>
                     <div>{totalItems} Items Tracked</div>
                     <div className={styles["store-page__search"]}>
@@ -74,28 +75,38 @@ const StorePage: React.FC<Props> = ({
                             }}
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
-
                             <ButtonContained
-                                className={
-                                    styles["store-page__search-button"]
-                                }
+                                className={styles["store-page__search-button"]}
                             >
                                 <SearchIcon />
                             </ButtonContained>
-
                         </Link>
                     </div>
                     <div className={styles["store-page__category-list"]}>
-                            <Link href={showClear ? `${currentPath}?page=${page}`: "#"} passHref>
-
-                                <IconButton disabled={!showClear} className={styles["store-page__category-clear"]}>
-                                    <CloseIcon
-                                     className={styles["store-page__category-clear-icon"]}
-                                        sx={{ fill: showClear ? "white": "transparent" }}
-                                    />
-                                </IconButton>
-
-                            </Link>
+                        <Link
+                            href={
+                                showClear ? `${currentPath}?page=${page}` : "#"
+                            }
+                            passHref
+                        >
+                            <IconButton
+                                disabled={!showClear}
+                                className={styles["store-page__category-clear"]}
+                            >
+                                <CloseIcon
+                                    className={
+                                        styles[
+                                            "store-page__category-clear-icon"
+                                        ]
+                                    }
+                                    sx={{
+                                        fill: showClear
+                                            ? "white"
+                                            : "transparent",
+                                    }}
+                                />
+                            </IconButton>
+                        </Link>
                         <ButtonContained>{found} Items Found</ButtonContained>
                         {categoryData.map(({ category, categoryCount }) => (
                             <CategoryButton
@@ -127,13 +138,10 @@ const StorePage: React.FC<Props> = ({
                                           }
                                 }
                                 className={
-                                    styles[
-                                        "store-page__pagination-button-link"
-                                    ]
-                                }>
-
+                                    styles["store-page__pagination-button-link"]
+                                }
+                            >
                                 {"<"}
-
                             </Link>
                         </ButtonContained>
                         <ButtonContained
@@ -167,13 +175,10 @@ const StorePage: React.FC<Props> = ({
                                           }
                                 }
                                 className={
-                                    styles[
-                                        "store-page__pagination-button-link"
-                                    ]
-                                }>
-
+                                    styles["store-page__pagination-button-link"]
+                                }
+                            >
                                 {">"}
-
                             </Link>
                         </ButtonContained>
                     </div>
@@ -196,10 +201,9 @@ const StorePage: React.FC<Props> = ({
                                     styles[
                                         "store-page__back-to-top-button-link"
                                     ]
-                                }>
-                                
-                                    Back to top
-                                
+                                }
+                            >
+                                Back to top
                             </Link>
                         </ButtonContained>
                     )}
