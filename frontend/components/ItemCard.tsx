@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { Item } from "../global";
 import styles from "../styles/Store.module.scss";
-import ButtonOutlined from "./CustomButtonComponents/ButtonOutlined";
 import CategoryButton from "./CustomButtonComponents/CategoryButton";
 import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
