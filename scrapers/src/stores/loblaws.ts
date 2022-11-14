@@ -31,7 +31,7 @@ export async function getPricesLoblaws(
 
     await sequelize.sync();
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
     });
 
@@ -109,7 +109,9 @@ export async function getPricesLoblaws(
         await page.waitForSelector(".location-set-store__button:first-of-type");
         await page.click(".location-set-store__button:first-of-type");
         await page.waitForSelector(
-            ".fulfillment-location-confirmation__actions__button"
+            ".fulfillment-location-confirmation__actions__button", {
+                timeout: 15*1000
+            }
         );
         await page.click(".fulfillment-location-confirmation__actions__button");
 
@@ -130,7 +132,7 @@ export async function getPricesLoblaws(
             );
 
             try {
-                await page.waitForSelector(".product-tile", { timeout: 30000 });
+                await page.waitForSelector(".product-tile__thumbnail__image > img", { timeout: 30000 });
             } catch (err) {
                 continue;
             }

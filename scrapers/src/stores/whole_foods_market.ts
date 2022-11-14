@@ -110,6 +110,7 @@ export async function getPricesWholeFoodsMarket(
         const zipInput = await page.$("#store-finder-search-bar");
 
         await zipInput?.type(zipCode);
+        await page.waitForTimeout(500)
         await zipInput?.press("Enter");
 
         
