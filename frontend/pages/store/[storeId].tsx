@@ -74,27 +74,27 @@ const StorePage: React.FC<Props> = ({
                             }}
                         />
                         <Link href={`${currentPath}?search=${search}`} passHref>
-                            <a>
-                                <ButtonContained
-                                    className={
-                                        styles["store-page__search-button"]
-                                    }
-                                >
-                                    <SearchIcon />
-                                </ButtonContained>
-                            </a>
+
+                            <ButtonContained
+                                className={
+                                    styles["store-page__search-button"]
+                                }
+                            >
+                                <SearchIcon />
+                            </ButtonContained>
+
                         </Link>
                     </div>
                     <div className={styles["store-page__category-list"]}>
                             <Link href={showClear ? `${currentPath}?page=${page}`: "#"} passHref>
-                                <a href="#">
-                                    <IconButton disabled={!showClear} className={styles["store-page__category-clear"]}>
-                                        <CloseIcon
-                                         className={styles["store-page__category-clear-icon"]}
-                                            sx={{ fill: showClear ? "white": "transparent" }}
-                                        />
-                                    </IconButton>
-                                </a>
+
+                                <IconButton disabled={!showClear} className={styles["store-page__category-clear"]}>
+                                    <CloseIcon
+                                     className={styles["store-page__category-clear-icon"]}
+                                        sx={{ fill: showClear ? "white": "transparent" }}
+                                    />
+                                </IconButton>
+
                             </Link>
                         <ButtonContained>{found} Items Found</ButtonContained>
                         {categoryData.map(({ category, categoryCount }) => (
@@ -126,17 +126,14 @@ const StorePage: React.FC<Props> = ({
                                               },
                                           }
                                 }
-                            >
-                                <a
-                                    href="#"
-                                    className={
-                                        styles[
-                                            "store-page__pagination-button-link"
-                                        ]
-                                    }
-                                >
-                                    {"<"}
-                                </a>
+                                className={
+                                    styles[
+                                        "store-page__pagination-button-link"
+                                    ]
+                                }>
+
+                                {"<"}
+
                             </Link>
                         </ButtonContained>
                         <ButtonContained
@@ -169,17 +166,14 @@ const StorePage: React.FC<Props> = ({
                                               },
                                           }
                                 }
-                            >
-                                <a
-                                    href="#"
-                                    className={
-                                        styles[
-                                            "store-page__pagination-button-link"
-                                        ]
-                                    }
-                                >
-                                    {">"}
-                                </a>
+                                className={
+                                    styles[
+                                        "store-page__pagination-button-link"
+                                    ]
+                                }>
+
+                                {">"}
+
                             </Link>
                         </ButtonContained>
                     </div>
@@ -196,17 +190,16 @@ const StorePage: React.FC<Props> = ({
                         <ButtonContained
                             className={styles["store-page__back-to-top-button"]}
                         >
-                            <Link href={`${currentPathWithoutID}#header`}>
-                                <a
-                                    href="#"
-                                    className={
-                                        styles[
-                                            "store-page__back-to-top-button-link"
-                                        ]
-                                    }
-                                >
+                            <Link
+                                href={`${currentPathWithoutID}#header`}
+                                className={
+                                    styles[
+                                        "store-page__back-to-top-button-link"
+                                    ]
+                                }>
+                                
                                     Back to top
-                                </a>
+                                
                             </Link>
                         </ButtonContained>
                     )}
