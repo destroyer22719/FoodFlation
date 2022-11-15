@@ -103,136 +103,176 @@ export async function getPricesLoblaws(
         await page.goto(
             `https://www.loblaws.ca/store-locator?searchQuery=${
                 postalCode.split(" ")[0]
-            }%20${postalCode.split(" ")[1]}`, {
-                timeout: 60000,
+            }%20${postalCode.split(" ")[1]}`,
+            {
+                timeout: 60 * 1000,
             }
         );
+        
+        try {
+            await page.waitForSelector(".lds__store-locator__store-list__store", {
+                timeout: 5 * 1000,
+            });
+    
+            const cookiesPopUp = await page.$(".lds__privacy-policy__btnClose");
+            if (cookiesPopUp) {
+                await page.click(".lds__privacy-policy__btnClose");
+            }
+        } catch (e) {
+        }
 
-        await page.waitForSelector(".location-set-store__button:first-of-type", {
-            timeout: 60000,
-        });
+        await page.waitForSelector(
+            ".location-set-store__button:first-of-type",
+            {
+                timeout: 60 * 1000,
+            }
+        );
         await page.click(".location-set-store__button:first-of-type");
         await page.waitForSelector(
-            ".fulfillment-location-confirmation__actions__button", {
-                timeout: 15*1000
+            ".fulfillment-location-confirmation__actions__button",
+            {
+                timeout: 60 * 1000,
             }
         );
         await page.click(".fulfillment-location-confirmation__actions__button");
 
         for (const item of items) {
-            loader.color = "green";
-            loader.text = `${itemsArray.indexOf(item)}/${
-                itemsArray.length
-            } - ${storesArray
-                .map((store) => store.postalCode)
-                .indexOf(postalCode)}/${
-                storesArray.length
-            }| ${item} at ${postalCode}`;
-            await page.goto(
-                `https://www.loblaws.ca/search?search-bar=${item.replace(
-                    " ",
-                    "%20"
-                )}`
-            );
-
             try {
-                await page.waitForSelector(".product-tile__thumbnail__image > img", { timeout: 60000 });
-            } catch (err) {
-                continue;
-            }
-
-            //retrieves the value of the first 3 items
-            const results = await page.evaluate(() => {
-                const results = [];
-
-                const name = document.getElementsByClassName(
-                    "product-name__item product-name__item--name"
-                );
-                const price = document.querySelectorAll(
-                    ".selling-price-list__item__price--now-price__value"
-                );
-                const img = document.querySelectorAll(
-                    ".product-tile__thumbnail__image > img"
-                );
-
-                //finds a maximum of 3 of each item
-                const totalIters = name.length > 3 ? 3 : name.length;
-
-                for (let i = 0; i < totalIters; i++) {
-                    results.push({
-                        name: (<HTMLElement>name[i]).innerText,
-                        price: (<HTMLElement>price[i]).innerText,
-                        imgUrl: (<HTMLImageElement>img[i]).src,
-                    });
-                }
-
-                return results;
-            });
-
-            //inserts information to database
-            let company = await Company.findOne({ where: { name: "Loblaws" } });
-
-            if (!company) {
-                company = new Company({ id: uuidv4(), name: "Loblaws" });
-                await company.save();
-            }
-
-            let store = await Store.findOne({
-                where: { postalCode, companyId: company.id },
-            });
-            if (!store) {
-                store = new Store({
-                    id: uuidv4(),
-                    name: "Loblaws",
-                    street,
-                    city,
-                    province,
-                    country,
-                    postalCode,
-                    companyId: company.id,
-                });
-
-                await store.save();
-            }
-
-            for (const result of results) {
+                loader.color = "green";
                 loader.text = `${itemsArray.indexOf(item)}/${
                     itemsArray.length
                 } - ${storesArray
                     .map((store) => store.postalCode)
                     .indexOf(postalCode)}/${
                     storesArray.length
-                }|${item} at ${postalCode} |(${result.name} for ${
-                    result.price
-                })`;
+                }| ${item} at ${postalCode}`;
+                await page.goto(
+                    `https://www.loblaws.ca/search?search-bar=${item.replace(
+                        " ",
+                        "%20"
+                    )}`
+                );
 
-                let itemObj = await Item.findOne({
-                    where: { name: result.name, storeId: store.id },
-                });
-
-                if (!itemObj) {
-                    itemObj = new Item({
-                        id: uuidv4(),
-                        name: result.name,
-                        storeId: store.id,
-                        imgUrl: result.imgUrl,
-                    });
-
-                    await itemObj.save();
-                } else if (itemObj.category !== item2category[item]) {
-                    itemObj.category = item2category[item];
-                    await itemObj.save();
+                try {
+                    await page.waitForSelector(
+                        ".product-tile__thumbnail__image > img",
+                        { timeout: 60 * 1000 }
+                    );
+                } catch (err) {
+                    continue;
                 }
 
-                const itemPrice = new Price({
-                    id: uuidv4(),
-                    price: parseFloat(result.price.slice(1)),
-                    itemId: itemObj.id,
+                //retrieves the value of the first 3 items
+                const results = await page.evaluate(() => {
+                    const results = [];
+
+                    const name = document.getElementsByClassName(
+                        "product-name__item product-name__item--name"
+                    );
+                    const price = document.querySelectorAll(
+                        ".selling-price-list__item__price--now-price__value"
+                    );
+                    const img = document.querySelectorAll(
+                        ".product-tile__thumbnail__image > img"
+                    );
+
+                    //finds a maximum of 3 of each item
+                    const totalIters = name.length > 3 ? 3 : name.length;
+
+                    let i = 0;
+                    while (i < totalIters) {
+                        // for (let i = 0; i < totalIters; i++) {
+                        //hopefully to get around selecting sponsored items
+                        if (
+                            document
+                                .querySelectorAll(
+                                    ".product-tile-group__list__item"
+                                )
+                                [i].querySelector(
+                                    ".product-badge__text.product-badge__text--product-tile"
+                                )
+                        )
+                            continue;
+                        results.push({
+                            name: (<HTMLElement>name[i]).innerText,
+                            price: (<HTMLElement>price[i]).innerText,
+                            imgUrl: (<HTMLImageElement>img[i]).src,
+                        });
+                        i++;
+                    }
+
+                    return results;
                 });
 
-                await itemPrice.save();
+                //inserts information to database
+                let company = await Company.findOne({
+                    where: { name: "Loblaws" },
+                });
+
+                if (!company) {
+                    company = new Company({ id: uuidv4(), name: "Loblaws" });
+                    await company.save();
+                }
+
+                let store = await Store.findOne({
+                    where: { postalCode, companyId: company.id },
+                });
+                if (!store) {
+                    store = new Store({
+                        id: uuidv4(),
+                        name: "Loblaws",
+                        street,
+                        city,
+                        province,
+                        country,
+                        postalCode,
+                        companyId: company.id,
+                    });
+
+                    await store.save();
+                }
+
+                for (const result of results) {
+                    loader.text = `${itemsArray.indexOf(item)}/${
+                        itemsArray.length
+                    } - ${storesArray
+                        .map((store) => store.postalCode)
+                        .indexOf(postalCode)}/${
+                        storesArray.length
+                    }|${item} at ${postalCode} |(${result.name} for ${
+                        result.price
+                    })`;
+
+                    let itemObj = await Item.findOne({
+                        where: { name: result.name, storeId: store.id },
+                    });
+
+                    if (!itemObj) {
+                        itemObj = new Item({
+                            id: uuidv4(),
+                            name: result.name,
+                            storeId: store.id,
+                            imgUrl: result.imgUrl,
+                        });
+
+                        await itemObj.save();
+                    } else if (itemObj.category !== item2category[item]) {
+                        itemObj.category = item2category[item];
+                        await itemObj.save();
+                    }
+
+                    const itemPrice = new Price({
+                        id: uuidv4(),
+                        price: parseFloat(result.price.slice(1)),
+                        itemId: itemObj.id,
+                    });
+
+                    await itemPrice.save();
+                }
+                itemBar.increment(1);
+            } catch (e) {
+                continue;
             }
-            itemBar.increment(1);
         }
         items = itemsArray;
         storeBar.increment(1);
