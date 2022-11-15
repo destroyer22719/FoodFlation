@@ -180,6 +180,14 @@
             "province": "Ontario",
             "country": "Canada",
             "company": "Metro"
+        },
+        {
+            "postalCode": "K7L 5L4",
+            "street": "310 Barrie St",
+            "city": "Kingston",
+            "province": "Ontario",
+            "country": "Canada",
+            "company": "Metro"
         }
     ]
 }
