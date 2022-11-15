@@ -1,0 +1,76 @@
+{
+    "stores": [
+        {
+            "street": "11920 Domain Dr",
+            "city": "Austin",
+            "state": "Texas",
+            "zipCode": "78758",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "901 E 5th St, Ste 100",
+            "city": "Austin",
+            "state": "Texas",
+            "zipCode": "78702",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "4301 W William Cannon, Bldg B Ste 800",
+            "city": "Austin",
+            "state": "Texas",
+            "zipCode": "78749",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "4301 W William Cannon, Bldg B Ste 800",
+            "city": "Austin",
+            "state": "Texas",
+            "zipCode": "78749",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "10133 Louetta Rd",
+            "city": "Houston",
+            "state": "Texas",
+            "zipCode": "77070",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "11041 Westheimer Rd",
+            "city": "Houston",
+            "state": "Texas",
+            "zipCode": "77042",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "1407 S Voss Rd",
+            "city": "Houston",
+            "state": "Texas",
+            "zipCode": "77057",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "11700 Preston Rd, Ste 714",
+            "city": "Houston",
+            "state": "Texas",
+            "zipCode": "75230",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        },
+        {
+            "street": "8190 Park Ln, Ste 351",
+            "city": "Houston",
+            "state": "Texas",
+            "zipCode": "75231",
+            "company": "Whole Foods Market",
+            "country": "United States"
+        }
+    ]
+}
