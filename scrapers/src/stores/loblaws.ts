@@ -103,10 +103,14 @@ export async function getPricesLoblaws(
         await page.goto(
             `https://www.loblaws.ca/store-locator?searchQuery=${
                 postalCode.split(" ")[0]
-            }%20${postalCode.split(" ")[1]}`
+            }%20${postalCode.split(" ")[1]}`, {
+                timeout: 60000,
+            }
         );
 
-        await page.waitForSelector(".location-set-store__button:first-of-type");
+        await page.waitForSelector(".location-set-store__button:first-of-type", {
+            timeout: 60000,
+        });
         await page.click(".location-set-store__button:first-of-type");
         await page.waitForSelector(
             ".fulfillment-location-confirmation__actions__button", {
@@ -132,7 +136,7 @@ export async function getPricesLoblaws(
             );
 
             try {
-                await page.waitForSelector(".product-tile__thumbnail__image > img", { timeout: 30000 });
+                await page.waitForSelector(".product-tile__thumbnail__image > img", { timeout: 60000 });
             } catch (err) {
                 continue;
             }
