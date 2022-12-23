@@ -146,7 +146,7 @@ export async function getPricesWholeFoodsMarket(
                 }
             );
             
-            if (await page.$(`img[alt="No results found"`)) continue;
+            if (await page.$(`img[alt="No results found"]`)) continue;
 
             await page.waitForSelector(".w-pie--product-tile__image", {
                 visible: true,
