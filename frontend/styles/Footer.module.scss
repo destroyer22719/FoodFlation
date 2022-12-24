@@ -1,17 +1,17 @@
 @import "assets/vars";
 
 .footer {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    align-items: center;
-    padding: 10px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  padding: 10px;
 
-    @media only screen and (min-width: 400px) {
-        justify-content: flex-end;
-    }
-    &__item {
-        fill: $purple-light;
-        font-size: 50px;
-    }
+  @media only screen and (min-width: 400px) {
+    justify-content: flex-end;
+  }
+  &__item {
+    fill: $purple-light;
+    font-size: 50px;
+  }
 }

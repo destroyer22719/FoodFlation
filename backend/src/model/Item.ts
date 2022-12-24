@@ -1,51 +1,51 @@
 import {
-    Table,
-    Model,
-    IsUUID,
-    PrimaryKey,
-    Column,
-    HasMany,
-    AllowNull,
-    IsUrl,
-    BelongsTo,
-    ForeignKey,
-    Default,
-    DataType,
+  Table,
+  Model,
+  IsUUID,
+  PrimaryKey,
+  Column,
+  HasMany,
+  AllowNull,
+  IsUrl,
+  BelongsTo,
+  ForeignKey,
+  Default,
+  DataType,
 } from "sequelize-typescript";
 import Price from "./Price.js";
 import Store from "./Store.js";
 
 @Table({
-    timestamps: true,
-    tableName: "items",
-    freezeTableName: true,
+  timestamps: true,
+  tableName: "items",
+  freezeTableName: true,
 })
 export default class Item extends Model {
-    @IsUUID(4)
-    @PrimaryKey
-    @Column
-    id: string;
+  @IsUUID(4)
+  @PrimaryKey
+  @Column
+  id: string;
 
-    @AllowNull(false)
-    @Column
-    name: string;
+  @AllowNull(false)
+  @Column
+  name: string;
 
-    @HasMany(() => Price)
-    prices: Price[];
+  @HasMany(() => Price)
+  prices: Price[];
 
-    @AllowNull(false)
-    @ForeignKey(() => Store)
-    @Column
-    storeId: string;
+  @AllowNull(false)
+  @ForeignKey(() => Store)
+  @Column
+  storeId: string;
 
-    @BelongsTo(() => Store)
-    store: Store;
+  @BelongsTo(() => Store)
+  store: Store;
 
-    @IsUrl
-    @Column(DataType.STRING(500))
-    imgUrl: string;
+  @IsUrl
+  @Column(DataType.STRING(500))
+  imgUrl: string;
 
-    @Default("Miscellaneous")
-    @Column
-    category: string;
+  @Default("Miscellaneous")
+  @Column
+  category: string;
 }

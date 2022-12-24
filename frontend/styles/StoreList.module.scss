@@ -47,7 +47,7 @@
       &-item {
         display: flex;
         justify-content: center;
-
+        
         & > div {
           display: flex;
           align-items: center;
@@ -91,6 +91,7 @@
       &-item {
         width: 200px;
         margin-bottom: 10px;
+        font-weight: bold;
       }
     }
 

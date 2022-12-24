@@ -1,5 +1,10 @@
 import express from "express";
-import { getAllItems, getItemById, getItemCount, getAllStoreItems } from "../controllers/items.js";
+import {
+  getAllItems,
+  getItemById,
+  getItemCount,
+  getAllStoreItems,
+} from "../controllers/items.js";
 const router = express.Router();
 
 router.get("/", getAllItems);

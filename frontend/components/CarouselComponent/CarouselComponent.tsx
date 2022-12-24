@@ -30,7 +30,8 @@ const CarouselComponent = () => {
         <div>
           According to
           <Link href="https://www150.statcan.gc.ca/n1/daily-quotidien/220622/dq220622a-eng.htm">
-            {" "} Stastics Canada
+            {" "}
+            Stastics Canada
           </Link>
           , in May of 2022, the Consumer Price index rose by 7.7%. Prices for
           grocery stores rose by 9.7%. Some items, including edible fats and

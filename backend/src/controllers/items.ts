@@ -7,40 +7,40 @@ import Store from "../model/Store.js";
 const pageSize = 10;
 
 type ResultsFound = [
-    {
-        resultsFound: number;
-    }
+  {
+    resultsFound: number;
+  }
 ];
 
 export const getItemById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-    try {
-        const item = await Item.findByPk(req.params.id, {
-            include: [Store, Price],
-            order: [["prices", "createdAt", "ASC"]],
-        });
+  try {
+    const item = await Item.findByPk(req.params.id, {
+      include: [Store, Price],
+      order: [["prices", "createdAt", "ASC"]],
+    });
 
-        if (!item)
-            res.status(404).send({
-                message: `No item found with id of ${req.params.id}`,
-            });
-        else res.send(item);
-    } catch (err) {
-        next(err);
-    }
+    if (!item)
+      res.status(404).send({
+        message: `No item found with id of ${req.params.id}`,
+      });
+    else res.send(item);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getAllItems = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-    try {
-        const [items] = await sequelize.query(
-            `
+  try {
+    const [items] = await sequelize.query(
+      `
             SELECT 
                 items.id, 
                 items.name, 
@@ -66,119 +66,105 @@ export const getAllItems = async (
             LIMIT :pageSize
             OFFSET :offset
         `,
-            {
-                replacements: {
-                    pageSize,
-                    offset: req.query.page
-                        ? (+req.query.page - 1) * pageSize
-                        : 0,
-                },
-            }
-        );
-        res.send(items);
-    } catch (err) {
-        next(err);
-    }
+      {
+        replacements: {
+          pageSize,
+          offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
+        },
+      }
+    );
+    res.send(items);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getAllStoreItems = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-    try {
-        const total = await Item.count({
-            where: {
-                storeId: req.params.storeId,
-            },
-        });
+  try {
+    const total = await Item.count({
+      where: {
+        storeId: req.params.storeId,
+      },
+    });
 
-        const [items] = await sequelize.query(
-            `
-            SELECT
-                items.id,
-                items.name, 
-                items.imgUrl, 
-                items.category,
-                prices.price, 
-                prices.createdAt AS lastUpdated
-            FROM 
-                items 
-                LEFT JOIN prices ON prices.id = (
-                    SELECT 
-                        id 
-                    FROM 
-                        prices 
-                    WHERE 
-                        items.id = prices.itemId 
-                    ORDER BY 
-                        prices.createdAt 
-                        DESC
-                    LIMIT 
-                        1
-                )
-            WHERE items.storeId = :storeId
-            ${
-                req.query.search
-                    ? `AND items.name LIKE "%${req.query.search}%"`
-                    : ""
-            }
-            ${
-                req.query.category
-                    ? `AND items.category = "${req.query.category}"`
-                    : ""
-            }
-            LIMIT :pageSize
-            OFFSET :offset
-            `,
-            {
-                replacements: {
-                    storeId: req.params.storeId,
-                    pageSize,
-                    offset: req.query.page
-                        ? (+req.query.page - 1) * pageSize
-                        : 0,
-                },
-            }
-        );
+    const [items] = await sequelize.query(
+      `
+      SELECT
+          items.id,
+          items.name, 
+          items.imgUrl, 
+          items.category,
+          prices.price, 
+          prices.createdAt AS lastUpdated
+      FROM 
+          items 
+          LEFT JOIN prices ON prices.id = (
+              SELECT 
+                  id 
+              FROM 
+                  prices 
+              WHERE 
+                  items.id = prices.itemId 
+              ORDER BY 
+                  prices.createdAt 
+                  DESC
+              LIMIT 
+                  1
+          )
+      WHERE items.storeId = :storeId
+      ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
+      ${
+        req.query.category ? `AND items.category = "${req.query.category}"` : ""
+      }
+      LIMIT :pageSize
+      OFFSET :offset
+      `,
+      {
+        replacements: {
+          storeId: req.params.storeId,
+          pageSize,
+          offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
+        },
+      }
+    );
 
-        const [resultsFound] = await sequelize.query(
-            `
-        SELECT COUNT(*) AS resultsFound FROM 
-        items 
-        LEFT JOIN prices ON prices.id = (
-            SELECT 
-                id 
-            FROM 
-                prices 
-            WHERE 
-                items.id = prices.itemId 
-            ORDER BY 
-                prices.createdAt 
-            LIMIT 
-                1
-        )
-        WHERE items.storeId = :storeId
-        ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
-        ${
-            req.query.category
-                ? `AND items.category = "${req.query.category}"`
-                : ""
-        }
-        `,
-            {
-                replacements: {
-                    storeId: req.params.storeId,
-                    pageSize,
-                    offset: req.query.page
-                        ? (+req.query.page - 1) * pageSize
-                        : 0,
-                },
-            }
-        );
+    const [resultsFound] = await sequelize.query(
+      `
+      SELECT COUNT(*) AS resultsFound FROM 
+      items 
+      LEFT JOIN prices ON prices.id = (
+          SELECT 
+              id 
+          FROM 
+              prices 
+          WHERE 
+              items.id = prices.itemId 
+          ORDER BY 
+              prices.createdAt 
+          LIMIT 
+              1
+      )
+      WHERE items.storeId = :storeId
+      ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
+      ${
+        req.query.category ? `AND items.category = "${req.query.category}"` : ""
+      }
+      `,
+      {
+        replacements: {
+          storeId: req.params.storeId,
+          pageSize,
+          offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
+        },
+      }
+    );
 
-        const [categoryData] = await sequelize.query(
-            `SELECT 
+    const [categoryData] = await sequelize.query(
+      `SELECT 
                 COUNT(category) as categoryCount, category 
             FROM 
                 items 
@@ -187,33 +173,33 @@ export const getAllStoreItems = async (
             GROUP BY 
                 category 
             `,
-            {
-                replacements: {
-                    storeId: req.params.storeId,
-                },
-            }
-        );
+      {
+        replacements: {
+          storeId: req.params.storeId,
+        },
+      }
+    );
 
-        res.send({
-            total,
-            resultsFound: (resultsFound as ResultsFound)[0].resultsFound,
-            categoryData,
-            items,
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.send({
+      total,
+      resultsFound: (resultsFound as ResultsFound)[0].resultsFound,
+      categoryData,
+      items,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getItemCount = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction
+  _req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-    try {
-        const itemCount = await Item.count();
-        res.send({ count: itemCount });
-    } catch (err) {
-        next(err);
-    }
+  try {
+    const itemCount = await Item.count();
+    res.send({ count: itemCount });
+  } catch (err) {
+    next(err);
+  }
 };

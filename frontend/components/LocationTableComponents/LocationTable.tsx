@@ -3,23 +3,23 @@ import styles from "../../styles/StoreList.module.scss";
 import CountryRow from "./CountryRow";
 
 type Props = {
-    locations: Location[];
+  locations: Location[];
 };
 
 const LocationTable: React.FC<Props> = ({ locations }) => {
-    return (
-        <div className={styles["store-list__location"]}>
-            {locations.map((location) => (
-                <CountryRow key={location.country} location={location} />
-            ))}
-        </div>
-    );
+  return (
+    <div className={styles["store-list__location"]}>
+      {locations.map((location) => (
+        <CountryRow key={location.country} location={location} />
+      ))}
+    </div>
+  );
 };
 
 export default LocationTable;
 
 {
-    /* 
+  /* 
 <div
     key={i}
     className={styles["store-list__location-prov-item"]}

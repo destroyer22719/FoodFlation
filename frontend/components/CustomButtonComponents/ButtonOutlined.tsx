@@ -3,44 +3,44 @@ import Button from "@mui/material/Button";
 import { MouseEventHandler } from "react";
 
 const ButtonOutlinedStyled = styled(Button)({
-    border: "2px solid #9388A2",
+  border: "2px solid #9388A2",
+  backgroundColor: "rgb(147, 136, 162, 0.5)",
+  "&:hover": {
     backgroundColor: "rgb(147, 136, 162, 0.5)",
-    "&:hover": {
-        backgroundColor: "rgb(147, 136, 162, 0.5)",
-        border: "2px solid #9388A2",
-        borderRadius: "3px",
-        outline: "none",
-    },
-    "&:active": {
-        boxShadow: "none",
-        backgroundColor: "rgb(147, 136, 162, 0.5)",
-        border: "2px solid #9388A2",
-    },
+    border: "2px solid #9388A2",
+    borderRadius: "3px",
+    outline: "none",
+  },
+  "&:active": {
+    boxShadow: "none",
+    backgroundColor: "rgb(147, 136, 162, 0.5)",
+    border: "2px solid #9388A2",
+  },
 });
 
 type Props = {
-    onClick?: MouseEventHandler<HTMLButtonElement>;
-    className?: string;
-    children: React.ReactNode;
-    disabled?: boolean;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+  children: React.ReactNode;
+  disabled?: boolean;
 };
 
 const ButtonOutlined: React.FC<Props> = ({
-    onClick,
-    className,
-    children,
-    disabled = false,
+  onClick,
+  className,
+  children,
+  disabled = false,
 }) => {
-    return (
-        <ButtonOutlinedStyled
-            variant="outlined"
-            className={className}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {children}
-        </ButtonOutlinedStyled>
-    );
+  return (
+    <ButtonOutlinedStyled
+      variant="outlined"
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </ButtonOutlinedStyled>
+  );
 };
 
 export default ButtonOutlined;
