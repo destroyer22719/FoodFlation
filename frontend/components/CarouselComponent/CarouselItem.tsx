@@ -13,7 +13,7 @@ const CarouselItem: React.FC<Props> = ({ imgUrl, children }) => {
             <div>{children}</div>
             {imgUrl && (
                 <div className={styles["carousel__item-img"]}>
-                    <Image layout="fill" src={imgUrl} alt={""} />
+                    <Image src={imgUrl} alt={""} />
                 </div>
             )}
         </div>

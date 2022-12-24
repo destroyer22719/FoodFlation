@@ -70,17 +70,14 @@ const StorePage: React.FC<Props> = ({
                 }
               }}
             />
-            <Link href={`${currentPath}?search=${search}`} passHref>
+            <Link href={`${currentPath}?search=${search}`}>
               <ButtonContained className={styles["store-page__search-button"]}>
                 <SearchIcon />
               </ButtonContained>
             </Link>
           </div>
           <div className={styles["store-page__category-list"]}>
-            <Link
-              href={showClear ? `${currentPath}?page=${page}` : "#"}
-              passHref
-            >
+            <Link href={showClear ? `${currentPath}?page=${page}` : "#"}>
               <IconButton
                 disabled={!showClear}
                 className={styles["store-page__category-clear"]}
@@ -111,7 +108,6 @@ const StorePage: React.FC<Props> = ({
               className={styles["store-page__pagination-button"]}
             >
               <Link
-                passHref
                 href={
                   page == 1
                     ? "#"
@@ -144,7 +140,6 @@ const StorePage: React.FC<Props> = ({
               className={styles["store-page__pagination-button"]}
             >
               <Link
-                passHref
                 href={
                   page == maxPages
                     ? "#"

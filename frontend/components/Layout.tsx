@@ -24,7 +24,7 @@ const Layout: React.FC<Props> = ({ title, children }) => {
     return (
         <div className={style["layout"]}>
             <Head>
-                <title>FoodFlation | {title || ""} </title>
+                <title>{`FoodFlation | ${title}`} </title>
                 <meta
                     name="description"
                     content="Track price histories of grocery stores across Canada"

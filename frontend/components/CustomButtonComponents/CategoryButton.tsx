@@ -5,34 +5,34 @@ import { UrlObject } from "url";
 import { Category } from "../../global";
 
 type Props = {
-    category: Category;
-    linkTo?: UrlObject | string;
-    className?: string;
-    count?: number;
+  category: Category;
+  linkTo?: UrlObject | string;
+  className?: string;
+  count?: number;
 };
 
 const CategoryButton: React.FC<Props> = ({
-    category,
-    linkTo,
-    className,
-    count,
+  category,
+  linkTo,
+  className,
+  count,
 }) => {
-    return (
-        <Link href={linkTo ? linkTo : "#"} passHref>
-            <ButtonContained
-                className={`${className || ""} ${
-                    styles[
-                        `category__${category
-                            .toLowerCase()
-                            .replaceAll(" ", "-")
-                            .replaceAll("&", "and")}`
-                    ]
-                }`}
-            >
-                {category} {count !== undefined ? `- ${count}` : ""}
-            </ButtonContained>
-        </Link>
-    );
+  return (
+    <Link href={linkTo ? linkTo : "#"}>
+      <ButtonContained
+        className={`${className || ""} ${
+          styles[
+            `category__${category
+              .toLowerCase()
+              .replaceAll(" ", "-")
+              .replaceAll("&", "and")}`
+          ]
+        }`}
+      >
+        {category} {count !== undefined ? `- ${count}` : ""}
+      </ButtonContained>
+    </Link>
+  );
 };
 
 export default CategoryButton;
