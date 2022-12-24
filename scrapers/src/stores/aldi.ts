@@ -105,12 +105,19 @@ export async function getPricesAldi(
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
     // @ts-ignore
-    const stateAbbr = states.default.filter((s) => s.name === state)[0].abbreviation.toLowerCase();
+    const stateAbbr = states.default
+      // @ts-ignore
+      .filter((s) => s.name === state)[0]
+      .abbreviation.toLowerCase();
+
     const urlCity = city.replaceAll(" ", "-").toLowerCase();
     const urlAdr = street.replaceAll(" ", "-").toLowerCase();
-    await page.goto(`https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`, {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(
+      `https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`,
+      {
+        waitUntil: "domcontentloaded",
+      }
+    );
     await page.click(".Hero-cta--primary");
     await page.waitForSelector('span[class*="AddressButton"]');
     for (const item of items) {
@@ -121,10 +128,13 @@ export async function getPricesAldi(
       } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
         storesArray.length
       }| ${item} at ${zipCode}`;
+
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-
+      await page.waitForSelector('span[aria-label*="Original price:"]', {
+        timeout: 60 * 60 * 1000,
+      });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
@@ -137,11 +147,10 @@ export async function getPricesAldi(
         //finds a maximum of 3 of each item
         const totalIters = name.length > 3 ? 3 : name.length;
         for (let i = 0; i < totalIters; i++) {
-
           results.push({
             name: (<HTMLElement>name[i]).innerText,
             price: (<HTMLElement>price[i]).innerText.slice(1),
-            imgUrl: (<HTMLImageElement>img[i]).srcset.split(", ")[0],
+            imgUrl: (<HTMLImageElement>img[i]).srcset.split(", ").filter(url => /\.(jpe?g|png)$/gm.test(url))[0],
           });
         }
 

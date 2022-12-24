@@ -14,7 +14,8 @@ const moduleExports = {
             "assets.sellers.loblaw.ca",
             "product-images.metro.ca",
             "www.metro.ca",
-            "m.media-amazon.com"
+            "m.media-amazon.com",
+            "www.instacart.com"
         ],
     },
 };

@@ -28,7 +28,7 @@ const CarouselComponent = () => {
             imgUrl: "/inflation_icon.png",
             content: (
                 <div>
-                    According to
+                    According to 
                     <Link href="https://www150.statcan.gc.ca/n1/daily-quotidien/220622/dq220622a-eng.htm">
                         Stastics Canada
                     </Link>

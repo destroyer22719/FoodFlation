@@ -62,7 +62,7 @@ const StorePage: React.FC<Props> = ({
                         <InputOutlined
                             className={styles["store-page__search-bar"]}
                             value={search}
-                            placeholder="Enter Postal Code of Store"
+                            placeholder="Enter Item Name"
                             onChange={(e) =>
                                 setSearch((e.target as HTMLInputElement).value)
                             }

@@ -14,9 +14,8 @@ const StoreItem: React.FC<Props> = ({ store }) => {
       <ButtonContained className={style["store-list__store-item-btn"]}>
         <Link
           href={`/store/${store.id}`}
-          className={style["store-list__store-item--format"]}
         >
-          <>
+          <div className={style["store-list__store-item--format"]}>
             <div className={style["store-list__store-item-image"]}>
               <Image
                 src={`/store-logos/${store.name
@@ -31,7 +30,7 @@ const StoreItem: React.FC<Props> = ({ store }) => {
               <span>{store.city}</span>
               <span>{store.postalCode}</span>
             </div>
-          </>
+          </div>
         </Link>
       </ButtonContained>
     </div>
