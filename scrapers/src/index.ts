@@ -12,6 +12,7 @@ const argv = yargs(process.argv.slice(2))
         metro: { type: "boolean", demand: false, default: false },
         loblaws: { type: "boolean", demand: false, default: false },
         wholeFoodsMarket: { type: "boolean", demand: false, default: false },
+        aldi: { type: "boolean", demand: false, default: false },
         canada: { type: "boolean", demand: false, default: false },
         usa: { type: "boolean", demand: false, default: false },
     })
@@ -42,6 +43,7 @@ const argv = yargs(process.argv.slice(2))
             itemStart: argv.itemStart,
             state: argv.state as State,
             wholeFoodsMarket: argv.wholeFoodsMarket,
+            aldi: argv.aldi,
         });
     }
 })();

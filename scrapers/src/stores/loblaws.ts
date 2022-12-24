@@ -16,277 +16,236 @@ import { msToTime } from "../util.js";
 const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
-    itemsArray: string[],
-    storesArray: Address[],
-    storeStart: number = 0,
-    itemStart: number = 0
+  itemsArray: string[],
+  storesArray: Address[],
+  storeStart: number = 0,
+  itemStart: number = 0
 ) {
-    const stores = storesArray.slice(storeStart);
-    if (stores.length === 0) {
-        console.log("No Loblaws stores found");
-        return;
+  const stores = storesArray.slice(storeStart);
+  if (stores.length === 0) {
+    console.log("No Loblaws stores found");
+    return;
+  }
+
+  const startTime = Date.now();
+
+  await sequelize.sync();
+  const browser = await puppeteer.launch({
+    headless: false,
+    ignoreHTTPSErrors: true,
+  });
+
+  const page = await browser.newPage();
+  //disables location
+  const context = browser.defaultBrowserContext();
+  await context.overridePermissions("https://www.loblaws.ca/store-locator?", [
+    "geolocation",
+  ]);
+
+  let items = itemsArray.slice(itemStart);
+
+  const multiBar = new cliProgress.MultiBar(
+    {
+      clearOnComplete: false,
+      hideCursor: true,
+    },
+    cliProgress.Presets.shades_grey
+  );
+
+  const storeBar = multiBar.create(
+    storesArray.length,
+    storeStart,
+    {},
+    {
+      format:
+        "Loblaws |" +
+        colors.cyan("{bar}") +
+        "| {percentage}% | {value}/{total} Stores",
+      hideCursor: true,
     }
+  );
 
-    const startTime = Date.now();
+  const itemBar = multiBar.create(
+    itemsArray.length,
+    itemStart,
+    {},
+    {
+      format:
+        "Items   |" +
+        colors.magenta("{bar}") +
+        "| {percentage}% | {value}/{total} Items",
+      hideCursor: true,
+    }
+  );
 
-    await sequelize.sync();
-    const browser = await puppeteer.launch({
-        headless: false,
-        ignoreHTTPSErrors: true,
+  //this is a cheap workaround for combining multiple bars with ora spinners
+  multiBar.create(0, 0);
+
+  const loader = ora("Scraping Loblaws...").start();
+
+  const item2category = JSON.parse(
+    fs.readFileSync(
+      path.join(__dirname, "src", "config", "item2category.json"),
+      "utf-8"
+    )
+  );
+
+  for (const store of stores) {
+    //searches up store postal code directly and set the store location
+    let { city, postalCode, province, country, street } = store;
+
+    postalCode = postalCode as string;
+    province = province as string;
+    country = country as string;
+
+    loader.color = "green";
+    loader.text = `Scraping ${postalCode}...`;
+    await page.goto(
+      `https://www.loblaws.ca/store-locator?searchQuery=${postalCode}`,
+      {
+        timeout: 2 * 60 * 1000,
+      }
+    );
+
+    await page.waitForSelector(".location-set-store__button:first-of-type", {
+      timeout: 60 * 1000,
     });
-
-    const page = await browser.newPage();
-    //disables location
-    const context = browser.defaultBrowserContext();
-    await context.overridePermissions("https://www.loblaws.ca/store-locator?", [
-        "geolocation",
-    ]);
-
-    let items = itemsArray.slice(itemStart);
-
-    const multiBar = new cliProgress.MultiBar(
-        {
-            clearOnComplete: false,
-            hideCursor: true,
-        },
-        cliProgress.Presets.shades_grey
+    await page.click(".location-set-store__button:first-of-type");
+    await page.waitForSelector(
+      ".fulfillment-location-confirmation__actions__button",
+      {
+        timeout: 15 * 60 * 1000,
+      }
     );
+    await page.click(".fulfillment-location-confirmation__actions__button");
 
-    const storeBar = multiBar.create(
-        storesArray.length,
-        storeStart,
-        {},
-        {
-            format:
-                "Loblaws |" +
-                colors.cyan("{bar}") +
-                "| {percentage}% | {value}/{total} Stores",
-            hideCursor: true,
-        }
-    );
-
-    const itemBar = multiBar.create(
-        itemsArray.length,
-        itemStart,
-        {},
-        {
-            format:
-                "Items   |" +
-                colors.magenta("{bar}") +
-                "| {percentage}% | {value}/{total} Items",
-            hideCursor: true,
-        }
-    );
-
-    //this is a cheap workaround for combining multiple bars with ora spinners
-    multiBar.create(0, 0);
-
-    const loader = ora("Scraping Loblaws...").start();
-
-    const item2category = JSON.parse(
-        fs.readFileSync(
-            path.join(__dirname, "src", "config", "item2category.json"),
-            "utf-8"
-        )
-    );
-
-    for (const store of stores) {
-        //searches up store postal code directly and set the store location
-        let { city, postalCode, province, country, street } = store;
-
-        postalCode = postalCode as string;
-        province = province as string;
-        country = country as string;
-
+    for (const item of items) {
+      try {
         loader.color = "green";
-        loader.text = `Scraping ${postalCode}...`;
-        await page.goto(
-            `https://www.loblaws.ca/store-locator?searchQuery=${
-                postalCode.split(" ")[0]
-            }%20${postalCode.split(" ")[1]}`,
-            {
-                timeout: 60 * 1000,
-            }
-        );
-        
-        try {
-            await page.waitForSelector(".lds__store-locator__store-list__store", {
-                timeout: 5 * 1000,
+        loader.text = `${itemsArray.indexOf(item)}/${
+          itemsArray.length
+        } - ${storesArray
+          .map((store) => store.postalCode)
+          .indexOf(postalCode)}/${
+          storesArray.length
+        }| ${item} at ${postalCode}`;
+        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
+
+        await page.waitForSelector(".product-tile__thumbnail__image", {
+          timeout: 60 * 1000,
+        });
+
+        //retrieves the value of the first 3 items
+        const results = await page.evaluate(() => {
+          const results = [];
+
+          const name = document.getElementsByClassName(
+            "product-name__item product-name__item--name"
+          );
+          const price = document.querySelectorAll(
+            ".selling-price-list__item__price--now-price__value"
+          );
+          const img = document.querySelectorAll(
+            ".product-tile__thumbnail__image > img"
+          );
+
+          //finds a maximum of 3 of each item
+          const totalIters = name.length > 3 ? 3 : name.length;
+
+          let i = 0;
+          while (i < totalIters) {
+            results.push({
+              name: (<HTMLElement>name[i]).innerText,
+              price: (<HTMLElement>price[i]).innerText,
+              imgUrl: (<HTMLImageElement>img[i]).src,
             });
-    
-            const cookiesPopUp = await page.$(".lds__privacy-policy__btnClose");
-            if (cookiesPopUp) {
-                await page.click(".lds__privacy-policy__btnClose");
-            }
-        } catch (e) {
+            i++;
+          }
+
+          return results;
+        });
+
+        //inserts information to database
+        let company = await Company.findOne({
+          where: { name: "Loblaws" },
+        });
+
+        if (!company) {
+          company = new Company({ id: uuidv4(), name: "Loblaws" });
+          await company.save();
         }
 
-        await page.waitForSelector(
-            ".location-set-store__button:first-of-type",
-            {
-                timeout: 60 * 1000,
-            }
-        );
-        await page.click(".location-set-store__button:first-of-type");
-        await page.waitForSelector(
-            ".fulfillment-location-confirmation__actions__button",
-            {
-                timeout: 60 * 1000,
-            }
-        );
-        await page.click(".fulfillment-location-confirmation__actions__button");
+        let store = await Store.findOne({
+          where: { postalCode, companyId: company.id },
+        });
+        if (!store) {
+          store = new Store({
+            id: uuidv4(),
+            name: "Loblaws",
+            street,
+            city,
+            province,
+            country,
+            postalCode,
+            companyId: company.id,
+          });
 
-        for (const item of items) {
-            try {
-                loader.color = "green";
-                loader.text = `${itemsArray.indexOf(item)}/${
-                    itemsArray.length
-                } - ${storesArray
-                    .map((store) => store.postalCode)
-                    .indexOf(postalCode)}/${
-                    storesArray.length
-                }| ${item} at ${postalCode}`;
-                await page.goto(
-                    `https://www.loblaws.ca/search?search-bar=${item.replace(
-                        " ",
-                        "%20"
-                    )}`
-                );
-
-                try {
-                    await page.waitForSelector(
-                        ".product-tile__thumbnail__image > img",
-                        { timeout: 60 * 1000 }
-                    );
-                } catch (err) {
-                    continue;
-                }
-
-                //retrieves the value of the first 3 items
-                const results = await page.evaluate(() => {
-                    const results = [];
-
-                    const name = document.getElementsByClassName(
-                        "product-name__item product-name__item--name"
-                    );
-                    const price = document.querySelectorAll(
-                        ".selling-price-list__item__price--now-price__value"
-                    );
-                    const img = document.querySelectorAll(
-                        ".product-tile__thumbnail__image > img"
-                    );
-
-                    //finds a maximum of 3 of each item
-                    const totalIters = name.length > 3 ? 3 : name.length;
-
-                    let i = 0;
-                    while (i < totalIters) {
-                        // for (let i = 0; i < totalIters; i++) {
-                        //hopefully to get around selecting sponsored items
-                        if (
-                            document
-                                .querySelectorAll(
-                                    ".product-tile-group__list__item"
-                                )
-                                [i].querySelector(
-                                    ".product-badge__text.product-badge__text--product-tile"
-                                )
-                        )
-                            continue;
-                        results.push({
-                            name: (<HTMLElement>name[i]).innerText,
-                            price: (<HTMLElement>price[i]).innerText,
-                            imgUrl: (<HTMLImageElement>img[i]).src,
-                        });
-                        i++;
-                    }
-
-                    return results;
-                });
-
-                //inserts information to database
-                let company = await Company.findOne({
-                    where: { name: "Loblaws" },
-                });
-
-                if (!company) {
-                    company = new Company({ id: uuidv4(), name: "Loblaws" });
-                    await company.save();
-                }
-
-                let store = await Store.findOne({
-                    where: { postalCode, companyId: company.id },
-                });
-                if (!store) {
-                    store = new Store({
-                        id: uuidv4(),
-                        name: "Loblaws",
-                        street,
-                        city,
-                        province,
-                        country,
-                        postalCode,
-                        companyId: company.id,
-                    });
-
-                    await store.save();
-                }
-
-                for (const result of results) {
-                    loader.text = `${itemsArray.indexOf(item)}/${
-                        itemsArray.length
-                    } - ${storesArray
-                        .map((store) => store.postalCode)
-                        .indexOf(postalCode)}/${
-                        storesArray.length
-                    }|${item} at ${postalCode} |(${result.name} for ${
-                        result.price
-                    })`;
-
-                    let itemObj = await Item.findOne({
-                        where: { name: result.name, storeId: store.id },
-                    });
-
-                    if (!itemObj) {
-                        itemObj = new Item({
-                            id: uuidv4(),
-                            name: result.name,
-                            storeId: store.id,
-                            imgUrl: result.imgUrl,
-                        });
-
-                        await itemObj.save();
-                    } else if (itemObj.category !== item2category[item]) {
-                        itemObj.category = item2category[item];
-                        await itemObj.save();
-                    }
-
-                    const itemPrice = new Price({
-                        id: uuidv4(),
-                        price: parseFloat(result.price.slice(1)),
-                        itemId: itemObj.id,
-                    });
-
-                    await itemPrice.save();
-                }
-                itemBar.increment(1);
-            } catch (e) {
-                continue;
-            }
+          await store.save();
         }
-        items = itemsArray;
-        storeBar.increment(1);
-        itemBar.update(0);
+
+        for (const result of results) {
+          loader.text = `${itemsArray.indexOf(item)}/${
+            itemsArray.length
+          } - ${storesArray
+            .map((store) => store.postalCode)
+            .indexOf(postalCode)}/${
+            storesArray.length
+          }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
+
+          let itemObj = await Item.findOne({
+            where: { name: result.name, storeId: store.id },
+          });
+
+          if (!itemObj) {
+            itemObj = new Item({
+              id: uuidv4(),
+              name: result.name,
+              storeId: store.id,
+              imgUrl: result.imgUrl,
+            });
+
+            await itemObj.save();
+          } else if (itemObj.category !== item2category[item]) {
+            itemObj.category = item2category[item];
+            await itemObj.save();
+          }
+
+          const itemPrice = new Price({
+            id: uuidv4(),
+            price: parseFloat(result.price.slice(1)),
+            itemId: itemObj.id,
+          });
+
+          await itemPrice.save();
+        }
+        itemBar.increment(1);
+      } catch (e) {
+        continue;
+      }
     }
-    itemBar.update(itemsArray.length);
-    storeBar.stop();
-    itemBar.stop();
-    multiBar.stop();
-    loader.stop();
+    items = itemsArray;
+    storeBar.increment(1);
+    itemBar.update(0);
+  }
+  itemBar.update(itemsArray.length);
+  storeBar.stop();
+  itemBar.stop();
+  multiBar.stop();
+  loader.stop();
 
-    await browser.close();
+  await browser.close();
 
-    const endTime = Date.now();
-    const timeTaken = endTime - startTime;
-    console.log(msToTime(timeTaken));
+  const endTime = Date.now();
+  const timeTaken = endTime - startTime;
+  console.log(msToTime(timeTaken));
 }

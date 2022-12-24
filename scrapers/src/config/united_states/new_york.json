@@ -1,36 +1,44 @@
 {
-    "stores": [
-        {
-            "street": "270 Greenwich St",
-            "city": "New York",
-            "state": "New York",
-            "zipCode": "10007",
-            "company": "Whole Foods Market",
-            "country": "United States"
-        },
-        {
-            "street": "4 Union Square S",
-            "city": "New York",
-            "state": "New York",
-            "zipCode": "10003",
-            "company": "Whole Foods Market",
-            "country": "United States"  
-        },
-        {
-            "street": "95 East Houston St",
-            "city": "New York",
-            "state": "New York",
-            "zipCode": "10002",
-            "company": "Whole Foods Market",
-            "country": "United States"  
-        },
-        {
-            "street": "292 Ashland Pl",
-            "city": "Brooklyn",
-            "state": "New York",
-            "zipCode": "11217",
-            "company": "Whole Foods Market",
-            "country": "United States"  
-        }
-    ]
+  "stores": [
+    {
+      "street": "270 Greenwich St",
+      "city": "New York",
+      "state": "New York",
+      "zipCode": "10007",
+      "company": "Whole Foods Market",
+      "country": "United States"
+    },
+    {
+      "street": "4 Union Square S",
+      "city": "New York",
+      "state": "New York",
+      "zipCode": "10003",
+      "company": "Whole Foods Market",
+      "country": "United States"
+    },
+    {
+      "street": "95 East Houston St",
+      "city": "New York",
+      "state": "New York",
+      "zipCode": "10002",
+      "company": "Whole Foods Market",
+      "country": "United States"
+    },
+    {
+      "street": "292 Ashland Pl",
+      "city": "Brooklyn",
+      "state": "New York",
+      "zipCode": "11217",
+      "company": "Whole Foods Market",
+      "country": "United States"
+    },
+    {
+      "city": "New York",
+      "state": "New York",
+      "country": "United States",
+      "street": "517 East 117th Street",
+      "company": "Aldi",
+      "zipCode": "10035"
+    }
+  ]
 }

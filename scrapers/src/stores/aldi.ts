@@ -12,10 +12,11 @@ import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
 import { Address } from "../global.js";
 import { msToTime } from "../util.js";
+import states from "states-us";
 
 const __dirname = path.resolve();
 
-export async function getPricesMetro(
+export async function getPricesAldi(
   itemsArray: string[],
   storesArray: Address[],
   storeStart: number = 0,
@@ -24,7 +25,7 @@ export async function getPricesMetro(
   const stores = storesArray.slice(storeStart);
 
   if (stores.length === 0) {
-    console.log("No Metro stores found");
+    console.log("No Aldi's stores found");
     return;
   }
 
@@ -35,16 +36,17 @@ export async function getPricesMetro(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     ignoreHTTPSErrors: true,
   });
 
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
-  await context.overridePermissions("https://www.Metro.ca/cp/grocery", [
-    "geolocation",
-  ]);
+  await context.overridePermissions(
+    "https://shop.aldi.us/store/aldi/storefront/",
+    ["geolocation"]
+  );
 
   const multiBar = new cliProgress.MultiBar(
     {
@@ -60,7 +62,7 @@ export async function getPricesMetro(
     {},
     {
       format:
-        "Metro |" +
+        "Aldi |" +
         colors.cyan("{bar}") +
         "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
@@ -73,7 +75,7 @@ export async function getPricesMetro(
     {},
     {
       format:
-        "Items |" +
+        "Items|" +
         colors.magenta("{bar}") +
         "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
@@ -83,7 +85,7 @@ export async function getPricesMetro(
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
 
-  const loader = ora("Scraping Metro...").start();
+  const loader = ora("Scraping Aldi...").start();
 
   const item2category = JSON.parse(
     fs.readFileSync(
@@ -94,139 +96,78 @@ export async function getPricesMetro(
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
-    let { city, postalCode, province, country, street } = store;
+    let { city, zipCode, state, country, street } = store;
 
-    postalCode = postalCode as string;
-    province = province as string;
+    zipCode = zipCode as string;
+    state = state as string;
     country = country as string;
 
     loader.color = "green";
-    loader.text = `Scraping ${postalCode}...`;
-    await page.goto("https://www.metro.ca/en/find-a-grocery");
-
-    await page.$eval(
-      "#postalCode",
-      (input, pc) => ((input as HTMLInputElement).value = pc as string),
-      postalCode
-    );
-    await page.click("#submit");
-    await page.waitForTimeout(5000);
-    await page.click(
-      "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
-    );
-    await page.waitForNavigation();
+    loader.text = `Scraping ${zipCode}...`;
+    // @ts-ignore
+    const stateAbbr = states.default.filter((s) => s.name === state)[0].abbreviation.toLowerCase();
+    const urlCity = city.replaceAll(" ", "-").toLowerCase();
+    const urlAdr = street.replaceAll(" ", "-").toLowerCase();
+    await page.goto(`https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`, {
+      waitUntil: "domcontentloaded",
+    });
+    await page.click(".Hero-cta--primary");
+    await page.waitForSelector('span[class*="AddressButton"]');
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
       loader.text = `${itemsArray.indexOf(item)}/${
         itemsArray.length
-      } - ${storesArray.map((store) => store.postalCode).indexOf(postalCode)}/${
+      } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
         storesArray.length
-      }| ${item} at ${postalCode}`;
-      await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
+      }| ${item} at ${zipCode}`;
+      await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-
-      await page.waitForTimeout(2000);
-      const popup = await page.$(
-        ".p__close.closeModalLogIn.removeBodyOverFlow"
-      );
-      if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
-      try {
-        await page.waitForSelector(".tile-product__top-section__details", {
-          timeout: 15000,
-        });
-      } catch (err) {
-        continue;
-      }
 
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const priceRegex = /(?<=\$)\d*.\d{2}/;
-        const name = document.querySelectorAll(
-          ".tile-product__top-section__details > a > div"
+        const name = document.querySelectorAll("li h2");
+        const price = document.querySelectorAll(
+          'span[aria-label*="Original price:"]'
         );
-        const price = document.querySelectorAll(".pi--main-price");
-        const prodTile = document.querySelectorAll(".products-tile-list__tile");
-        const img = document.querySelectorAll(
-          ".tile-product__top-section__visuals__img-product.defaultable-picture > img"
-        );
+        const img = document.querySelectorAll("li img[srcset]");
 
         //finds a maximum of 3 of each item
         const totalIters = name.length > 3 ? 3 : name.length;
         for (let i = 0; i < totalIters; i++) {
-          //somes the prices on metro listes as "2 / $9.99" with "or 6.99 ea", this code will get the price of each items
-          // please Metro can the prices on your website be consistently and displayed in a uniform manner T_T
-          let priceText = (<HTMLElement>(
-            price[i].querySelector(":scope .pi-sale-price:first-child")
-          )).innerText;
-          let priceElem: HTMLElement;
-
-          if (priceText.match(/^\s*(?<!\$)[a-z0-9\s\.]+\//)) {
-            priceElem = <HTMLElement>(
-              price[i].querySelector(":scope .pi-secondary-price>div")
-            );
-            if (priceElem)
-              priceText = priceElem.innerText.match(priceRegex)![0];
-            else if (
-              <HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-regular-price > .pi-price"
-                )
-              )
-            ) {
-              priceText = (<HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-regular-price > .pi-price"
-                )
-              )).innerText.match(priceRegex)![0];
-            } else if (
-              <HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-secondary-price > .pi-price"
-                )
-              )
-            ) {
-              priceText = (<HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-secondary-price > .pi-price"
-                )
-              )).innerText.match(priceRegex)![0];
-            }
-          } else {
-            priceText = (<HTMLElement>price[i]).innerText.match(priceRegex)![0];
-          }
 
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: priceText,
-            imgUrl: (<HTMLImageElement>img[i]).src,
+            price: (<HTMLElement>price[i]).innerText.slice(1),
+            imgUrl: (<HTMLImageElement>img[i]).srcset.split(", ")[0],
           });
         }
 
         return results;
       });
+
       //inserts information to database
-      let company = await Company.findOne({ where: { name: "Metro" } });
+      let company = await Company.findOne({ where: { name: "Aldi" } });
 
       if (!company) {
-        company = new Company({ id: uuidv4(), name: "Metro" });
+        company = new Company({ id: uuidv4(), name: "Aldi" });
         await company.save();
       }
 
       let store = await Store.findOne({
-        where: { postalCode, companyId: company.id },
+        where: { zipCode, companyId: company.id },
       });
       if (!store) {
         store = new Store({
           id: uuidv4(),
-          name: "Metro",
+          name: "Aldi",
           street,
           city,
-          province,
+          state,
           country,
-          postalCode,
+          zipCode,
           companyId: company.id,
         });
 
@@ -236,11 +177,9 @@ export async function getPricesMetro(
       for (const result of results) {
         loader.text = `${itemsArray.indexOf(item)}/${
           itemsArray.length
-        } - ${storesArray
-          .map((store) => store.postalCode)
-          .indexOf(postalCode)}/${
+        } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
           storesArray.length
-        }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
+        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
         let itemObj = await Item.findOne({
           where: { name: result.name, storeId: store.id },
