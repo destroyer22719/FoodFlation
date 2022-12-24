@@ -66,7 +66,7 @@ export async function scrapeAmerica({
     )
   );
 
-  let states: State[] = state ? [state] : ["new_york", "california", "texas"];
+  let states: State[] = state ? [state] : ["new_york", "california", "texas", "michigan"];
 
   for (const st of states) {
     console.log(st);
@@ -118,7 +118,7 @@ export async function scrapeAll({
     "quebec",
   ];
 
-  let states: State[] = ["new_york", "california"];
+  let states: State[] = ["new_york", "california", "texas", "michigan"];
 
   provinces = provinces.slice(
     province ? provinces.indexOf(province as Province) : 0

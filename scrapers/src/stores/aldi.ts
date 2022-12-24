@@ -36,7 +36,7 @@ export async function getPricesAldi(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     ignoreHTTPSErrors: true,
   });
 

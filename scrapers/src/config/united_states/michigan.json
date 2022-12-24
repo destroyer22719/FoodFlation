@@ -1,0 +1,20 @@
+{
+  "stores": [
+    {
+      "street": "14708 Mack Ave",
+      "city": "Detroit",
+      "state": "Michigan",
+      "zipCode": "48215",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "15415 Gratiot Avenue",
+      "city": "Detroit",
+      "state": "Michigan",
+      "zipCode": "48205",
+      "company": "Aldi",
+      "country": "United States"
+    }
+  ]
+}
