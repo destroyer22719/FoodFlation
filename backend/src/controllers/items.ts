@@ -79,6 +79,63 @@ export const getAllItems = async (
   }
 };
 
+export const getAllItemsInCity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // const isCanada = req.query.postalCode && !req.query.zipCode;
+    const [items] = await sequelize.query(
+      `
+      SELECT
+          stores.name AS storeName,
+          stores.address
+          items.id,
+          items.name, 
+          items.imgUrl, 
+          items.category,
+          prices.price, 
+          prices.createdAt AS lastUpdated
+      FROM 
+          stores
+          INNER JOIN items ON stores.id = items.storeId
+          LEFT JOIN prices ON prices.id = (
+              SELECT 
+                  id 
+              FROM 
+                  prices 
+              WHERE 
+                  items.id = prices.itemId 
+              ORDER BY 
+                  prices.createdAt 
+                  DESC
+              LIMIT 
+                  1
+          )
+      WHERE stores.city = :city
+      ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
+      ${
+        req.query.category ? `AND items.category = "${req.query.category}"` : ""
+      }
+      LIMIT :pageSize
+      OFFSET :offset
+      `,
+      {
+        replacements: {
+          city: req.params.city,
+          pageSize,
+          offset: req.query.page ? (+req.query.page - 1) * pageSize : 0,
+        },
+      }
+    );
+
+    res.send({ items });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getAllStoreItems = async (
   req: Request,
   res: Response,
