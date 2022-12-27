@@ -1,4 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import styles from "../styles/SearchPage.module.scss";
+import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
 type Props = {
   item: {
@@ -6,6 +10,7 @@ type Props = {
     price: number;
     imgUrl: string;
     id: string;
+    lastUpdated: Date;
   };
   store: {
     name: string;
@@ -13,24 +18,44 @@ type Props = {
   };
 };
 
-export const ItemFromStoreCard: React.FC<Props> = ({ item, store }) => {
+const ItemsCityCard: React.FC<Props> = ({ item, store }) => {
+  const [date, setDate] = useState<string | null>(null);
+  useState(() => {
+    setDate(new Date(item.lastUpdated).toISOString().split("T")[0]);
+  });
+
   return (
-    <div>
-      <h3>{item.name}</h3>
-      <div>
-        <Image src={item.imgUrl} alt={item.name} />
-        <div>
+    <Link href={`/item/${item.id}`}>
+      <ButtonContained>
+        <div className={styles["search-page__item"]}>
+          <div className={styles["search-page__item-header"]}>
+            <Image
+              src={`/store-logos/${store.name
+                .toLocaleLowerCase()
+                .replaceAll(" ", "_")}-logo.png`}
+              alt={store.name}
+              width={60}
+              height={60}
+            />
+            <div>
+              <h3>{item.name}</h3>
+              <div>
+                ${item.price} {date || ""}
+              </div>
+              <div>{store.address}</div>
+            </div>
+          </div>
           <Image
-            src={`/store-logos/${store.name
-              .toLocaleLowerCase()
-              .replaceAll(" ", "_")}-logo.png`}
-            alt={store.name}
-            width={80}
-            height={80}
+            className={styles["search-page__item-img"]}
+            src={item.imgUrl}
+            alt={item.name}
+            width={125}
+            height={125}
           />
-          <div>{store.address}</div>
         </div>
-      </div>
-    </div>
+      </ButtonContained>
+    </Link>
   );
 };
+
+export default ItemsCityCard;

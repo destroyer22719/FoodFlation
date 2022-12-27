@@ -15,7 +15,8 @@ const moduleExports = {
             "product-images.metro.ca",
             "www.metro.ca",
             "m.media-amazon.com",
-            "www.instacart.com"
+            "www.instacart.com",
+            "upload.wikimedia.org"
         ],
     },
 };

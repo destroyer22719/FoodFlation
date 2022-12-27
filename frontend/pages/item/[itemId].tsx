@@ -43,8 +43,9 @@ ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
 const ItemPage: React.FC<Props> = ({ item }) => {
-  const { prices } = item;
   const router = useRouter();
+  
+  const { prices } = item;
   //dates
   const xDataset: string[] = [];
   //prices
@@ -173,7 +174,14 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const res = await fetch(`${API_URL}/items/${itemId}`);
   const item = await res.json();
-
+  if (!item?.prices) {
+    return {
+      redirect: {
+        destination: "/404",
+      },
+      props: {},
+    };
+  }
   return {
     props: { item },
   };
