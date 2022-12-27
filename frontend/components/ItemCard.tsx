@@ -44,7 +44,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
               {"$"}
               {item.price}
             </div>
-            <div>Last Updated: {date}</div>
+            <div title={`Last Updated: ${date}`}>{date}</div>
           </div>
         </Link>
       </ButtonContained>
