@@ -39,6 +39,7 @@ const postalCodeRegex =
 
 const StoresPage: React.FC<Props> = ({ locations }) => {
   const [postalCode, setPostalCode] = useState("");
+  const [searched, setSearched] = useState(false);
   const initialArray: boolean[] = [];
   initialArray.length = locations.length;
 
@@ -78,6 +79,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                setSearched(true);
                 searchByCode(
                   `${postalCode.slice(0, 3)} ${postalCode.slice(3)}`
                 );
@@ -86,12 +88,14 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
           />
           <ButtonOutlined
             className={styles["store-list__search-button"]}
-            onClick={() =>
-              searchByCode(`${postalCode.slice(0, 3)} ${postalCode.slice(3)}`)
-            }
+            onClick={() => {
+              setSearched(true);
+              searchByCode(`${postalCode.slice(0, 3)} ${postalCode.slice(3)}`);
+            }}
           >
             <SearchIcon /> Find a Store
           </ButtonOutlined>
+          {searched && <div>{stores.length} Results Found</div>}
         </div>
         <LocationTable locations={locations} />
         {stores.length > 0 && (
