@@ -17,6 +17,8 @@ const InputOutlinedStyle = styled(TextField)({
 });
 
 type Props = {
+  focused?: boolean;
+  disabled?: boolean;
   value: string;
   onChange: ChangeEventHandler<Element>;
   onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
@@ -30,9 +32,13 @@ const InputOutlined: React.FC<Props> = ({
   className,
   placeholder,
   onKeyDown,
+  disabled = false,
+  focused = false,
 }) => {
   return (
     <InputOutlinedStyle
+      focused={focused}
+      disabled={disabled}
       variant="outlined"
       placeholder={placeholder}
       className={className}

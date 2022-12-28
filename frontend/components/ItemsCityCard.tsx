@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "../styles/SearchPage.module.scss";
 import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
-type Props = {
+export type ItemsCityCardProps = {
   item: {
     name: string;
     price: number;
@@ -18,7 +18,7 @@ type Props = {
   };
 };
 
-const ItemsCityCard: React.FC<Props> = ({ item, store }) => {
+const ItemsCityCard: React.FC<ItemsCityCardProps> = ({ item, store }) => {
   const [date, setDate] = useState<string | null>(null);
   useState(() => {
     setDate(new Date(item.lastUpdated).toISOString().split("T")[0]);

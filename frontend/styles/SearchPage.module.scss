@@ -1,0 +1,48 @@
+@import "./assets/vars";
+
+.search-page {
+  &__search {
+    &-section {
+      display: flex;
+    }
+
+    &-city {
+      width: 500px;
+      // height: 50px;
+      // outline: none;
+      // border: 2px solid $purple-light;
+    }
+
+    &-item {
+      input {
+        outline: none;
+        height: 40px;
+      }
+    }
+  }
+
+  &__item {
+    width: 100%;
+    border-radius: 0.5rem;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: $purple-light;
+    width: 200px;
+    font-weight: bold;
+
+    &-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      * {
+        margin: 0;
+      }
+    }
+
+    &-img {
+      margin: auto;
+    }
+  }
+}
