@@ -19,6 +19,7 @@ type Props = {
 const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
+  const [page, setPage] = useState(1);
 
   return (
     <Layout title="Search Items">
@@ -36,20 +37,6 @@ const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
           <ItemsCityCard {...props} key={props.id} />
         ))}
       </div>
-      {/* <ItemsCityCard
-        item={{
-          name: "Milk",
-          price: 2.99,
-          id: "1",
-          lastUpdated: new Date(),
-          imgUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/a/a5/Glass_of_Milk_%2833657535532%29.jpg",
-        }}
-        store={{
-          name: "Metro",
-          address: "1234 Main St",
-        }}
-      /> */}
     </Layout>
   );
 };

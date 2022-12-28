@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import InputOutlined from "./InputOutlined";
 import styles from "../styles/SearchPage.module.scss";
 import { useRouter } from "next/router";
-
+import Link from "next/link";
+import SearchIcon from "@mui/icons-material/Search";
+import ButtonContained from "./CustomButtonComponents/ButtonContained";
 
 type Props = {
   city: string;
@@ -98,6 +100,15 @@ const SearchCityItems: React.FC<Props> = ({
           }
         }}
       />
+      {search && (
+        <>
+          <Link href={`/search?city=${city}&search=${search}`}>
+            <ButtonContained className={styles["search-page__search-button"]}>
+              <SearchIcon />
+            </ButtonContained>
+          </Link>
+        </>
+      )}
     </div>
   );
 };
