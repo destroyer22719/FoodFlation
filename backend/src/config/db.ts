@@ -18,7 +18,7 @@ const sequelize = new Sequelize({
   password: process.env.DATABASE_PASSWORD,
   models: [Item, Price, Store, Company],
   host: process.env.DATABASE_HOST || "localhost",
-  logging: false,
+  logging: true,
   dialectOptions: {
     multipleStatements: true,
   },

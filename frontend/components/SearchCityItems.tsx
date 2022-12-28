@@ -2,6 +2,8 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import InputOutlined from "./InputOutlined";
 import styles from "../styles/SearchPage.module.scss";
+import { useRouter } from "next/router";
+
 
 type Props = {
   city: string;
@@ -41,6 +43,7 @@ const SearchCityItems: React.FC<Props> = ({
   setSearch,
 }) => {
   const [focused, setFocused] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (city) {
@@ -88,6 +91,12 @@ const SearchCityItems: React.FC<Props> = ({
         disabled={!city}
         value={search}
         onChange={(e) => setSearch((e.target as HTMLInputElement).value)}
+        placeholder={"Search for an item"}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            router.push(`/search?city=${city}&search=${search}`);
+          }
+        }}
       />
     </div>
   );

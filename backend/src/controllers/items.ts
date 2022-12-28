@@ -90,7 +90,7 @@ export const getAllItemsInCity = async (
       `
       SELECT
           stores.name AS storeName,
-          stores.address
+          stores.street,
           items.id,
           items.name, 
           items.imgUrl, 

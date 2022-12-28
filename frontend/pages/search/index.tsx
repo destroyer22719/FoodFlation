@@ -9,6 +9,7 @@ import SearchCityItems, {
   CityDataUS,
 } from "../../components/SearchCityItems";
 import { API_URL } from "../../config";
+import styles from "../../styles/SearchPage.module.scss";
 
 type Props = {
   items: ItemsCityCardProps[];
@@ -18,9 +19,6 @@ type Props = {
 const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
-
-  console.log(search);
-  console.log(city);
 
   return (
     <Layout title="Search Items">
@@ -33,9 +31,9 @@ const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
         setSearch={setSearch}
         citiesData={citiesData}
       />
-      <div>
-        {items.map(({ item, store }) => (
-          <ItemsCityCard item={item} store={store} />
+      <div className={styles["search-page__item-list"]}>
+        {items.map((props) => (
+          <ItemsCityCard {...props} key={props.id} />
         ))}
       </div>
       {/* <ItemsCityCard
@@ -60,16 +58,20 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const req = await fetch(`${API_URL}/stores/locations`);
   const res = await req.json();
   let items = [];
+
   if (query?.search && query?.city) {
     const itemReq = await fetch(
-      `${API_URL}/items/search?search=${query.search}&city=${query.city}`
+      `${API_URL}/items/city/${(query.city as string).split(", ")[0]}?search=${
+        query.search
+      }`
     );
 
     const itemRes = await itemReq.json();
     items = itemRes;
   }
+
   return {
-    props: { items, citiesData: res },
+    props: { items: items.items, citiesData: res },
   };
 };
 
