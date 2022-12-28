@@ -112,7 +112,6 @@ const StoreContextProvider: React.FC<Props> = ({ children }) => {
       data = { stores: [], total: 0 };
     }
     
-    console.log(data);
     setStores(data.stores);
     setTotalStores(data.total);
     setPostalCode(codeSearch);

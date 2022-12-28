@@ -24,7 +24,6 @@ const ItemsCityCard: React.FC<ItemsCityCardProps> = ({
   storeName,
 }) => {
   const [date, setDate] = useState<string | null>(null);
-  console.log(lastUpdated);
   useState(() => {
     setDate(new Date(lastUpdated).toISOString().split("T")[0]);
   });

@@ -130,7 +130,43 @@ export const getAllItemsInCity = async (
       }
     );
 
-    res.send({ items });
+    const [resultsFound] = await sequelize.query(
+      `
+      SELECT
+          COUNT(*) AS resultsFound
+      FROM 
+          stores
+          INNER JOIN items ON stores.id = items.storeId
+          LEFT JOIN prices ON prices.id = (
+              SELECT 
+                  id 
+              FROM 
+                  prices 
+              WHERE 
+                  items.id = prices.itemId 
+              ORDER BY 
+                  prices.createdAt 
+                  DESC
+              LIMIT 
+                  1
+          )
+      WHERE stores.city = :city
+      ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
+      ${
+        req.query.category ? `AND items.category = "${req.query.category}"` : ""
+      }
+      `,
+      {
+        replacements: {
+          city: req.params.city,
+        },
+      }
+    );
+
+    res.send({
+      items,
+      resultsFound: (resultsFound[0] as { resultsFound: number }).resultsFound,
+    });
   } catch (err) {
     next(err);
   }

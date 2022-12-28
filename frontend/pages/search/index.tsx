@@ -1,5 +1,7 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import ItemsCityCard, {
   ItemsCityCardProps,
 } from "../../components/ItemsCityCard";
@@ -14,12 +16,27 @@ import styles from "../../styles/SearchPage.module.scss";
 type Props = {
   items: ItemsCityCardProps[];
   citiesData: [CityDataCAN, CityDataUS];
+  resultsFound?: number;
 };
 
-const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
+const SearchPage: React.FC<Props> = ({
+  citiesData,
+  items = [],
+  resultsFound,
+}) => {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const { query } = router;
+  const page = parseInt(query.page as string) || 1;
+  const pageSize = 10;
+  const maxPages = Math.ceil((resultsFound || 0) / pageSize);
+
+  function navigatePages(change: number) {
+    router.push(
+      `/search?search=${query.search}&city=${query.city}&page=${page + change}`
+    );
+  }
 
   return (
     <Layout title="Search Items">
@@ -32,6 +49,34 @@ const SearchPage: React.FC<Props> = ({ citiesData, items = [] }) => {
         setSearch={setSearch}
         citiesData={citiesData}
       />
+      {query.search && query.city && <div>{resultsFound} Results Found</div>}
+      {query.search && query.city && resultsFound && resultsFound > 0 && (
+        <div className={styles["store-list__pagination-buttons"]}>
+          <ButtonContained
+            className={styles["store-list__pagination-button"]}
+            disabled={page == 1}
+            onClick={() => navigatePages(-1)}
+          >
+            <div className={styles["store-list__pagination-button-link"]}>
+              {"<"}
+            </div>
+          </ButtonContained>
+          <ButtonContained className={styles["store-list__pagination-button"]}>
+            <div className={styles["store-list__pagination-button-link"]}>
+              Page {page}/{maxPages}
+            </div>
+          </ButtonContained>
+          <ButtonContained
+            className={styles["store-list__pagination-button"]}
+            disabled={page == maxPages}
+            onClick={() => navigatePages(1)}
+          >
+            <div className={styles["store-list__pagination-button-link"]}>
+              {">"}
+            </div>
+          </ButtonContained>
+        </div>
+      )}
       <div className={styles["search-page__item-list"]}>
         {items.map((props) => (
           <ItemsCityCard {...props} key={props.id} />
@@ -50,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const itemReq = await fetch(
       `${API_URL}/items/city/${(query.city as string).split(", ")[0]}?search=${
         query.search
-      }`
+      }&page=${query.page || 1}`
     );
 
     const itemRes = await itemReq.json();
@@ -58,7 +103,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   return {
-    props: { items: items.items, citiesData: res },
+    props: {
+      items: items.items,
+      citiesData: res,
+      resultsFound: items.resultsFound,
+    },
   };
 };
 
