@@ -18,6 +18,8 @@ import styles from "../../styles/Item.module.scss";
 import { useRouter } from "next/router";
 import CategoryButton from "../../components/CustomButtonComponents/CategoryButton";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 
 ChartJS.register(
   CategoryScale,
@@ -31,6 +33,8 @@ ChartJS.register(
 
 type Props = {
   item: Item;
+  timeStrAgo: string;
+  timeNumAgo: number;
 };
 
 type DataSet = {
@@ -42,9 +46,11 @@ ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
-const ItemPage: React.FC<Props> = ({ item }) => {
+TimeAgo.addDefaultLocale(en);
+const ItemPage: React.FC<Props> = ({ item, timeNumAgo, timeStrAgo }) => {
   const router = useRouter();
-  
+  const timeAgo = new TimeAgo("en-US");
+
   const { prices } = item;
   //dates
   const xDataset: string[] = [];
@@ -115,11 +121,20 @@ const ItemPage: React.FC<Props> = ({ item }) => {
                 {"<"}
               </ButtonContained>
             </div>
-            <div>
-              <h1>{item.name}</h1>
-              <p>
-                {item.store.street}, {item.store.city} {item.store.postalCode}
-              </p>
+            <div className={styles["item-page__header-metada"]}>
+              <div>
+                <h1>{item.name}</h1>
+              </div>
+              {1000 * 60 * 60 * 24 * 14 < timeNumAgo && (
+                <h3>
+                  Warning: Price may be outdated as it is from {timeStrAgo}
+                </h3>
+              )}
+              <div>
+                <p>
+                  {item.store.street}, {item.store.city} {item.store.postalCode}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -127,18 +142,25 @@ const ItemPage: React.FC<Props> = ({ item }) => {
             <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
             <div>
               <div className={styles["item-page__price-info"]}>
+                <div></div>
                 <div>
                   Latest Price: {"$"}
                   {parsedPrices[parsedPrices.length - 1].y} on{" "}
-                  {parsedPrices[parsedPrices.length - 1].x}
+                  {parsedPrices[parsedPrices.length - 1].x} {"("}
+                  {timeStrAgo}
+                  {")"}
                 </div>
                 <div>
                   Highest Price: {"$"}
-                  {highest.y} on {highest.x}
+                  {highest.y} on {highest.x} {"("}
+                  {timeAgo.format(new Date(highest.x))}
+                  {")"}
                 </div>
                 <div>
                   Lowest Price: {"$"}
-                  {lowest.y} on {lowest.x}
+                  {lowest.y} on {lowest.x} {"("}
+                  {timeAgo.format(new Date(lowest.x))}
+                  {")"}
                 </div>
               </div>
               <CategoryButton category={item.category} />
@@ -182,8 +204,14 @@ export const getServerSideProps: GetServerSideProps = async ({
       props: {},
     };
   }
+
+  const timeAgo = new TimeAgo("en-US");
+  const latestPrice = item.prices[item.prices.length - 1].createdAt;
+  const timeNumAgo = Date.now() - new Date(latestPrice).getTime();
+  const timeStrAgo = timeAgo.format(new Date(latestPrice).getTime());
+
   return {
-    props: { item },
+    props: { item, timeNumAgo, timeStrAgo },
   };
 };
 

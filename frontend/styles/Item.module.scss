@@ -18,6 +18,16 @@
     }
   }
 
+  &__header-metada {
+    display: flex;
+    flex-direction: column;
+
+    * {
+      margin: 0;
+      text-align: left;
+    }
+  }
+
   &__item-section {
     margin-bottom: 50px;
   }
