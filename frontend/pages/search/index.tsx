@@ -51,27 +51,27 @@ const SearchPage: React.FC<Props> = ({
       />
       {query.search && query.city && <div>{resultsFound} Results Found</div>}
       {query.search && query.city && resultsFound && resultsFound > 0 && (
-        <div className={styles["store-list__pagination-buttons"]}>
+        <div className={styles["search-page__pagination-buttons"]}>
           <ButtonContained
-            className={styles["store-list__pagination-button"]}
+            className={styles["search-page__pagination-button"]}
             disabled={page == 1}
             onClick={() => navigatePages(-1)}
           >
-            <div className={styles["store-list__pagination-button-link"]}>
+            <div className={styles["search-page__pagination-button-link"]}>
               {"<"}
             </div>
           </ButtonContained>
-          <ButtonContained className={styles["store-list__pagination-button"]}>
-            <div className={styles["store-list__pagination-button-link"]}>
+          <ButtonContained className={styles["search-page__pagination-button"]}>
+            <div className={styles["search-page__pagination-button-link"]}>
               Page {page}/{maxPages}
             </div>
           </ButtonContained>
           <ButtonContained
-            className={styles["store-list__pagination-button"]}
+            className={styles["search-page__pagination-button"]}
             disabled={page == maxPages}
             onClick={() => navigatePages(1)}
           >
-            <div className={styles["store-list__pagination-button-link"]}>
+            <div className={styles["search-page__pagination-button-link"]}>
               {">"}
             </div>
           </ButtonContained>
