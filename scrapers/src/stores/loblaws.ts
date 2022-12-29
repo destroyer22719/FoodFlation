@@ -23,7 +23,6 @@ export async function getPricesLoblaws(
 ) {
   const stores = storesArray.slice(storeStart);
   if (stores.length === 0) {
-    console.log("No Loblaws stores found");
     return;
   }
 

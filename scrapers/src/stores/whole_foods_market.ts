@@ -24,7 +24,6 @@ export async function getPricesWholeFoodsMarket(
   const stores = storesArray.slice(storeStart);
 
   if (stores.length === 0) {
-    console.log("No Whole Foods Market stores found");
     return;
   }
 

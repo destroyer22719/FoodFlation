@@ -9,6 +9,6 @@ interface Address {
     company: CompanyName;
 }
 
-export type CompanyName = "Loblaws" | "Metro" | "Whole Foods Market" | "Aldi";
+export type CompanyName = "Loblaws" | "Metro" | "Whole Foods Market" | "Aldi" | "No Frills";
 export type Province = "alberta" | "british_columbia" | "ontario" | "quebec";
 export type State = "new_york" | "california" | "texas" | "michigan";

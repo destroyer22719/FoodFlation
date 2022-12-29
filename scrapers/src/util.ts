@@ -5,6 +5,7 @@ import { getPricesLoblaws } from "./stores/loblaws.js";
 import { getPricesMetro } from "./stores/metro.js";
 import { getPricesWholeFoodsMarket } from "./stores/whole_foods_market.js";
 import { getPricesAldi } from "./stores/aldi.js";
+import { getPricesNoFrills } from "./stores/nofrills.js";
 
 const __dirname = path.resolve();
 
@@ -14,12 +15,14 @@ export async function scrapeCanada({
   storeStart = 0,
   metro = false,
   loblaws = false,
+  noFrills = false,
 }: {
   province?: Province;
   itemStart: number;
   storeStart: number;
   metro?: boolean;
   loblaws?: boolean;
+  noFrills?: boolean;
 }) {
   const { items } = JSON.parse(
     fs.readFileSync(
@@ -42,7 +45,13 @@ export async function scrapeCanada({
       )
     );
 
-    await storeScrape(items, stores, { itemStart, storeStart, metro, loblaws });
+    await storeScrape(items, stores, {
+      itemStart,
+      storeStart,
+      metro,
+      loblaws,
+      noFrills,
+    });
   }
 }
 
@@ -66,7 +75,9 @@ export async function scrapeAmerica({
     )
   );
 
-  let states: State[] = state ? [state] : ["new_york", "california", "texas", "michigan"];
+  let states: State[] = state
+    ? [state]
+    : ["new_york", "california", "texas", "michigan"];
 
   for (const st of states) {
     console.log(st);
@@ -95,6 +106,7 @@ export async function scrapeAll({
   loblaws = false,
   metro = false,
   wholeFoodsMarket = false,
+  noFrills = false,
 }: {
   province?: string;
   state?: string;
@@ -103,6 +115,7 @@ export async function scrapeAll({
   loblaws?: boolean;
   metro?: boolean;
   wholeFoodsMarket?: boolean;
+  noFrills?: boolean;
 }) {
   const { items } = JSON.parse(
     fs.readFileSync(
@@ -141,6 +154,7 @@ export async function scrapeAll({
       storeStart,
       loblaws,
       metro,
+      noFrills,
     });
   }
 
@@ -170,6 +184,7 @@ const storeScrape = async (
     metro,
     wholeFoodsMarket,
     aldi,
+    noFrills,
     storeStart = 0,
     itemStart = 0,
   }: {
@@ -177,6 +192,7 @@ const storeScrape = async (
     metro?: boolean;
     wholeFoodsMarket?: boolean;
     aldi?: boolean;
+    noFrills?: boolean;
     storeStart?: number;
     itemStart?: number;
   }
@@ -192,6 +208,13 @@ const storeScrape = async (
     await getPricesMetro(
       items,
       filterByStore(stores, "Metro"),
+      storeStart,
+      itemStart
+    );
+  } else if (noFrills) {
+    await getPricesNoFrills(
+      items,
+      filterByStore(stores, "No Frills"),
       storeStart,
       itemStart
     );
@@ -219,6 +242,12 @@ const storeScrape = async (
     await getPricesMetro(
       items,
       filterByStore(stores, "Metro"),
+      storeStart,
+      itemStart
+    );
+    await getPricesNoFrills(
+      items,
+      filterByStore(stores, "No Frills"),
       storeStart,
       itemStart
     );

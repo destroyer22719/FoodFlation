@@ -1,12 +1,12 @@
 {
-    "stores": [
-        {
-            "postalCode": "T5K 0T3",
-            "street": "101-12060 104th Ave NW",
-            "city": "Edmonton",
-            "province": "Alberta",
-            "country": "Canada",
-            "company": "Loblaws"
-        }
-    ]
+  "stores": [
+    {
+      "postalCode": "T5K 0T3",
+      "street": "101-12060 104th Ave NW",
+      "city": "Edmonton",
+      "province": "Alberta",
+      "country": "Canada",
+      "company": "Loblaws"
+    }
+  ]
 }

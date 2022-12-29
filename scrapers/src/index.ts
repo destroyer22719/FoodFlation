@@ -11,6 +11,7 @@ const argv = yargs(process.argv.slice(2))
         province: { type: "string", demandOption: false },
         metro: { type: "boolean", demand: false, default: false },
         loblaws: { type: "boolean", demand: false, default: false },
+        noFrills: { type: "boolean", demand: false, default: false },
         wholeFoodsMarket: { type: "boolean", demand: false, default: false },
         aldi: { type: "boolean", demand: false, default: false },
         canada: { type: "boolean", demand: false, default: false },
@@ -27,6 +28,7 @@ const argv = yargs(process.argv.slice(2))
             state: argv.state,
             metro: argv.metro,
             loblaws: argv.loblaws,
+            noFrills: argv.noFrills,
             wholeFoodsMarket: argv.wholeFoodsMarket,
         });
     } else if (argv.canada) {
@@ -36,6 +38,7 @@ const argv = yargs(process.argv.slice(2))
             province: argv.province as Province,
             metro: argv.metro,
             loblaws: argv.loblaws,
+            noFrills: argv.noFrills,
         });
     } else if (argv.usa) {
         await scrapeAmerica({

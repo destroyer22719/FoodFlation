@@ -24,7 +24,6 @@ export async function getPricesMetro(
   const stores = storesArray.slice(storeStart);
 
   if (stores.length === 0) {
-    console.log("No Metro stores found");
     return;
   }
 

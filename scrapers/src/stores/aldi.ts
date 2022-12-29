@@ -25,7 +25,6 @@ export async function getPricesAldi(
   const stores = storesArray.slice(storeStart);
 
   if (stores.length === 0) {
-    console.log("No Aldi's stores found");
     return;
   }
 
