@@ -44,7 +44,7 @@ const ItemsCityCard: React.FC<ItemsCityCardProps> = ({
             />
             <div>
               <div>
-                ${price} {date || ""}
+                ${price} | {date || ""}
               </div>
               <div>{street}</div>
             </div>

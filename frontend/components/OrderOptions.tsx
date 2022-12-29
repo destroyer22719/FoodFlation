@@ -18,10 +18,13 @@ const OrderOptions: React.FC<Props> = ({
 }) => {
   return (
     <div>
-      <Select value={column} onChange={handleColumnChange} placeholder="Sort By">
-        <MenuItem value={"price"}>Price</MenuItem>
-        <MenuItem  value={"lastUpdated"}>Last Updated</MenuItem>
-      </Select>
+      <div>
+        <h3>Order By</h3>
+        <Select value={column} onChange={handleColumnChange}>
+          <MenuItem value={"price"}>Price</MenuItem>
+          <MenuItem value={"lastUpdated"}>Last Updated</MenuItem>
+        </Select>
+      </div>
       {column === "price" && (
         <ButtonContained onClick={() => handleOrderChange()}>
           {order ? <TrendingUpIcon /> : <TrendingDownIcon />}
