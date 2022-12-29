@@ -30,6 +30,20 @@
     margin: 8px 5px;
     font-weight: bold;
 
+    &--center {
+      @media screen and (min-width: 500px) and (max-width: 720px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      @media screen and (max-width: 379px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
     &--bold {
       font-weight: bold;
     }

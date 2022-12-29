@@ -14,11 +14,18 @@ const Nav = () => {
           </ButtonOutlined>
         </Link>
       </div>
-      <Link href={"/store/"} className={styles["nav__item"]}>
-        <ButtonContained className={styles["nav__item--bold"]}>
-          <SearchIcon /> Track Prices
-        </ButtonContained>
-      </Link>
+      <div className={styles["nav__item--center"]}>
+        <Link href={"/store/"} className={styles["nav__item"]}>
+          <ButtonContained className={styles["nav__item--bold"]}>
+            <SearchIcon /> Search Stores
+          </ButtonContained>
+        </Link>
+        <Link href={"/search/"} className={styles["nav__item"]}>
+          <ButtonContained className={styles["nav__item--bold"]}>
+            <SearchIcon /> Search Items
+          </ButtonContained>
+        </Link>
+      </div>
       <div className={styles["nav__section"]}>
         <Link href={"/faq"} className={styles["nav__item"]}>
           <ButtonOutlined className={styles["nav__item--bold"]}>
