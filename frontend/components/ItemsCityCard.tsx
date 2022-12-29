@@ -31,7 +31,6 @@ const ItemsCityCard: React.FC<ItemsCityCardProps> = ({
   return (
     <Link href={`/item/${id}`}>
       <ButtonContained className={styles["search-page__item"]}>
-        <div>
           <h3>{name}</h3>
           <div className={styles["search-page__item-header"]}>
             <Image
@@ -41,6 +40,7 @@ const ItemsCityCard: React.FC<ItemsCityCardProps> = ({
               alt={storeName}
               width={60}
               height={60}
+              className={styles["search-page__item-header-logo"]}
             />
             <div>
               <div>
@@ -56,7 +56,6 @@ const ItemsCityCard: React.FC<ItemsCityCardProps> = ({
             width={125}
             height={125}
           />
-        </div>
       </ButtonContained>
     </Link>
   );
