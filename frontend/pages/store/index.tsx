@@ -35,10 +35,14 @@ export type Location = {
 };
 
 const postalCodeRegex =
-  /^[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])[A-Z]?(?![A-Z])[0-9]?(?![0-9])$/;
+  /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/;
+
+const zipCodeRegex = /^\d{5}/;
 
 const StoresPage: React.FC<Props> = ({ locations }) => {
+  const [codeInput, setCodeInput] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [zipCode, setZipCode] = useState("");
   const [searched, setSearched] = useState(false);
   const initialArray: boolean[] = [];
   initialArray.length = locations.length;
@@ -46,6 +50,13 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
   const { stores, searchByCode, loading, totalStores, updateStoreList } =
     useStoreContext();
 
+  function handleSearchCode(input: string) {
+    if (postalCodeRegex.test(input)) {
+      searchByCode(input);
+    } else if (zipCodeRegex.test(input)) {
+      searchByCode(input, true);
+    }
+  }
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const maxPages = Math.ceil(totalStores / pageSize);
@@ -71,18 +82,15 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
         <div className={styles["store-list__search"]}>
           <InputOutlined
             className={styles["store-list__search-bar"]}
-            value={postalCode}
-            placeholder="Enter Postal Code of Store"
+            value={codeInput}
+            placeholder="A1A 1A1 or 12345"
             onChange={(e) => {
-              const input = (e.target as HTMLInputElement).value.toUpperCase();
-              if (input.match(postalCodeRegex)) setPostalCode(input);
+              setCodeInput((e.target as HTMLInputElement).value.toUpperCase());
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setSearched(true);
-                searchByCode(
-                  `${postalCode.slice(0, 3)} ${postalCode.slice(3)}`
-                );
+                handleSearchCode(codeInput);
               }
             }}
           />
@@ -90,7 +98,7 @@ const StoresPage: React.FC<Props> = ({ locations }) => {
             className={styles["store-list__search-button"]}
             onClick={() => {
               setSearched(true);
-              searchByCode(`${postalCode.slice(0, 3)} ${postalCode.slice(3)}`);
+              handleSearchCode(codeInput);
             }}
           >
             <SearchIcon /> Find a Store

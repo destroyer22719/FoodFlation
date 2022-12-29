@@ -25,7 +25,7 @@ const StoreItem: React.FC<Props> = ({ store }) => {
             <div className={style["store-list__store-item-address"]}>
               <span>{store.street}</span>
               <span>{store.city}</span>
-              <span>{store.postalCode}</span>
+              <span>{store.postalCode || store.zipCode}</span>
             </div>
           </div>
         </Link>
