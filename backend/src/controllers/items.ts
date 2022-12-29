@@ -85,7 +85,6 @@ export const getAllItemsInCity = async (
   next: NextFunction
 ) => {
   try {
-    // const isCanada = req.query.postalCode && !req.query.zipCode;
     const [items] = await sequelize.query(
       `
       SELECT
@@ -95,7 +94,7 @@ export const getAllItemsInCity = async (
           items.name, 
           items.imgUrl, 
           items.category,
-          prices.price, 
+          prices.price AS price, 
           prices.createdAt AS lastUpdated
       FROM 
           stores
@@ -114,10 +113,9 @@ export const getAllItemsInCity = async (
                   1
           )
       WHERE stores.city = :city
-      ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
-      ${
-        req.query.category ? `AND items.category = "${req.query.category}"` : ""
-      }
+      ${req.query.search && `AND items.name LIKE "%${req.query.search}%"`}
+      ${req.query.orderBy ? `ORDER BY ${req.query.orderBy}` : ""}
+      ${req.query.sortBy ? req.query.sortBy : ""}
       LIMIT :pageSize
       OFFSET :offset
       `,

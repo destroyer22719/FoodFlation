@@ -46,7 +46,8 @@ ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
-TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(en);
+
 const ItemPage: React.FC<Props> = ({ item, timeNumAgo, timeStrAgo }) => {
   const router = useRouter();
   const timeAgo = new TimeAgo("en-US");
