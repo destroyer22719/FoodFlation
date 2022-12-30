@@ -33,10 +33,58 @@
       "country": "United States"
     },
     {
-      "street": "SF Folsom and 13th St",
+      "street": "6755 Mira Mesa Blvd, Suite 130",
+      "city": "San Diego",
+      "state": "California",
+      "zipCode": "92121",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "8788 Navajo Rd",
+      "city": "San Diego",
+      "state": "California",
+      "zipCode": "92119",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "1690 Folsom St",
       "city": "San Francisco",
       "state": "California",
       "zipCode": "94103",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "789 Mission St",
+      "city": "San Francisco",
+      "state": "California",
+      "zipCode": "94103",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "2626 Colorado Blvd",
+      "city": "Los Angeles",
+      "state": "California",
+      "zipCode": "90041",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "8001 Othello Ave",
+      "city": "San Diego",
+      "state": "California",
+      "zipCode": "92111",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "3030 Grape St.",
+      "city": "San Diego",
+      "state": "California",
+      "zipCode": "92102",
       "company": "Target",
       "country": "United States"
     }
