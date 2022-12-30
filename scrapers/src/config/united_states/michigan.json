@@ -15,6 +15,14 @@
       "zipCode": "48205",
       "company": "Aldi",
       "country": "United States"
+    },
+    {
+      "street": "115 Mack Ave",
+      "city": "Detroit",
+      "state": "Michigan",
+      "zipCode": "48201",
+      "company": "Whole Foods Market",
+      "country": "United States"
     }
   ]
 }

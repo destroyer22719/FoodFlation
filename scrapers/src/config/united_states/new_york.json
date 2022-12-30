@@ -39,6 +39,30 @@
       "street": "517 East 117th Street",
       "company": "Aldi",
       "zipCode": "10035"
+    },
+    {
+      "city": "New York",
+      "state": "New York",
+      "country": "United States",
+      "street": "255 Greenwhich St",
+      "company": "Target",
+      "zipCode": "10007"
+    },
+    {
+      "city": "New York",
+      "state": "New York",
+      "country": "United States",
+      "street": "400 Grand St",
+      "company": "Target",
+      "zipCode": "10002"
+    },
+    {
+      "city": "New York",
+      "state": "New York",
+      "country": "United States",
+      "street": "500 E 14th St",
+      "company": "Target",
+      "zipCode": "10009"
     }
   ]
 }

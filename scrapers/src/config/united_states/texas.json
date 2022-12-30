@@ -71,6 +71,110 @@
       "zipCode": "75231",
       "company": "Whole Foods Market",
       "country": "United States"
+    },
+    {
+      "street": "19955 Katy Fwy",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77094",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "6955 Highway 6 N",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77084",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "2700 Eldridge Pkwy",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77082",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "2417 N Haskell Ave",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75204",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "6464 E Northwest HWY STE 212",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75214",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "8335 Westchester Dr, Ste 200",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75225",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "6464 E Northwest HWY STE  212",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75214",
+      "company": "Target",
+      "country": "United States"
+    },
+    {
+      "street": "13548 Preston Road",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75240",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "2440 W. Illinois Ave",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75233",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "2505 Ft. Worth Ave.",
+      "city": "Dallas",
+      "state": "Texas",
+      "zipCode": "75211",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "10064 Almeda Genoa",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77075",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "13340 Tomball Pkwy",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77086",
+      "company": "Aldi",
+      "country": "United States"
+    },
+    {
+      "street": "161 West Road",
+      "city": "Houston",
+      "state": "Texas",
+      "zipCode": "77037",
+      "company": "Aldi",
+      "country": "United States"
     }
   ]
 }
