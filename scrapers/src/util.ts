@@ -1,4 +1,12 @@
-import { Address, CompanyName, Province, State } from "./global";
+import {
+  Address,
+  AmericanStoresOptions,
+  CanadianStoresOptions,
+  CompanyName,
+  Province,
+  State,
+  StoresOptions,
+} from "./global";
 import fs from "fs";
 import path from "path";
 import { getPricesLoblaws } from "./stores/loblaws.js";
@@ -9,21 +17,12 @@ import { getPricesNoFrills } from "./stores/nofrills.js";
 
 const __dirname = path.resolve();
 
-export async function scrapeCanada({
-  province,
-  itemStart = 0,
-  storeStart = 0,
-  metro = false,
-  loblaws = false,
-  noFrills = false,
-}: {
-  province?: Province;
-  itemStart: number;
-  storeStart: number;
-  metro?: boolean;
-  loblaws?: boolean;
-  noFrills?: boolean;
-}) {
+export async function scrapeCanada(
+  province: Province,
+  itemStart: number = 0,
+  storeStart: number = 0,
+  storesOptions: CanadianStoresOptions
+) {
   const { items } = JSON.parse(
     fs.readFileSync(
       path.join(__dirname, "src", "config", "items.json"),
@@ -45,29 +44,16 @@ export async function scrapeCanada({
       )
     );
 
-    await storeScrape(items, stores, {
-      itemStart,
-      storeStart,
-      metro,
-      loblaws,
-      noFrills,
-    });
+    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
   }
 }
 
-export async function scrapeAmerica({
-  state,
-  itemStart,
-  storeStart,
-  wholeFoodsMarket = false,
-  aldi = false,
-}: {
-  state?: State;
-  wholeFoodsMarket?: boolean;
-  aldi?: boolean;
-  itemStart: number;
-  storeStart: number;
-}) {
+export async function scrapeAmerica(
+  state: State,
+  itemStart: number = 0,
+  storeStart: number = 0,
+  storesOptions: AmericanStoresOptions
+) {
   const { items } = JSON.parse(
     fs.readFileSync(
       path.join(__dirname, "src", "config", "items.json"),
@@ -89,34 +75,17 @@ export async function scrapeAmerica({
       )
     );
 
-    await storeScrape(items, stores, {
-      itemStart,
-      storeStart,
-      wholeFoodsMarket,
-      aldi,
-    });
+    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
   }
 }
 
-export async function scrapeAll({
-  province,
-  state,
-  itemStart = 0,
-  storeStart = 0,
-  loblaws = false,
-  metro = false,
-  wholeFoodsMarket = false,
-  noFrills = false,
-}: {
-  province?: string;
-  state?: string;
-  itemStart: number;
-  storeStart: number;
-  loblaws?: boolean;
-  metro?: boolean;
-  wholeFoodsMarket?: boolean;
-  noFrills?: boolean;
-}) {
+export async function scrapeAll(
+  province: Province,
+  state: State,
+  itemStart: number = 0,
+  storeStart: number = 0,
+  storesOptions: StoresOptions
+) {
   const { items } = JSON.parse(
     fs.readFileSync(
       path.join(__dirname, "src", "config", "items.json"),
@@ -149,13 +118,7 @@ export async function scrapeAll({
       )
     );
 
-    await storeScrape(items, stores, {
-      itemStart,
-      storeStart,
-      loblaws,
-      metro,
-      noFrills,
-    });
+    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
   }
 
   for (const st of states) {
@@ -168,35 +131,19 @@ export async function scrapeAll({
       )
     );
 
-    await storeScrape(items, stores, {
-      itemStart,
-      storeStart,
-      wholeFoodsMarket,
-    });
+    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
   }
 }
 
 const storeScrape = async (
   items: string[],
   stores: Address[],
-  {
-    loblaws,
-    metro,
-    wholeFoodsMarket,
-    aldi,
-    noFrills,
-    storeStart = 0,
-    itemStart = 0,
-  }: {
-    loblaws?: boolean;
-    metro?: boolean;
-    wholeFoodsMarket?: boolean;
-    aldi?: boolean;
-    noFrills?: boolean;
-    storeStart?: number;
-    itemStart?: number;
-  }
+  storeStart: number = 0,
+  itemStart: number = 0,
+  storesOptions: StoresOptions
 ) => {
+  const { aldi, loblaws, metro, noFrills, wholeFoodsMarket } = storesOptions;
+
   if (loblaws) {
     await getPricesLoblaws(
       items,

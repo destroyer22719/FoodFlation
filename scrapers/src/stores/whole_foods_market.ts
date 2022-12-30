@@ -125,7 +125,9 @@ export async function getPricesWholeFoodsMarket(
       "wfm-store-list li:nth-child(1) wfm-store-selector > span"
     );
 
-    await page.waitForSelector(".w-mystore");
+    await page.waitForSelector(".w-mystore", {
+      timeout: 1000 * 60,
+    });
 
     for (const item of items) {
       loader.color = "green";
