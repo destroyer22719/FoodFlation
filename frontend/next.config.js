@@ -16,7 +16,8 @@ const moduleExports = {
             "www.metro.ca",
             "m.media-amazon.com",
             "www.instacart.com",
-            "upload.wikimedia.org"
+            "upload.wikimedia.org",
+            "target.scene7.com"
         ],
     },
 };
