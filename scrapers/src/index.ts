@@ -13,7 +13,6 @@ const argv = yargs(process.argv.slice(2))
     loblaws: { type: "boolean", demand: false, default: false },
     noFrills: { type: "boolean", demand: false, default: false },
     wholeFoodsMarket: { type: "boolean", demand: false, default: false },
-    kroger: { type: "boolean", demand: false, default: false },
     aldi: { type: "boolean", demand: false, default: false },
     canada: { type: "boolean", demand: false, default: false },
     usa: { type: "boolean", demand: false, default: false },
@@ -22,35 +21,30 @@ const argv = yargs(process.argv.slice(2))
 
 (async () => {
   if (argv.all) {
-    await scrapeAll({
-      storeStart: argv.storeStart,
-      itemStart: argv.itemStart,
-      province: argv.province,
-      state: argv.state,
-      metro: argv.metro,
-      loblaws: argv.loblaws,
-      noFrills: argv.noFrills,
-      wholeFoodsMarket: argv.wholeFoodsMarket,
-      aldi: argv.aldi,
-      kroger: argv.kroger,
-    });
+    await scrapeAll(
+      argv.province as Province,
+      argv.state as State,
+      argv.storeStart,
+      argv.itemStart,
+      {
+        metro: argv.metro,
+        loblaws: argv.loblaws,
+        noFrills: argv.noFrills,
+        wholeFoodsMarket: argv.wholeFoodsMarket,
+        aldi: argv.aldi,
+      }
+    );
   } else if (argv.canada) {
-    await scrapeCanada({
-      storeStart: argv.storeStart,
-      itemStart: argv.itemStart,
-      province: argv.province as Province,
-      metro: argv.metro,
-      loblaws: argv.loblaws,
-      noFrills: argv.noFrills,
-    });
+    await scrapeCanada(
+      argv.province as Province,
+      argv.storeStart,
+      argv.itemStart,
+      { metro: argv.metro, loblaws: argv.loblaws, noFrills: argv.noFrills }
+    );
   } else if (argv.usa) {
-    await scrapeAmerica({
-      storeStart: argv.storeStart,
-      itemStart: argv.itemStart,
-      state: argv.state as State,
+    await scrapeAmerica(argv.state as State, argv.storeStart, argv.itemStart, {
       wholeFoodsMarket: argv.wholeFoodsMarket,
       aldi: argv.aldi,
-      kroger: argv.kroger,
     });
   }
 })();
