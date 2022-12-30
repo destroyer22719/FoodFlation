@@ -5,7 +5,7 @@ interface Address {
   company: CompanyName;
 }
 
-export type CompanyName = "Loblaws" | "Metro" | "Whole Foods Marketplace" | "Aldi" | "No Frills";
+export type CompanyName = "Loblaws" | "Metro" | "Whole Foods Marketplace" | "Aldi" | "No Frills" | "Target";
 
 export type Category =
   | "Fruits & Vegetables"

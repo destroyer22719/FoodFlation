@@ -14,6 +14,7 @@ import { getPricesMetro } from "./stores/metro.js";
 import { getPricesWholeFoodsMarket } from "./stores/whole_foods_market.js";
 import { getPricesAldi } from "./stores/aldi.js";
 import { getPricesNoFrills } from "./stores/nofrills.js";
+import { getPricesTarget } from "./stores/target.js";
 
 const __dirname = path.resolve();
 
@@ -142,7 +143,8 @@ const storeScrape = async (
   itemStart: number = 0,
   storesOptions: StoresOptions
 ) => {
-  const { aldi, loblaws, metro, noFrills, wholeFoodsMarket } = storesOptions;
+  const { aldi, loblaws, metro, noFrills, wholeFoodsMarket, target } =
+    storesOptions;
 
   if (loblaws) {
     await getPricesLoblaws(
@@ -162,6 +164,13 @@ const storeScrape = async (
     await getPricesNoFrills(
       items,
       filterByStore(stores, "No Frills"),
+      storeStart,
+      itemStart
+    );
+  } else if (target) {
+    await getPricesTarget(
+      items,
+      filterByStore(stores, "Target"),
       storeStart,
       itemStart
     );
@@ -207,6 +216,12 @@ const storeScrape = async (
     await getPricesAldi(
       items,
       filterByStore(stores, "Aldi"),
+      storeStart,
+      itemStart
+    );
+    await getPricesTarget(
+      items,
+      filterByStore(stores, "Target"),
       storeStart,
       itemStart
     );

@@ -13,6 +13,7 @@ const argv = yargs(process.argv.slice(2))
     loblaws: { type: "boolean", demand: false, default: false },
     noFrills: { type: "boolean", demand: false, default: false },
     wholeFoodsMarket: { type: "boolean", demand: false, default: false },
+    target: { type: "boolean", demand: false, default: false },
     aldi: { type: "boolean", demand: false, default: false },
     canada: { type: "boolean", demand: false, default: false },
     usa: { type: "boolean", demand: false, default: false },
@@ -45,6 +46,7 @@ const argv = yargs(process.argv.slice(2))
     await scrapeAmerica(argv.state as State, argv.storeStart, argv.itemStart, {
       wholeFoodsMarket: argv.wholeFoodsMarket,
       aldi: argv.aldi,
+      target: argv.target,
     });
   }
 })();

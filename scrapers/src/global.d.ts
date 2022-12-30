@@ -18,6 +18,7 @@ export type CanadianStoresOptions = {
 export type AmericanStoresOptions = {
   wholeFoodsMarket?: boolean;
   aldi?: boolean;
+  target?: boolean;
 };
 
 export interface StoresOptions
@@ -29,7 +30,8 @@ export type CompanyName =
   | "Metro"
   | "Whole Foods Market"
   | "Aldi"
-  | "No Frills";
+  | "No Frills"
+  | "Target";
 
 export type Province = "alberta" | "british_columbia" | "ontario" | "quebec";
 export type State = "new_york" | "california" | "texas" | "michigan";

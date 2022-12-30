@@ -31,6 +31,14 @@
       "zipCode": "94107",
       "company": "Whole Foods Market",
       "country": "United States"
+    },
+    {
+      "street": "SF Folsom and 13th St",
+      "city": "San Francisco",
+      "state": "California",
+      "zipCode": "94103",
+      "company": "Target",
+      "country": "United States"
     }
   ]
 }
