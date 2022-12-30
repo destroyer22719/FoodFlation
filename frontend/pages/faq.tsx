@@ -31,12 +31,12 @@ const FaqPage: React.FC<null> = () => {
           Attemps have been made to scrape for prices on a larger pool of
           grocery stores but {"it's"} difficult or impossible to do so for some
           of them. One of the main reasons being that the grocery
-          {"store's"} website only contains flyers {"("}Freshco and NoFrills
-          {")"} or there tools to shut down bots {"("}Walmart{")"}. While more
-          stores will hopefully be added the current stores are the most ideal
-          because {"it's"} website specifically lists the price of all grocery
-          store items by location. If you have a grocery store that fits the
-          criteria for scraping please contact me.
+          {"store's"} website only contains flyers {"("}Freshco
+          {")"} or there tools to shut down bots {"("}Walmart and Kroger{")"}.
+          While more stores will hopefully be added the current stores are the
+          most ideal because {"it's"} website specifically lists the price of
+          all grocery store items by location. If you have a grocery store that
+          fits the criteria for scraping please contact me.
         </p>
         <h3>
           Why are there only Canadian grocery store prices? Will you add US
