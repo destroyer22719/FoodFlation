@@ -35,7 +35,7 @@ export async function getPricesAldi(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: !process.argv.includes("--debug"),
     ignoreHTTPSErrors: true,
   });
 
@@ -110,7 +110,7 @@ export async function getPricesAldi(
       .abbreviation.toLowerCase();
 
     const urlCity = city.replaceAll(" ", "-").toLowerCase();
-    const urlAdr = street.replaceAll(" ", "-").toLowerCase();
+    const urlAdr = street.split(", ")[0].replaceAll(" ", "-").toLowerCase();
     await page.goto(
       `https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`,
       {

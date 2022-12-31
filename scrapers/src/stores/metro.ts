@@ -34,7 +34,7 @@ export async function getPricesMetro(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: !process.argv.includes("--debug"),
     ignoreHTTPSErrors: true,
   });
 

@@ -34,7 +34,7 @@ export async function getPricesWholeFoodsMarket(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: !process.argv.includes("--debug"),
     ignoreHTTPSErrors: true,
   });
 
@@ -141,7 +141,14 @@ export async function getPricesWholeFoodsMarket(
         waitUntil: "domcontentloaded",
       });
 
-      if (await page.$(`img[alt="No results found"]`)) continue;
+      try {
+        const notFound = await page.$(`.w-pie--no-results__header`);
+        if (notFound) {
+          throw new Error();
+        }
+      } catch (err) {
+        continue;
+      }
 
       await page.waitForSelector(".w-pie--product-tile__image", {
         visible: true,

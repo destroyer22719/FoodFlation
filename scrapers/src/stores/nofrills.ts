@@ -30,7 +30,7 @@ export async function getPricesNoFrills(
 
   await sequelize.sync();
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     ignoreHTTPSErrors: true,
   });
 
