@@ -110,7 +110,8 @@ export async function getPricesAldi(
       .abbreviation.toLowerCase();
 
     const urlCity = city.replaceAll(" ", "-").toLowerCase();
-    const urlAdr = street.split(", ")[0].replaceAll(" ", "-").toLowerCase();
+    const urlAdr = street.replaceAll(".", "").split(", ")[0].replaceAll(" ", "-").toLowerCase();
+
     await page.goto(
       `https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`,
       {
@@ -149,7 +150,9 @@ export async function getPricesAldi(
           results.push({
             name: (<HTMLElement>name[i]).innerText,
             price: (<HTMLElement>price[i]).innerText.slice(1),
-            imgUrl: (<HTMLImageElement>img[i]).srcset.split(", ").filter(url => /\.(jpe?g|png)$/gm.test(url))[0],
+            imgUrl: (<HTMLImageElement>img[i]).srcset
+              .split(", ")
+              .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
           });
         }
 
