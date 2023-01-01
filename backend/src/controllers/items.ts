@@ -150,6 +150,7 @@ export const getAllItemsInCity = async (
                   1
           )
       WHERE stores.city = :city
+      AND prices.createdAt >= NOW() - INTERVAL 7 DAY
       ${req.query.search ? `AND items.name LIKE "%${req.query.search}%"` : ""}
       ${
         req.query.category ? `AND items.category = "${req.query.category}"` : ""
