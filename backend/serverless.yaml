@@ -1,0 +1,15 @@
+service: foodflation-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+	
+plugins:
+  - serverless-plugin-typescript
+
+functions:
+  app:
+    handler: src/index.handler
+    events:
+      - httpApi: "*"

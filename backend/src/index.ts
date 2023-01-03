@@ -8,7 +8,7 @@ import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import helmet from "helmet";
 import compression from "compression";
-
+import serverless from "serverless-http";
 import itemRouter from "./routes/items.js";
 import storeRouter from "./routes/stores.js";
 import companyRouter from "./routes/companies.js";
@@ -65,3 +65,5 @@ app.listen(port, async () => {
   await sequelize.sync();
   console.log(`listening on port ${port}`);
 });
+
+export const handler = serverless(app);
