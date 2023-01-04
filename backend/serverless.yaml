@@ -8,6 +8,7 @@ provider:
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
+  - serverless-plugin-warmup
 
 functions:
   app:
