@@ -219,12 +219,12 @@ const storeScrape = async (
       storeStart,
       itemStart
     );
-    await getPricesTarget(
-      items,
-      filterByStore(stores, "Target"),
-      storeStart,
-      itemStart
-    );
+    // await getPricesTarget(
+    //   items,
+    //   filterByStore(stores, "Target"),
+    //   storeStart,
+    //   itemStart
+    // );
   }
 };
 
