@@ -12,7 +12,6 @@ import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
 import { Address } from "../global.js";
 import { msToTime } from "../util.js";
-import states from "states-us";
 
 const __dirname = path.resolve();
 
@@ -103,22 +102,11 @@ export async function getPricesAldi(
 
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
-    // @ts-ignore
-    const stateAbbr = states.default
-      // @ts-ignore
-      .filter((s) => s.name === state)[0]
-      .abbreviation.toLowerCase();
-
-    const urlCity = city.replaceAll(" ", "-").toLowerCase();
-    const urlAdr = street.replaceAll(".", "").split(", ")[0].replaceAll(" ", "-").toLowerCase();
 
     await page.goto(
-      `https://stores.aldi.us/${stateAbbr}/${urlCity}/${urlAdr}`,
-      {
-        waitUntil: "domcontentloaded",
-      }
+      `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`,
     );
-    await page.click(".Hero-cta--primary");
+
     await page.waitForSelector('span[class*="AddressButton"]');
     for (const item of items) {
       //searches up the price of each item
@@ -134,7 +122,9 @@ export async function getPricesAldi(
       });
       await page.waitForSelector('span[aria-label*="Original price:"]', {
         timeout: 60 * 60 * 1000,
+        visible: true,
       });
+      await page.waitForSelector("li h2", { timeout: 60 * 60 * 1000, visible: true });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
