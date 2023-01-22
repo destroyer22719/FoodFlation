@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React, { useEffect } from "react";
-import style from "../styles/Layout.module.scss";
+import style from "@/styles/Layout.module.scss";
 import Footer from "./Footer";
 import Nav from "./Nav";
 

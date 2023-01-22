@@ -4,7 +4,7 @@ import { Collapse, ListItemButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import styles from "../../styles/StoreList.module.scss";
-import { Location } from "../../pages/store";
+import { Location } from "../../pagesOld/store";
 
 type Props = {
   location: Location;

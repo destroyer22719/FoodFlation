@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "../styles/Nav.module.scss";
+import styles from "@/styles/Nav.module.scss";
 import ButtonOutlined from "./CustomButtonComponents/ButtonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import ButtonContained from "./CustomButtonComponents/ButtonContained";

@@ -1,4 +1,4 @@
-import { Country, StoreData } from "../../pages/store";
+import { Country, StoreData } from "../../pagesOld/store";
 import styles from "../../styles/StoreList.module.scss";
 import ProvinceColumnItem from "./ProvinceColumnItem";
 

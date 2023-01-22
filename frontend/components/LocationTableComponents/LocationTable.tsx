@@ -1,4 +1,4 @@
-import { Location } from "../../pages/store";
+import { Location } from "../../pagesOld/store";
 import styles from "../../styles/StoreList.module.scss";
 import CountryRow from "./CountryRow";
 

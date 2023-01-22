@@ -3,7 +3,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
 import styles from "../../styles/StoreList.module.scss";
-import { StoreData } from "../../pages/store";
+import { StoreData } from "../../pagesOld/store";
 import ButtonContained from "../CustomButtonComponents/ButtonContained";
 import { useStoreContext } from "../../providers/storeContext";
 
