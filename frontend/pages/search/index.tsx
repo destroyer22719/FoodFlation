@@ -47,7 +47,7 @@ const SearchPage: React.FC<Props> = ({
         }`
       );
     }
-  }, [column, asc]);
+  }, [column, asc, query, page, router]);
 
   function handleColumnChange(e: SelectChangeEvent) {
     setColumn(e.target.value);

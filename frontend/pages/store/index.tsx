@@ -41,8 +41,6 @@ const zipCodeRegex = /^\d{5}/;
 
 const StoresPage: React.FC<Props> = ({ locations }) => {
   const [codeInput, setCodeInput] = useState("");
-  const [postalCode, setPostalCode] = useState("");
-  const [zipCode, setZipCode] = useState("");
   const [searched, setSearched] = useState(false);
   const initialArray: boolean[] = [];
   initialArray.length = locations.length;
