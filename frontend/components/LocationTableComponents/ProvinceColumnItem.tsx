@@ -2,10 +2,10 @@ import { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
-import styles from "../../styles/StoreList.module.scss";
-import { StoreData } from "../../pagesOld/store";
-import ButtonContained from "../CustomButtonComponents/ButtonContained";
-import { useStoreContext } from "../../providers/storeContext";
+import styles from "@/styles/StoreList.module.scss";
+import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
+import { StoreData } from "app/store/layout";
+import Link from "next/link";
 
 type Prop = {
   prov: StoreData;
@@ -14,7 +14,6 @@ type Prop = {
 
 const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
   const [open, setOpen] = useState(false);
-  const { updateStoreList } = useStoreContext();
 
   const handleClick = () => {
     setOpen(!open);
@@ -31,21 +30,18 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <div className={styles["store-list__location-city"]}>
           {prov.stores.map((store) => (
-            <ButtonContained
+            <Link
               key={store.city}
-              className={styles["store-list__location-city-item"]}
-              onClick={() =>
-                updateStoreList({
-                  citySearch: store.city,
-                  stateSearch: isCanada ? undefined : (prov.state as string),
-                  provinceSearch: isCanada
-                    ? (prov.province as string)
-                    : undefined,
-                })
-              }
+              href={`/store?city=${store.city}&${
+                isCanada ? `province=${prov.province}` : `state=${prov.state}`
+              }`}
             >
-              {store.city} - {store.cityCount}
-            </ButtonContained>
+              <ButtonContained
+                className={styles["store-list__location-city-item"]}
+              >
+                {store.city} - {store.cityCount}
+              </ButtonContained>
+            </Link>
           ))}
         </div>
       </Collapse>
