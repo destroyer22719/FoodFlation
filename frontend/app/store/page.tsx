@@ -49,6 +49,7 @@ const StorePage = ({
   const { total: totalStores, stores } = use(
     getStores(searchParams as searchOboject)
   );
+  
   const pageSize = 10;
   const maxPages = Math.ceil(totalStores / pageSize);
   const page = searchParams?.page ? +searchParams.page : 1;

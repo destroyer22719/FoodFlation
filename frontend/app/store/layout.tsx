@@ -38,9 +38,13 @@ const getLocations = async () => {
   return locations as Location[];
 };
 
+// quick fix to sending infinite fetch api requests
+// https://github.com/vercel/next.js/issues/42265#issuecomment-1305260064
+const getLocationsCache = getLocations();
+
 const StoresPage: React.FC<{ children: React.Component }> = ({ children }) => {
   const [codeInput, setCodeInput] = useState("");
-  const locations = use(getLocations());
+  const locations = use(getLocationsCache);
 
   return (
     <div className={styles["store-list"]}>
