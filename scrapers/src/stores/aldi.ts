@@ -34,8 +34,8 @@ export async function getPricesAldi(
   await sequelize.sync();
 
   const browser = await puppeteer.launch({
-    // headless: !process.argv.includes("--debug"),
-    headless: false,
+    headless: !process.argv.includes("--debug"),
+    // headless: false,
     ignoreHTTPSErrors: true,
   });
 
@@ -125,11 +125,11 @@ export async function getPricesAldi(
         timeout: 60 * 60 * 1000,
         visible: true,
       });
-      await page.waitForSelector("li h2", { timeout: 60 * 60 * 1000, visible: true });
+      await page.waitForSelector("li h3", { timeout: 60 * 60 * 1000, visible: true });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = document.querySelectorAll("li h2");
+        const name = document.querySelectorAll("li h3");
         const price = document.querySelectorAll(
           'span[aria-label*="Original price:"]'
         );
