@@ -39,6 +39,19 @@ export async function getPricesMetro(
   });
 
   const page = await browser.newPage();
+
+  await page.setRequestInterception(true);
+
+  page.on("request", (req) => {
+    if (
+      req.resourceType() === "image" ||
+      req.resourceType() === "stylesheet" ||
+      req.resourceType() === "font" 
+    )
+      req.abort();
+    else req.continue();
+  });
+
   //disables location
   const context = browser.defaultBrowserContext();
   await context.overridePermissions("https://www.Metro.ca/cp/grocery", [
@@ -126,7 +139,6 @@ export async function getPricesMetro(
         waitUntil: "domcontentloaded",
       });
 
-      await page.waitForTimeout(2000);
       const popup = await page.$(
         ".p__close.closeModalLogIn.removeBodyOverFlow"
       );
@@ -135,6 +147,8 @@ export async function getPricesMetro(
         await page.waitForSelector(".tile-product__top-section__details", {
           timeout: 15000,
         });
+
+        await page.waitForTimeout(999999);
       } catch (err) {
         continue;
       }
