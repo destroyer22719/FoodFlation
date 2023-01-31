@@ -35,3 +35,26 @@ export type CompanyName =
 
 export type Province = "alberta" | "british_columbia" | "ontario" | "quebec";
 export type State = "new_york" | "california" | "texas" | "michigan";
+export type StoreIndex = {
+  storeIndex: number;
+  itemIndex: number;
+  storeTotal: number;
+  itemTotal: number;
+};
+
+export type StoreLists = {
+  us: {
+    new_york: Address[];
+    california: Address[];
+    texas: Address[];
+    michigan: Address[];
+  };
+  canada: {
+    alberta: Address[];
+    british_columbia: Address[];
+    ontario: Address[];
+    quebec: Address[];
+  };
+  firstItems: [],
+  items: [],
+};

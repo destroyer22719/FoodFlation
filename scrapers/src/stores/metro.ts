@@ -10,7 +10,7 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../global.js";
+import { Address, StoreIndex } from "../global.js";
 import { msToTime } from "../util.js";
 
 const __dirname = path.resolve();
@@ -19,7 +19,8 @@ export async function getPricesMetro(
   itemsArray: string[],
   storesArray: Address[],
   storeStart: number = 0,
-  itemStart: number = 0
+  itemStart: number = 0,
+  storeIndex: StoreIndex
 ) {
   const stores = storesArray.slice(storeStart);
 
@@ -268,9 +269,11 @@ export async function getPricesMetro(
         await itemPrice.save();
       }
       itemBar.increment(1);
+      storeIndex.itemIndex++;
     }
     items = itemsArray;
     storeBar.increment(1);
+    storeIndex.storeIndex++;
     itemBar.update(0);
   }
 

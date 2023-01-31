@@ -1,5 +1,5 @@
 import yargs from "yargs/yargs";
-import { Province, State } from "./global.js";
+import { Province, State, StoreIndex } from "./global.js";
 import { scrapeAll, scrapeAmerica, scrapeCanada } from "./util.js";
 
 const argv = yargs(process.argv.slice(2))
@@ -20,33 +20,41 @@ const argv = yargs(process.argv.slice(2))
   })
   .parseSync();
 
-(async () => {
-  if (argv.all) {
-    await scrapeAll(
-      argv.province as Province,
-      argv.state as State,
-      argv.storeStart,
-      argv.itemStart,
-      {
-        metro: argv.metro,
-        loblaws: argv.loblaws,
-        noFrills: argv.noFrills,
-        wholeFoodsMarket: argv.wholeFoodsMarket,
-        aldi: argv.aldi,
-      }
-    );
-  } else if (argv.canada) {
-    await scrapeCanada(
-      argv.province as Province,
-      argv.storeStart,
-      argv.itemStart,
-      { metro: argv.metro, loblaws: argv.loblaws, noFrills: argv.noFrills }
-    );
-  } else if (argv.usa) {
-    await scrapeAmerica(argv.state as State, argv.storeStart, argv.itemStart, {
+const indexes: StoreIndex = {
+  storeIndex: 0,
+  itemIndex: 0,
+  storeTotal: 0,
+  itemTotal: 0,
+};
+
+if (argv.all) {
+  await scrapeAll(
+    argv.province as Province,
+    argv.state as State,
+    argv.storeStart,
+    argv.itemStart,
+    {
+      metro: argv.metro,
+      loblaws: argv.loblaws,
+      noFrills: argv.noFrills,
       wholeFoodsMarket: argv.wholeFoodsMarket,
       aldi: argv.aldi,
-      target: argv.target,
-    });
-  }
-})();
+    },
+    indexes
+  );
+} else if (argv.canada) {
+  await scrapeCanada(
+    argv.province as Province,
+    argv.storeStart,
+    argv.itemStart,
+    { metro: argv.metro, loblaws: argv.loblaws, noFrills: argv.noFrills },
+    indexes
+  );
+} else if (argv.usa) {
+  await scrapeAmerica(argv.state as State, argv.storeStart, argv.itemStart, {
+    wholeFoodsMarket: argv.wholeFoodsMarket,
+    aldi: argv.aldi,
+    target: argv.target,
+  },
+  indexes);
+}

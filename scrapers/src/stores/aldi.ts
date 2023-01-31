@@ -10,7 +10,7 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../global.js";
+import { Address, StoreIndex } from "../global.js";
 import { msToTime } from "../util.js";
 
 const __dirname = path.resolve();
@@ -19,7 +19,8 @@ export async function getPricesAldi(
   itemsArray: string[],
   storesArray: Address[],
   storeStart: number = 0,
-  itemStart: number = 0
+  itemStart: number = 0,
+  storeIndex: StoreIndex
 ) {
   const stores = storesArray.slice(storeStart);
 
@@ -105,7 +106,7 @@ export async function getPricesAldi(
     loader.text = `Scraping ${zipCode}...`;
 
     await page.goto(
-      `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`,
+      `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
     );
 
     await page.waitForSelector('span[class*="AddressButton"]');
@@ -125,7 +126,10 @@ export async function getPricesAldi(
         timeout: 60 * 60 * 1000,
         visible: true,
       });
-      await page.waitForSelector("li h3", { timeout: 60 * 60 * 1000, visible: true });
+      await page.waitForSelector("li h3", {
+        timeout: 60 * 60 * 1000,
+        visible: true,
+      });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
@@ -210,9 +214,11 @@ export async function getPricesAldi(
         await itemPrice.save();
       }
       itemBar.increment(1);
+      storeIndex.itemIndex++;
     }
     items = itemsArray;
     storeBar.increment(1);
+    storeIndex.storeIndex++;
     itemBar.update(0);
   }
 

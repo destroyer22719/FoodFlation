@@ -10,18 +10,17 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../../src/global.js";
+import { Address, StoreIndex } from "../../src/global.js";
 import { msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0
+  items: string[],
+  stores: Address[],
+  storeIndex: StoreIndex,
+  
 ) {
-  const stores = storesArray.slice(storeStart);
   if (stores.length === 0) {
     return;
   }
@@ -41,8 +40,6 @@ export async function getPricesLoblaws(
     "geolocation",
   ]);
 
-  let items = itemsArray.slice(itemStart);
-
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -52,8 +49,8 @@ export async function getPricesLoblaws(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
-    storeStart,
+    stores.length,
+    0,
     {},
     {
       format:
@@ -65,8 +62,8 @@ export async function getPricesLoblaws(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    items.length,
+    0,
     {},
     {
       format:
@@ -121,12 +118,12 @@ export async function getPricesLoblaws(
     for (const item of items) {
       try {
         loader.color = "green";
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray
+        loader.text = `${item.indexOf(item)}/${
+          item.length
+        } - ${stores
           .map((store) => store.postalCode)
           .indexOf(postalCode)}/${
-          storesArray.length
+          stores.length
         }| ${item} at ${postalCode}`;
         await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
 
@@ -193,12 +190,12 @@ export async function getPricesLoblaws(
         }
 
         for (const result of results) {
-          loader.text = `${itemsArray.indexOf(item)}/${
-            itemsArray.length
-          } - ${storesArray
+          loader.text = `${item.indexOf(item)}/${
+            item.length
+          } - ${stores
             .map((store) => store.postalCode)
             .indexOf(postalCode)}/${
-            storesArray.length
+            stores.length
           }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
           let itemObj = await Item.findOne({
@@ -228,15 +225,15 @@ export async function getPricesLoblaws(
           await itemPrice.save();
         }
         itemBar.increment(1);
+        storeIndex.itemIndex++;
       } catch (e) {
         continue;
       }
     }
-    items = itemsArray;
     storeBar.increment(1);
     itemBar.update(0);
   }
-  itemBar.update(itemsArray.length);
+  itemBar.update(items.length);
   storeBar.stop();
   itemBar.stop();
   multiBar.stop();
