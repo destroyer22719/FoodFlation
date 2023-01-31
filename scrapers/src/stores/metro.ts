@@ -46,7 +46,7 @@ export async function getPricesMetro(
     if (
       req.resourceType() === "image" ||
       req.resourceType() === "stylesheet" ||
-      req.resourceType() === "font" 
+      req.resourceType() === "font"
     )
       req.abort();
     else req.continue();
@@ -122,7 +122,7 @@ export async function getPricesMetro(
       postalCode
     );
     await page.click("#submit");
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(1000);
     await page.click(
       "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
     );
@@ -139,82 +139,38 @@ export async function getPricesMetro(
         waitUntil: "domcontentloaded",
       });
 
-      const popup = await page.$(
-        ".p__close.closeModalLogIn.removeBodyOverFlow"
-      );
-      if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
-      try {
-        await page.waitForSelector(".tile-product__top-section__details", {
-          timeout: 15000,
-        });
+      // const popup = await page.$(
+      //   ".p__close.closeModalLogIn.removeBodyOverFlow"
+      // );
+      // if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
+      // try {
+      //   await page.waitForSelector(".tile-product__top-section__details", {
+      //     timeout: 15000,
+      //   });
 
-        await page.waitForTimeout(999999);
-      } catch (err) {
-        continue;
-      }
+      //   await page.waitForTimeout(999999);
+      // } catch (err) {
+      //   continue;
+      // }
 
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const priceRegex = /(?<=\$)\d*.\d{2}/;
-        const name = document.querySelectorAll(
-          ".tile-product__top-section__details > a > div"
-        );
-        const price = document.querySelectorAll(".pi--main-price");
-        const prodTile = document.querySelectorAll(".products-tile-list__tile");
-        const img = document.querySelectorAll(
-          ".tile-product__top-section__visuals__img-product.defaultable-picture > img"
-        );
+        const name = Array.from(
+          document.querySelectorAll(".defaultable-picture > img")
+        ).map((x) => (x as HTMLImageElement).alt); // const price = document.querySelectorAll(".pi--main-price");
+        const price = document.querySelectorAll(".price-update");
+        const img = Array.from(
+          document.querySelectorAll(".defaultable-picture > img")
+        ).map((x) => (x as HTMLImageElement).src);
 
         //finds a maximum of 3 of each item
         const totalIters = name.length > 3 ? 3 : name.length;
         for (let i = 0; i < totalIters; i++) {
-          //somes the prices on metro listes as "2 / $9.99" with "or 6.99 ea", this code will get the price of each items
-          // please Metro can the prices on your website be consistently and displayed in a uniform manner T_T
-          let priceText = (<HTMLElement>(
-            price[i].querySelector(":scope .pi-sale-price:first-child")
-          )).innerText;
-          let priceElem: HTMLElement;
-
-          if (priceText.match(/^\s*(?<!\$)[a-z0-9\s\.]+\//)) {
-            priceElem = <HTMLElement>(
-              price[i].querySelector(":scope .pi-secondary-price>div")
-            );
-            if (priceElem)
-              priceText = priceElem.innerText.match(priceRegex)![0];
-            else if (
-              <HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-regular-price > .pi-price"
-                )
-              )
-            ) {
-              priceText = (<HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-regular-price > .pi-price"
-                )
-              )).innerText.match(priceRegex)![0];
-            } else if (
-              <HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-secondary-price > .pi-price"
-                )
-              )
-            ) {
-              priceText = (<HTMLElement>(
-                prodTile[i].querySelector(
-                  ":scope .pi-secondary-price > .pi-price"
-                )
-              )).innerText.match(priceRegex)![0];
-            }
-          } else {
-            priceText = (<HTMLElement>price[i]).innerText.match(priceRegex)![0];
-          }
-
           results.push({
-            name: (<HTMLElement>name[i]).innerText,
-            price: priceText,
-            imgUrl: (<HTMLImageElement>img[i]).src,
+            name: name[i],
+            price: price[i],
+            imgUrl: img[i],
           });
         }
 
@@ -242,7 +198,6 @@ export async function getPricesMetro(
           postalCode,
           companyId: company.id,
         });
-
         await store.save();
       }
 
