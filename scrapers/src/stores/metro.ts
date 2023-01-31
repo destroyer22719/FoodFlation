@@ -115,14 +115,15 @@ export async function getPricesMetro(
     loader.color = "green";
     loader.text = `Scraping ${postalCode}...`;
     await page.goto("https://www.metro.ca/en/find-a-grocery");
-
+    await page.waitForSelector("#postalCode");
     await page.$eval(
       "#postalCode",
       (input, pc) => ((input as HTMLInputElement).value = pc as string),
       postalCode
     );
+
     await page.click("#submit");
-    // await page.waitForTimeout(1000);
+    await page.waitForTimeout(5000);
     await page.click(
       "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
     );
@@ -139,37 +140,34 @@ export async function getPricesMetro(
         waitUntil: "domcontentloaded",
       });
 
-      // const popup = await page.$(
-      //   ".p__close.closeModalLogIn.removeBodyOverFlow"
-      // );
-      // if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
-      // try {
-      //   await page.waitForSelector(".tile-product__top-section__details", {
-      //     timeout: 15000,
-      //   });
-
-      //   await page.waitForTimeout(999999);
-      // } catch (err) {
-      //   continue;
-      // }
-
-      //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
         const name = Array.from(
           document.querySelectorAll(".defaultable-picture > img")
         ).map((x) => (x as HTMLImageElement).alt); // const price = document.querySelectorAll(".pi--main-price");
-        const price = document.querySelectorAll(".price-update");
+
+        let prices = Array.from(document.querySelectorAll(".price-update")).map(
+          (x) => (x as HTMLElement).innerText.slice(1)
+        );
+        const prodTile = Array.from(document.querySelectorAll(".tile-product"));
+
         const img = Array.from(
           document.querySelectorAll(".defaultable-picture > img")
         ).map((x) => (x as HTMLImageElement).src);
 
-        //finds a maximum of 3 of each item
         const totalIters = name.length > 3 ? 3 : name.length;
         for (let i = 0; i < totalIters; i++) {
+          let price = prices[i];
+          //for in case there is a promotion like 2 / $5 then use the price of per unit
+          if (price.includes("/")) {
+            price = (prodTile[i].querySelector(
+              ".pricing__secondary-price > span"
+            ) as HTMLElement)!.innerText.slice(4);
+            prices.splice(i + 1, 1);
+          }
           results.push({
             name: name[i],
-            price: price[i],
+            price: price,
             imgUrl: img[i],
           });
         }
