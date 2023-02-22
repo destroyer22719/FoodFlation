@@ -16,19 +16,14 @@ import { msToTime } from "../util.js";
 const __dirname = path.resolve();
 
 export async function getPricesAldi(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0,
-  storeIndex: StoreIndex
+  stores: Address[],
+  storeIndex: StoreIndex,
+  items: string[],
+  itemStart?: string[]
 ) {
-  const stores = storesArray.slice(storeStart);
-
   if (stores.length === 0) {
     return;
   }
-
-  let items = itemsArray.slice(itemStart);
 
   const startTime = Date.now();
 
@@ -57,8 +52,8 @@ export async function getPricesAldi(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
-    storeStart,
+    stores.length,
+    0,
     {},
     {
       format:
@@ -70,8 +65,8 @@ export async function getPricesAldi(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    items.length,
+    0,
     {},
     {
       format:
@@ -98,6 +93,8 @@ export async function getPricesAldi(
     //searches up store postal code directly and set the store location
     let { city, zipCode, state, country, street } = store;
 
+    let itemsToScrape = itemStart || items;
+
     zipCode = zipCode as string;
     state = state as string;
     country = country as string;
@@ -113,16 +110,14 @@ export async function getPricesAldi(
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      loader.text = `${itemsArray.indexOf(item)}/${
-        itemsArray.length
-      } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-        storesArray.length
-      }| ${item} at ${zipCode}`;
+      loader.text = `${items.indexOf(item)}/${items.length} - ${stores
+        .map((store) => store.zipCode)
+        .indexOf(zipCode)}/${stores.length}| ${item} at ${zipCode}`;
 
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-      await page.waitForSelector('span[aria-label*="Original price:"]', {
+      await page.waitForSelector('div[aria-label*="Original price:"]', {
         timeout: 60 * 60 * 1000,
         visible: true,
       });
@@ -135,7 +130,7 @@ export async function getPricesAldi(
         const results = [];
         const name = document.querySelectorAll("li h3");
         const price = document.querySelectorAll(
-          'span[aria-label*="Original price:"]'
+          'div[aria-label*="Original price:"]'
         );
         const img = document.querySelectorAll("li img[srcset]");
 
@@ -144,7 +139,7 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i]).innerText.slice(1),
+            price: (<HTMLElement>price[i]).innerText.match(/(?<=\$)(\d|\.)+/gm)![0],
             imgUrl: (<HTMLImageElement>img[i]).srcset
               .split(", ")
               .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
@@ -181,11 +176,11 @@ export async function getPricesAldi(
       }
 
       for (const result of results) {
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-          storesArray.length
-        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
+        loader.text = `${items.indexOf(item)}/${items.length} - ${stores
+          .map((store) => store.zipCode)
+          .indexOf(zipCode)}/${stores.length}|${item} at ${zipCode} |(${
+          result.name
+        } for ${result.price})`;
 
         let itemObj = await Item.findOne({
           where: { name: result.name, storeId: store.id },
@@ -216,13 +211,13 @@ export async function getPricesAldi(
       itemBar.increment(1);
       storeIndex.itemIndex++;
     }
-    items = itemsArray;
+    items = items;
     storeBar.increment(1);
     storeIndex.storeIndex++;
     itemBar.update(0);
   }
 
-  itemBar.update(itemsArray.length);
+  itemBar.update(items.length);
 
   storeBar.stop();
   itemBar.stop();

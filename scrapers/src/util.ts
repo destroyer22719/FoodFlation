@@ -5,6 +5,7 @@ import {
   CompanyName,
   Province,
   State,
+  StoreConfig,
   StoreIndex,
   StoreLists,
   StoresOptions,
@@ -21,15 +22,19 @@ import { getPricesTarget } from "./stores/target.js";
 const __dirname = path.resolve();
 
 export function generateStoresToScrape(
-  province: Province,
-  state: State,
-  itemStart: number = 0,
-  storeStart: number = 0,
   storeIndex: StoreIndex,
-  canadianStoreOptions?: CanadianStoresOptions,
-  americanStoreOptions?: AmericanStoresOptions
+  storeConfig: StoreConfig
 ): StoreLists {
   let totalStores = 0;
+
+  let {
+    province,
+    state,
+    itemStart,
+    storeStart,
+    americanStoreOptions,
+    canadianStoreOptions,
+  } = storeConfig;
 
   const storeList: StoreLists = {
     us: {
@@ -100,6 +105,7 @@ export function generateStoresToScrape(
       totalStores += newStores.length;
     } else {
       result = stores;
+      totalStores += stores.length;
     }
 
     storeList.canada[prov] = result;
@@ -127,14 +133,20 @@ export function generateStoresToScrape(
     }
     if (storeStart > 0) {
       const newStores = stores.slice(storeStart);
-      storeList.us[st] = newStores;
+      result = newStores;
       storeStart -= stores.length;
       totalStores += newStores.length;
     } else {
-      storeList.us[st] = stores;
+      result = stores;
+      totalStores += stores.length;
     }
+
+    storeList.us[st] = result;
   }
 
+  storeIndex.itemTotal = itemStart
+    ? items.length - itemStart + items.length * totalStores - 1
+    : items.length * totalStores;
   storeIndex.storeTotal = totalStores;
   return storeList;
 }
@@ -142,16 +154,20 @@ export function generateStoresToScrape(
 export async function scrapeStores(
   storeList: StoreLists,
   storeIndex: StoreIndex
-) {}
-
-export async function scrapeStore(
-  stores: Address[],
-  items: string[],
-  storeIndex: StoreIndex,
-  firstItems?: string[]
 ) {
-  let currentItemList = firstItems || items;
+  const { canada, us, items, firstItems } = storeList;
 
+  let currentItemList = firstItems || items;
+  const stores = [
+    ...canada.alberta,
+    ...canada.british_columbia,
+    ...canada.ontario,
+    ...canada.quebec,
+    ...us.new_york,
+    ...us.california,
+    ...us.texas,
+    ...us.michigan,
+  ];
   const loblawsStores = stores.filter((store) => store.company === "Loblaws");
   const metroStores = stores.filter((store) => store.company === "Metro");
   const noFrillsStores = stores.filter(
@@ -161,258 +177,13 @@ export async function scrapeStore(
     (store) => store.company === "Whole Foods Market"
   );
   const aldiStores = stores.filter((store) => store.company === "Aldi");
-  const targetStores = stores.filter((store) => store.company === "Target");
 
   if (loblawsStores.length) {
-    await getPricesLoblaws(currentItemList, loblawsStores, storeIndex);
+    await getPricesLoblaws(loblawsStores, storeIndex, currentItemList);
+  } else if (aldiStores.length) {
+    await getPricesAldi(aldiStores, storeIndex, currentItemList, firstItems);
   }
 }
-
-// export async function scrapeCanada(
-//   province: Province,
-//   itemStart: number = 0,
-//   storeStart: number = 0,
-//   storesOptions: CanadianStoresOptions,
-//   storeIndex: StoreIndexf
-// ) {
-//   const { items } = JSON.parse(
-//     fs.readFileSync(
-//       path.join(__dirname, "src", "config", "items.json"),
-//       "utf-8"
-//     )
-//   );
-
-//   let provinces: Province[] = province
-//     ? [province]
-//     : ["alberta", "british_columbia", "ontario", "quebec"];
-
-//   for (const prov of provinces) {
-//     console.log(prov);
-
-//     const { stores } = JSON.parse(
-//       fs.readFileSync(
-//         path.join(__dirname, "src", "config", "canada", `${prov}.json`),
-//         "utf-8"
-//       )
-//     );
-
-//     await storeScrape(
-//       items,
-//       stores,
-//       itemStart,
-//       storeStart,
-//       storesOptions,
-//       storeIndex
-//     );
-//   }
-// }
-
-// export async function scrapeAmerica(
-//   state: State,
-//   itemStart: number = 0,
-//   storeStart: number = 0,
-//   storesOptions: AmericanStoresOptions,
-//   storeIndex: StoreIndex
-// ) {
-//   const { items } = JSON.parse(
-//     fs.readFileSync(
-//       path.join(__dirname, "src", "config", "items.json"),
-//       "utf-8"
-//     )
-//   );
-
-//   let states: State[] = state
-//     ? [state]
-//     : ["new_york", "california", "texas", "michigan"];
-
-//   for (const st of states) {
-//     console.log(st);
-
-//     const { stores } = JSON.parse(
-//       fs.readFileSync(
-//         path.join(__dirname, "src", "config", "united_states", `${st}.json`),
-//         "utf-8"
-//       )
-//     );
-
-//     await storeScrape(
-//       items,
-//       stores,
-//       itemStart,
-//       storeStart,
-//       storesOptions,
-//       storeIndex
-//     );
-//   }
-// }
-
-// export async function scrapeAll(
-//   province: Province,
-//   state: State,
-//   itemStart: number = 0,
-//   storeStart: number = 0,
-//   storesOptions: StoresOptions,
-//   storeIndex: StoreIndex
-// ) {
-//   const { items } = JSON.parse(
-//     fs.readFileSync(
-//       path.join(__dirname, "src", "config", "items.json"),
-//       "utf-8"
-//     )
-//   );
-
-//   let provinces: Province[] = [
-//     "alberta",
-//     "british_columbia",
-//     "ontario",
-//     "quebec",
-//   ];
-
-//   let states: State[] = ["new_york", "california", "texas", "michigan"];
-
-//   provinces = provinces.slice(
-//     province ? provinces.indexOf(province as Province) : 0
-//   );
-
-//   states = states.slice(state ? states.indexOf(state as State) : 0);
-
-//   for (const prov of provinces) {
-//     console.log(prov);
-
-//     const { stores } = JSON.parse(
-//       fs.readFileSync(
-//         path.join(__dirname, "src", "config", "canada", `${prov}.json`),
-//         "utf-8"
-//       )
-//     );
-
-//     await storeScrape(
-//       items,
-//       stores,
-//       itemStart,
-//       storeStart,
-//       storesOptions,
-//       storeIndex
-//     );
-//   }
-
-//   for (const st of states) {
-//     console.log(st);
-
-//     const { stores } = JSON.parse(
-//       fs.readFileSync(
-//         path.join(__dirname, "src", "config", "united_states", `${st}.json`),
-//         "utf-8"
-//       )
-//     );
-
-//     await storeScrape(
-//       items,
-//       stores,
-//       itemStart,
-//       storeStart,
-//       storesOptions,
-//       storeIndex
-//     );
-//   }
-// }
-
-// const storeScrape = async (storeList: StoreLists, storeIndex: StoreIndex) => {
-//   const { aldi, loblaws, metro, noFrills, wholeFoodsMarket, target } =
-//     storesOptions;
-
-//   if (loblaws) {
-//     await getPricesLoblaws(
-//       items,
-//       filterByStore(stores, "Loblaws"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else if (metro) {
-//     await getPricesMetro(
-//       items,
-//       filterByStore(stores, "Metro"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else if (noFrills) {
-//     await getPricesNoFrills(
-//       items,
-//       filterByStore(stores, "No Frills"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else if (target) {
-//     await getPricesTarget(
-//       items,
-//       filterByStore(stores, "Target"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else if (wholeFoodsMarket) {
-//     await getPricesWholeFoodsMarket(
-//       items,
-//       filterByStore(stores, "Whole Foods Market"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else if (aldi) {
-//     await getPricesAldi(
-//       items,
-//       filterByStore(stores, "Aldi"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//   } else {
-//     await getPricesLoblaws(
-//       items,
-//       filterByStore(stores, "Loblaws"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//     await getPricesMetro(
-//       items,
-//       filterByStore(stores, "Metro"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//     await getPricesNoFrills(
-//       items,
-//       filterByStore(stores, "No Frills"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//     await getPricesWholeFoodsMarket(
-//       items,
-//       filterByStore(stores, "Whole Foods Market"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//     await getPricesAldi(
-//       items,
-//       filterByStore(stores, "Aldi"),
-//       storeStart,
-//       itemStart,
-//       storeIndex
-//     );
-//     // await getPricesTarget(
-//     //   items,
-//     //   filterByStore(stores, "Target"),
-//     //   storeStart,
-//     //   itemStart
-//     // );
-//   }
-// };
 
 function filterByStore(array: Address[], company: CompanyName): Address[] {
   return array.filter((store) => store.company === company);
@@ -427,3 +198,38 @@ export const msToTime = (ms: number): string => {
     .toString()
     .padStart(2, "0")}`;
 };
+
+export const defaultItems = [
+  "eggs",
+  "milk",
+  "butter",
+  "flour",
+  "bacon",
+  "pork",
+  "beef",
+  "ground beef",
+  "chicken breasts",
+  "chicken wings",
+  "tomatoes",
+  "cheese",
+  "bananas",
+  "lettuce",
+  "onions",
+  "broccoli",
+  "rice",
+  "cooking oil",
+  "salmon",
+  "tuna",
+  "cucumbers",
+  "potatoes",
+  "bread",
+  "cereal",
+  "beets",
+  "radish",
+  "mushrooms",
+  "watermelons",
+  "garlic",
+  "ham",
+  "sausages",
+  "turkey",
+];

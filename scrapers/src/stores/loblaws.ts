@@ -11,15 +11,14 @@ import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
 import { Address, StoreIndex } from "../../src/global.js";
-import { msToTime } from "../util.js";
+import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
-  items: string[],
   stores: Address[],
   storeIndex: StoreIndex,
-  
+  items: string[]
 ) {
   if (stores.length === 0) {
     return;
@@ -62,7 +61,7 @@ export async function getPricesLoblaws(
   );
 
   const itemBar = multiBar.create(
-    items.length,
+    defaultItems.length,
     0,
     {},
     {
@@ -89,6 +88,10 @@ export async function getPricesLoblaws(
   for (const store of stores) {
     //searches up store postal code directly and set the store location
     let { city, postalCode, province, country, street } = store;
+
+    if (items.length !== defaultItems.length) {
+      itemBar.increment(defaultItems.length - items.length);
+    }
 
     postalCode = postalCode as string;
     province = province as string;
@@ -118,15 +121,13 @@ export async function getPricesLoblaws(
     for (const item of items) {
       try {
         loader.color = "green";
-        loader.text = `${item.indexOf(item)}/${
-          item.length
-        } - ${stores
-          .map((store) => store.postalCode)
-          .indexOf(postalCode)}/${
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
           stores.length
         }| ${item} at ${postalCode}`;
-        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
 
+        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
         await page.waitForSelector(".product-tile__thumbnail__image", {
           timeout: 60 * 1000,
         });
@@ -190,11 +191,9 @@ export async function getPricesLoblaws(
         }
 
         for (const result of results) {
-          loader.text = `${item.indexOf(item)}/${
-            item.length
-          } - ${stores
-            .map((store) => store.postalCode)
-            .indexOf(postalCode)}/${
+          loader.text = `${defaultItems.indexOf(item)}/${
+            defaultItems.length
+          } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
             stores.length
           }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
@@ -229,6 +228,11 @@ export async function getPricesLoblaws(
       } catch (e) {
         continue;
       }
+    }
+
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
     }
     storeBar.increment(1);
     itemBar.update(0);

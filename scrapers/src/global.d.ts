@@ -55,6 +55,15 @@ export type StoreLists = {
     ontario: Address[];
     quebec: Address[];
   };
-  firstItems: [],
-  items: [],
+  firstItems: [];
+  items: [];
+};
+
+export type StoreConfig = {
+  province?: Province;
+  state?: State;
+  itemStart: number = 0;
+  storeStart: number = 0;
+  canadianStoreOptions?: CanadianStoresOptions;
+  americanStoreOptions?: AmericanStoresOptions;
 };

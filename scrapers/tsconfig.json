@@ -24,5 +24,5 @@
     "baseUrl": "."
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts", "loblaws.ts"]
+  "include": ["./src/**/*.ts", "loblaws.ts", "src/stores/nofrills.ts"]
 }
