@@ -5,7 +5,6 @@ import style from "../styles/Layout.module.scss";
 import "../styles/global.scss";
 
 type Props = {
-  title: string;
   children: React.ReactNode;
 };
 
