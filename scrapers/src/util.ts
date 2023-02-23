@@ -1,11 +1,11 @@
 import {
   Address,
-  AmericanStoresOptions,
-  CanadianStoresOptions,
   CompanyName,
   Province,
   State,
-  StoresOptions,
+  StoreConfig,
+  StoreIndexes,
+  StoreLists,
 } from "./global";
 import fs from "fs";
 import path from "path";
@@ -14,223 +14,260 @@ import { getPricesMetro } from "./stores/metro.js";
 import { getPricesWholeFoodsMarket } from "./stores/whole_foods_market.js";
 import { getPricesAldi } from "./stores/aldi.js";
 import { getPricesNoFrills } from "./stores/nofrills.js";
-import { getPricesTarget } from "./stores/target.js";
 
 const __dirname = path.resolve();
 
-export async function scrapeCanada(
-  province: Province,
-  itemStart: number = 0,
-  storeStart: number = 0,
-  storesOptions: CanadianStoresOptions
-) {
+export function generateStoresToScrape(
+  storeIndexes: StoreIndexes,
+  storeConfig: StoreConfig
+): StoreLists {
+  let totalStores = 0;
+
+  let {
+    province,
+    state,
+    itemStart,
+    storeStart,
+    americanStoreOptions,
+    canadianStoreOptions,
+    canadaOnly = false,
+    usOnly = false,
+  } = storeConfig;
+
+  const storeList: StoreLists = {
+    us: {
+      new_york: [],
+      california: [],
+      texas: [],
+      michigan: [],
+    },
+    canada: {
+      alberta: [],
+      british_columbia: [],
+      ontario: [],
+      quebec: [],
+    },
+    firstItems: [],
+    items: [],
+    storeStart: 0,
+  };
+
   const { items } = JSON.parse(
     fs.readFileSync(
       path.join(__dirname, "src", "config", "items.json"),
       "utf-8"
     )
   );
+
+  storeList.items = items;
+  storeList.firstItems = items.slice(itemStart);
 
   let provinces: Province[] = province
     ? [province]
     : ["alberta", "british_columbia", "ontario", "quebec"];
 
-  for (const prov of provinces) {
-    console.log(prov);
-
-    const { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "canada", `${prov}.json`),
-        "utf-8"
-      )
-    );
-
-    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
-  }
-}
-
-export async function scrapeAmerica(
-  state: State,
-  itemStart: number = 0,
-  storeStart: number = 0,
-  storesOptions: AmericanStoresOptions
-) {
-  const { items } = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "items.json"),
-      "utf-8"
-    )
-  );
-
   let states: State[] = state
     ? [state]
     : ["new_york", "california", "texas", "michigan"];
 
-  for (const st of states) {
-    console.log(st);
+  if (!usOnly) {
+    for (const prov of provinces) {
+      let { stores } = JSON.parse(
+        fs.readFileSync(
+          path.join(__dirname, "src", "config", "canada", `${prov}.json`),
+          "utf-8"
+        )
+      );
 
-    const { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "united_states", `${st}.json`),
-        "utf-8"
-      )
-    );
+      let filteredStores: Address[] = [];
+      if (canadianStoreOptions && !americanStoreOptions) {
+        const { metro, loblaws, noFrills } = canadianStoreOptions;
 
-    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
+        if (metro || loblaws || noFrills) {
+          if (metro) {
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Metro"),
+            ];
+          }
+          if (loblaws) {
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Loblaws"),
+            ];
+          }
+          if (noFrills) {
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "No Frills"),
+            ];
+          }
+        }
+      }
+
+      if (canadianStoreOptions && !americanStoreOptions) {
+        stores = filteredStores;
+      }
+
+      totalStores += stores.length;
+      storeList.canada[prov] = stores;
+    }
   }
+
+  if (!canadaOnly) {
+    for (const st of states) {
+      let { stores } = JSON.parse(
+        fs.readFileSync(
+          path.join(__dirname, "src", "config", "united_states", `${st}.json`),
+          "utf-8"
+        )
+      );
+
+      let filteredStores: Address[] = [];
+
+      if (americanStoreOptions && !canadianStoreOptions) {
+        const { aldi, target, wholeFoodsMarket } = americanStoreOptions;
+        if (aldi || target || wholeFoodsMarket) {
+          if (aldi) {
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Aldi"),
+            ];
+          }
+          if (target) {
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Target"),
+            ];
+          }
+          if (wholeFoodsMarket) {
+            filteredStores = [
+              ...stores,
+              ...filterByStore(filteredStores, "Whole Foods Market"),
+            ];
+          }
+        }
+      }
+
+      if (canadianStoreOptions && !americanStoreOptions) {
+        stores = filteredStores;
+      }
+
+      totalStores += stores.length;
+      storeList.us[st] = stores;
+    }
+  }
+
+  storeIndexes.itemTotal = itemStart
+    ? items.length - itemStart + items.length * totalStores - 1
+    : items.length * totalStores;
+  storeIndexes.storeTotal = totalStores;
+  storeIndexes.storeIndex = storeStart || 0;
+  return storeList;
 }
 
-export async function scrapeAll(
-  province: Province,
-  state: State,
-  itemStart: number = 0,
-  storeStart: number = 0,
-  storesOptions: StoresOptions
+export async function scrapeStores(
+  storeList: StoreLists,
+  storeIndexes: StoreIndexes
 ) {
-  const { items } = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "items.json"),
-      "utf-8"
-    )
-  );
+  let { canada, us, items, firstItems, storeStart } = storeList;
 
-  let provinces: Province[] = [
-    "alberta",
-    "british_columbia",
-    "ontario",
-    "quebec",
-  ];
+  let currentItemList = firstItems || items;
 
-  let states: State[] = ["new_york", "california", "texas", "michigan"];
+  for (const prov in canada) {
+    const stores: Address[] = canada[prov];
+    const prevStoreStart = storeStart;
 
-  provinces = provinces.slice(
-    province ? provinces.indexOf(province as Province) : 0
-  );
+    if (!stores.length) continue;
+    if (storeStart < storeIndexes.storeIndex && stores.length) {
+      let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
+      storeStart += min;
+      if (min === stores.length) continue;
+    }
 
-  states = states.slice(state ? states.indexOf(state as State) : 0);
+    let counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
+    let loblawsStores = filterByStore(stores, "Loblaws");
+    let metroStores = filterByStore(stores, "Metro");
+    let noFrillsStores = filterByStore(stores, "No Frills");
 
-  for (const prov of provinces) {
-    console.log(prov);
-
-    const { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "canada", `${prov}.json`),
-        "utf-8"
-      )
+    console.log(
+      loblawsStores.length,
+      metroStores.length,
+      noFrillsStores.length
     );
 
-    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
+    loblawsStores = loblawsStores.slice(counter.count);
+    metroStores = metroStores.slice(counter.count);
+    noFrillsStores = noFrillsStores.slice(counter.count);
+
+    console.log(`${prov}, Canada`);
+
+    await getPricesLoblaws(
+      loblawsStores,
+      currentItemList,
+      storeIndexes,
+      counter.count
+    );
+
+    counter.subtract(loblawsStores.length);
+
+    await getPricesMetro(
+      metroStores,
+      currentItemList,
+      storeIndexes,
+      counter.count
+    );
+
+    counter.subtract(metroStores.length);
+
+    await getPricesNoFrills(
+      noFrillsStores,
+      currentItemList,
+      storeIndexes,
+      counter.count
+    );
+    counter.subtract(noFrillsStores.length);
   }
 
-  for (const st of states) {
-    console.log(st);
+  for (const state in us) {
+    const stores: Address[] = us[state];
 
-    const { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "united_states", `${st}.json`),
-        "utf-8"
-      )
+    if (!stores.length) continue;
+    if (storeStart < storeIndexes.storeIndex && stores.length) {
+      let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
+      storeStart += min;
+      if (min === stores.length) continue;
+    }
+
+    let counter = new Counter(storeIndexes.storeIndex - storeStart);
+    let aldiStores = filterByStore(stores, "Aldi");
+    let wholeFoodsMarketStores = filterByStore(stores, "Whole Foods Market");
+
+    aldiStores = aldiStores.slice(counter.count);
+    wholeFoodsMarketStores = wholeFoodsMarketStores.slice(counter.count);
+
+    console.log(`${state}, United States`);
+    await getPricesAldi(
+      aldiStores,
+      currentItemList,
+      storeIndexes,
+      counter.count
     );
+    counter.subtract(aldiStores.length);
 
-    await storeScrape(items, stores, itemStart, storeStart, storesOptions);
+    await getPricesWholeFoodsMarket(
+      wholeFoodsMarketStores,
+      currentItemList,
+      storeIndexes,
+      counter.count
+    );
+    counter.subtract(wholeFoodsMarketStores.length);
   }
 }
 
-const storeScrape = async (
-  items: string[],
-  stores: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0,
-  storesOptions: StoresOptions
-) => {
-  const { aldi, loblaws, metro, noFrills, wholeFoodsMarket, target } =
-    storesOptions;
-
-  if (loblaws) {
-    await getPricesLoblaws(
-      items,
-      filterByStore(stores, "Loblaws"),
-      storeStart,
-      itemStart
-    );
-  } else if (metro) {
-    await getPricesMetro(
-      items,
-      filterByStore(stores, "Metro"),
-      storeStart,
-      itemStart
-    );
-  } else if (noFrills) {
-    await getPricesNoFrills(
-      items,
-      filterByStore(stores, "No Frills"),
-      storeStart,
-      itemStart
-    );
-  } else if (target) {
-    await getPricesTarget(
-      items,
-      filterByStore(stores, "Target"),
-      storeStart,
-      itemStart
-    );
-  } else if (wholeFoodsMarket) {
-    await getPricesWholeFoodsMarket(
-      items,
-      filterByStore(stores, "Whole Foods Market"),
-      storeStart,
-      itemStart
-    );
-  } else if (aldi) {
-    await getPricesAldi(
-      items,
-      filterByStore(stores, "Aldi"),
-      storeStart,
-      itemStart
-    );
-  } else {
-    await getPricesLoblaws(
-      items,
-      filterByStore(stores, "Loblaws"),
-      storeStart,
-      itemStart
-    );
-    await getPricesMetro(
-      items,
-      filterByStore(stores, "Metro"),
-      storeStart,
-      itemStart
-    );
-    await getPricesNoFrills(
-      items,
-      filterByStore(stores, "No Frills"),
-      storeStart,
-      itemStart
-    );
-    await getPricesWholeFoodsMarket(
-      items,
-      filterByStore(stores, "Whole Foods Market"),
-      storeStart,
-      itemStart
-    );
-    await getPricesAldi(
-      items,
-      filterByStore(stores, "Aldi"),
-      storeStart,
-      itemStart
-    );
-    // await getPricesTarget(
-    //   items,
-    //   filterByStore(stores, "Target"),
-    //   storeStart,
-    //   itemStart
-    // );
-  }
-};
-
-const filterByStore = (array: Address[], company: CompanyName): Address[] => {
+function filterByStore(array: Address[], company: CompanyName): Address[] {
   return array.filter((store) => store.company === company);
-};
+}
 
 export const msToTime = (ms: number): string => {
   const hours = Math.floor(ms / 3600000);
@@ -241,3 +278,49 @@ export const msToTime = (ms: number): string => {
     .toString()
     .padStart(2, "0")}`;
 };
+
+export const defaultItems = [
+  "eggs",
+  "milk",
+  "butter",
+  "flour",
+  "bacon",
+  "pork",
+  "beef",
+  "ground beef",
+  "chicken breasts",
+  "chicken wings",
+  "tomatoes",
+  "cheese",
+  "bananas",
+  "lettuce",
+  "onions",
+  "broccoli",
+  "rice",
+  "cooking oil",
+  "salmon",
+  "tuna",
+  "cucumbers",
+  "potatoes",
+  "bread",
+  "cereal",
+  "beets",
+  "radish",
+  "mushrooms",
+  "watermelons",
+  "garlic",
+  "ham",
+  "sausages",
+  "turkey",
+];
+
+class Counter {
+  count = 0;
+  constructor(count: number) {
+    this.count = count;
+  }
+
+  subtract(amt: number) {
+    this.count = Math.max(0, this.count - amt);
+  }
+}
