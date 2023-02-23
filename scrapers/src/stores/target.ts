@@ -56,7 +56,7 @@ export async function getPricesTarget(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    storesArray.length + storeStart,
     storeStart,
     {},
     {

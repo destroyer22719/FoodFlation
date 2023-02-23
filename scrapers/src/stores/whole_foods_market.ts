@@ -50,7 +50,7 @@ export async function getPricesWholeFoodsMarket(
   );
 
   const storeBar = multiBar.create(
-    stores.length,
+    stores.length + storeStart,
     storeStart,
     {},
     {

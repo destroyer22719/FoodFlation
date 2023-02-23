@@ -49,7 +49,7 @@ export async function getPricesLoblaws(
   );
 
   const storeBar = multiBar.create(
-    stores.length,
+    stores.length + storeStart,
     storeStart,
     {},
     {
