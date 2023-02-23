@@ -60,9 +60,10 @@ export async function getPricesMetro(
     },
     cliProgress.Presets.shades_grey
   );
-
+  
+  console.log(stores.length + storeStart)
   const storeBar = multiBar.create(
-    stores.length,
+    stores.length + storeStart,
     storeStart,
     {},
     {
@@ -126,7 +127,7 @@ export async function getPricesMetro(
       "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
     );
     await page.waitForNavigation();
-    
+
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
@@ -140,19 +141,6 @@ export async function getPricesMetro(
       await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
         waitUntil: "domcontentloaded",
       });
-
-      await page.waitForTimeout(2000);
-      const popup = await page.$(
-        ".p__close.closeModalLogIn.removeBodyOverFlow"
-      );
-      if (popup) await popup.evaluate((b) => (b as HTMLElement).click());
-      try {
-        await page.waitForSelector(".tile-product__top-section__details", {
-          timeout: 15000,
-        });
-      } catch (err) {
-        continue;
-      }
 
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {

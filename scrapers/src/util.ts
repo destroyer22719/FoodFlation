@@ -177,12 +177,13 @@ export async function scrapeStores(
   storeIndexes: StoreIndexes
 ) {
   let { canada, us, items, firstItems, storeStart} = storeList;
-
+  
   let currentItemList = firstItems || items;
 
   for (const prov in canada) {
     const stores: Address[] = canada[prov];
-    
+    const prevStoreStart = storeStart;
+
     if (!stores.length) continue;
     if (storeStart < storeIndexes.storeIndex && stores.length) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
@@ -190,17 +191,16 @@ export async function scrapeStores(
       if (min === stores.length) continue;
     }
 
-    let counter = new Counter(storeIndexes.storeIndex - storeStart);
-    const loblawsStores = filterByStore(stores, "Loblaws");
-    const metroStores = filterByStore(stores, "Metro");
-    const noFrillsStores = filterByStore(stores, "No Frills");
+    let counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
+    let loblawsStores = filterByStore(stores, "Loblaws");
+    let metroStores = filterByStore(stores, "Metro");
+    let noFrillsStores = filterByStore(stores, "No Frills");
+    
+    console.log(loblawsStores.length, metroStores.length, noFrillsStores.length)
 
-    loblawsStores.slice(counter.count);
-    counter.subtract(loblawsStores.length);
-    metroStores.slice(counter.count);
-    counter.subtract(metroStores.length);
-    noFrillsStores.slice(counter.count);
-    counter.subtract(noFrillsStores.length);
+    loblawsStores = loblawsStores.slice(counter.count);
+    metroStores = metroStores.slice(counter.count);
+    noFrillsStores = noFrillsStores.slice(counter.count);
 
     console.log(`${prov}, Canada`);
 
@@ -210,6 +210,8 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
+    
+    counter.subtract(loblawsStores.length);
 
     await getPricesMetro(
       metroStores,
@@ -218,12 +220,15 @@ export async function scrapeStores(
       counter.count
     );
 
+    counter.subtract(metroStores.length);
+
     await getPricesNoFrills(
       noFrillsStores,
       currentItemList,
       storeIndexes,
       counter.count
     );
+    counter.subtract(noFrillsStores.length);
   }
 
   for (const state in us) {
