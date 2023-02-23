@@ -41,6 +41,18 @@ export async function getPricesMetro(
     "geolocation",
   ]);
 
+  await page.setRequestInterception(true);
+
+  page.on("request", (req) => {
+    if (
+      req.resourceType() === "image" ||
+      req.resourceType() === "stylesheet" ||
+      req.resourceType() === "font"
+    )
+      req.abort();
+    else req.continue();
+  });
+
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,

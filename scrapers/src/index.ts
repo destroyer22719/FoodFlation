@@ -51,8 +51,6 @@ if (argv.all) {
     };
   }
 
-  console.log(canadianStoreOptions)
-
   const storesToScrape = generateStoresToScrape(indexes, {
     canadaOnly: true,
     itemStart: argv.itemStart,
