@@ -10,16 +10,15 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndex } from "../global.js";
-import { msToTime } from "../util.js";
+import { Address, StoreIndexes } from "../global.js";
+import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesAldi(
   stores: Address[],
-  storeIndex: StoreIndex,
   items: string[],
-  itemStart?: string[]
+  storeIndex: StoreIndexes,
 ) {
   if (stores.length === 0) {
     return;
@@ -65,7 +64,7 @@ export async function getPricesAldi(
   );
 
   const itemBar = multiBar.create(
-    items.length,
+    defaultItems.length,
     0,
     {},
     {
@@ -93,7 +92,9 @@ export async function getPricesAldi(
     //searches up store postal code directly and set the store location
     let { city, zipCode, state, country, street } = store;
 
-    let itemsToScrape = itemStart || items;
+    if (items.length !== defaultItems.length) {
+      itemBar.increment(defaultItems.length - items.length);
+    }
 
     zipCode = zipCode as string;
     state = state as string;
@@ -110,9 +111,11 @@ export async function getPricesAldi(
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      loader.text = `${items.indexOf(item)}/${items.length} - ${stores
-        .map((store) => store.zipCode)
-        .indexOf(zipCode)}/${stores.length}| ${item} at ${zipCode}`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| ${item} at ${zipCode}`;
 
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
@@ -139,7 +142,9 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i]).innerText.match(/(?<=\$)(\d|\.)+/gm)![0],
+            price: (<HTMLElement>price[i]).innerText.match(
+              /(?<=\$)(\d|\.)+/gm
+            )![0],
             imgUrl: (<HTMLImageElement>img[i]).srcset
               .split(", ")
               .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
@@ -176,11 +181,11 @@ export async function getPricesAldi(
       }
 
       for (const result of results) {
-        loader.text = `${items.indexOf(item)}/${items.length} - ${stores
-          .map((store) => store.zipCode)
-          .indexOf(zipCode)}/${stores.length}|${item} at ${zipCode} |(${
-          result.name
-        } for ${result.price})`;
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+          stores.length
+        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
         let itemObj = await Item.findOne({
           where: { name: result.name, storeId: store.id },
@@ -211,9 +216,13 @@ export async function getPricesAldi(
       itemBar.increment(1);
       storeIndex.itemIndex++;
     }
-    items = items;
-    storeBar.increment(1);
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
+    }
+
     storeIndex.storeIndex++;
+    storeBar.increment(1);
     itemBar.update(0);
   }
 

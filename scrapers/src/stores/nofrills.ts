@@ -10,19 +10,17 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndex } from "../global.js";
-import { msToTime } from "../util.js";
+import { Address, StoreIndexes } from "../global.js";
+import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesNoFrills(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0,
-  storeIndex: StoreIndex
+  stores: Address[],
+  items: string[],
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
-  const stores = storesArray.slice(storeStart);
   if (stores.length === 0) {
     return;
   }
@@ -42,8 +40,6 @@ export async function getPricesNoFrills(
     "geolocation",
   ]);
 
-  let items = itemsArray.slice(itemStart);
-
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -53,7 +49,7 @@ export async function getPricesNoFrills(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    stores.length,
     storeStart,
     {},
     {
@@ -66,8 +62,10 @@ export async function getPricesNoFrills(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    items.length,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -122,13 +120,13 @@ export async function getPricesNoFrills(
     for (const item of items) {
       try {
         loader.color = "green";
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray
-          .map((store) => store.postalCode)
-          .indexOf(postalCode)}/${
-          storesArray.length
-        }| ${item} at ${postalCode}`;
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+          stores.length
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${postalCode}`;
         await page.goto(
           `https://www.nofrills.ca/search?search-bar=${item}`,
           {}
@@ -197,13 +195,13 @@ export async function getPricesNoFrills(
         }
 
         for (const result of results) {
-          loader.text = `${itemsArray.indexOf(item)}/${
-            itemsArray.length
-          } - ${storesArray
+          loader.text = `${items.indexOf(item)}/${items.length} - ${stores
             .map((store) => store.postalCode)
-            .indexOf(postalCode)}/${
-            storesArray.length
-          }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
+            .indexOf(postalCode)}/${stores.length}| (${
+            storeIndexes.itemIndex
+          } / ${storeIndexes.storeIndex}) ${item} at ${postalCode} |(${
+            result.name
+          } for ${result.price})`;
 
           let itemObj = await Item.findOne({
             where: { name: result.name, storeId: store.id },
@@ -232,17 +230,17 @@ export async function getPricesNoFrills(
           await itemPrice.save();
         }
         itemBar.increment(1);
-        storeIndex.itemIndex++;
+        storeIndexes.itemIndex++;
       } catch (e) {
         continue;
       }
     }
-    items = itemsArray;
+    items = items;
     storeBar.increment(1);
-    storeIndex.storeIndex++;
+    storeIndexes.storeIndex++;
     itemBar.update(0);
   }
-  itemBar.update(itemsArray.length);
+  itemBar.update(items.length);
   storeBar.stop();
   itemBar.stop();
   multiBar.stop();

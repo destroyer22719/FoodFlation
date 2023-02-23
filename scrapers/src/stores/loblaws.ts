@@ -10,15 +10,16 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndex } from "../../src/global.js";
+import { Address, StoreIndexes } from "../../src/global.js";
 import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
   stores: Address[],
-  storeIndex: StoreIndex,
-  items: string[]
+  items: string[],
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
   if (stores.length === 0) {
     return;
@@ -49,7 +50,7 @@ export async function getPricesLoblaws(
 
   const storeBar = multiBar.create(
     stores.length,
-    0,
+    storeStart,
     {},
     {
       format:
@@ -62,7 +63,9 @@ export async function getPricesLoblaws(
 
   const itemBar = multiBar.create(
     defaultItems.length,
-    0,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -88,10 +91,6 @@ export async function getPricesLoblaws(
   for (const store of stores) {
     //searches up store postal code directly and set the store location
     let { city, postalCode, province, country, street } = store;
-
-    if (items.length !== defaultItems.length) {
-      itemBar.increment(defaultItems.length - items.length);
-    }
 
     postalCode = postalCode as string;
     province = province as string;
@@ -125,7 +124,9 @@ export async function getPricesLoblaws(
           defaultItems.length
         } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
           stores.length
-        }| ${item} at ${postalCode}`;
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${postalCode}`;
 
         await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
         await page.waitForSelector(".product-tile__thumbnail__image", {
@@ -195,7 +196,9 @@ export async function getPricesLoblaws(
             defaultItems.length
           } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
             stores.length
-          }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
+          }| ((${storeIndexes.itemIndex} / ${
+            storeIndexes.storeIndex
+          })) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
           let itemObj = await Item.findOne({
             where: { name: result.name, storeId: store.id },
@@ -224,7 +227,7 @@ export async function getPricesLoblaws(
           await itemPrice.save();
         }
         itemBar.increment(1);
-        storeIndex.itemIndex++;
+        storeIndexes.itemIndex++;
       } catch (e) {
         continue;
       }
@@ -234,9 +237,12 @@ export async function getPricesLoblaws(
     if (items.length !== defaultItems.length) {
       items = defaultItems;
     }
+
+    storeIndexes.storeIndex++;
     storeBar.increment(1);
     itemBar.update(0);
   }
+
   itemBar.update(items.length);
   storeBar.stop();
   itemBar.stop();

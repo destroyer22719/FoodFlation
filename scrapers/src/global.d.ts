@@ -35,7 +35,7 @@ export type CompanyName =
 
 export type Province = "alberta" | "british_columbia" | "ontario" | "quebec";
 export type State = "new_york" | "california" | "texas" | "michigan";
-export type StoreIndex = {
+export type StoreIndexes = {
   storeIndex: number;
   itemIndex: number;
   storeTotal: number;
@@ -57,9 +57,12 @@ export type StoreLists = {
   };
   firstItems: [];
   items: [];
+  storeStart: number = 0;
 };
 
 export type StoreConfig = {
+  canadaOnly?: boolean = false;
+  usOnly?: boolean = false; 
   province?: Province;
   state?: State;
   itemStart: number = 0;

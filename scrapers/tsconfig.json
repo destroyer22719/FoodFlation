@@ -21,7 +21,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "suppressImplicitAnyIndexErrors": true,
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts", "loblaws.ts", "src/stores/nofrills.ts"]

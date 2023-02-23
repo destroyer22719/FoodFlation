@@ -1,14 +1,11 @@
 import {
   Address,
-  AmericanStoresOptions,
-  CanadianStoresOptions,
   CompanyName,
   Province,
   State,
   StoreConfig,
-  StoreIndex,
+  StoreIndexes,
   StoreLists,
-  StoresOptions,
 } from "./global";
 import fs from "fs";
 import path from "path";
@@ -17,12 +14,11 @@ import { getPricesMetro } from "./stores/metro.js";
 import { getPricesWholeFoodsMarket } from "./stores/whole_foods_market.js";
 import { getPricesAldi } from "./stores/aldi.js";
 import { getPricesNoFrills } from "./stores/nofrills.js";
-import { getPricesTarget } from "./stores/target.js";
 
 const __dirname = path.resolve();
 
 export function generateStoresToScrape(
-  storeIndex: StoreIndex,
+  storeIndexes: StoreIndexes,
   storeConfig: StoreConfig
 ): StoreLists {
   let totalStores = 0;
@@ -34,6 +30,8 @@ export function generateStoresToScrape(
     storeStart,
     americanStoreOptions,
     canadianStoreOptions,
+    canadaOnly = false,
+    usOnly = false,
   } = storeConfig;
 
   const storeList: StoreLists = {
@@ -51,9 +49,8 @@ export function generateStoresToScrape(
     },
     firstItems: [],
     items: [],
+    storeStart: 0,
   };
-
-  let result = [];
 
   const { items } = JSON.parse(
     fs.readFileSync(
@@ -77,111 +74,166 @@ export function generateStoresToScrape(
   provinces = provinces.slice(
     province ? provinces.indexOf(province as Province) : 0
   );
-  for (const prov of provinces) {
-    let { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "canada", `${prov}.json`),
-        "utf-8"
-      )
-    );
 
-    if (canadianStoreOptions && !americanStoreOptions) {
-      const { metro, loblaws, noFrills } = canadianStoreOptions;
-      if (metro) {
-        stores = filterByStore(stores, "Metro");
-      } else if (loblaws) {
-        stores = filterByStore(stores, "Loblaws");
-      } else if (noFrills) {
-        stores = filterByStore(stores, "No Frills");
-      }
-    }
-
-    if (storeStart > 0) {
-      const newStores = stores.slice(
-        storeStart > stores.length ? stores.length : storeStart
+  if (!usOnly) {
+    for (const prov of provinces) {
+      let { stores } = JSON.parse(
+        fs.readFileSync(
+          path.join(__dirname, "src", "config", "canada", `${prov}.json`),
+          "utf-8"
+        )
       );
-      result = newStores;
-      storeStart -= stores.length;
-      totalStores += newStores.length;
-    } else {
-      result = stores;
+
+      if (canadianStoreOptions && !americanStoreOptions) {
+        const { metro, loblaws, noFrills } = canadianStoreOptions;
+
+        if (metro || loblaws || noFrills) {
+          stores = [];
+          if (metro) {
+            stores = filterByStore(stores, "Metro");
+          }
+          if (loblaws) {
+            stores = filterByStore(stores, "Loblaws");
+          }
+          if (noFrills) {
+            stores = filterByStore(stores, "No Frills");
+          }
+        }
+      }
+
       totalStores += stores.length;
+      storeList.canada[prov] = stores;
     }
-
-    storeList.canada[prov] = result;
   }
-
   states = states.slice(state ? states.indexOf(state as State) : 0);
 
-  for (const st of states) {
-    let { stores } = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "src", "config", "united_states", `${st}.json`),
-        "utf-8"
-      )
-    );
-    if (americanStoreOptions && !canadianStoreOptions) {
-      const { aldi, target, wholeFoodsMarket } = americanStoreOptions;
-
-      if (aldi) {
-        stores = filterByStore(stores, "Aldi");
-      } else if (target) {
-        stores = filterByStore(stores, "Target");
-      } else if (wholeFoodsMarket) {
-        stores = filterByStore(stores, "Whole Foods Market");
+  if (!canadaOnly) {
+    for (const st of states) {
+      let { stores } = JSON.parse(
+        fs.readFileSync(
+          path.join(__dirname, "src", "config", "united_states", `${st}.json`),
+          "utf-8"
+        )
+      );
+      if (americanStoreOptions && !canadianStoreOptions) {
+        const { aldi, target, wholeFoodsMarket } = americanStoreOptions;
+        if (aldi || target || wholeFoodsMarket) {
+          stores = [];
+          if (aldi) {
+            stores = [...stores, ...filterByStore(stores, "Aldi")];
+          }
+          if (target) {
+            stores = [...stores, ...filterByStore(stores, "Target")];
+          }
+          if (wholeFoodsMarket) {
+            stores = [
+              ...stores,
+              ...filterByStore(stores, "Whole Foods Market"),
+            ];
+          }
+        }
       }
-    }
-    if (storeStart > 0) {
-      const newStores = stores.slice(storeStart);
-      result = newStores;
-      storeStart -= stores.length;
-      totalStores += newStores.length;
-    } else {
-      result = stores;
-      totalStores += stores.length;
-    }
 
-    storeList.us[st] = result;
+      totalStores += stores.length;
+      storeList.us[st] = stores;
+    }
   }
 
-  storeIndex.itemTotal = itemStart
+  storeIndexes.itemTotal = itemStart
     ? items.length - itemStart + items.length * totalStores - 1
     : items.length * totalStores;
-  storeIndex.storeTotal = totalStores;
+  storeIndexes.storeTotal = totalStores;
+  storeIndexes.storeIndex = storeStart || 0;
   return storeList;
 }
 
 export async function scrapeStores(
   storeList: StoreLists,
-  storeIndex: StoreIndex
+  storeIndexeses: StoreIndexes
 ) {
-  const { canada, us, items, firstItems } = storeList;
+  let { canada, us, items, firstItems, storeStart } = storeList;
 
   let currentItemList = firstItems || items;
-  const stores = [
-    ...canada.alberta,
-    ...canada.british_columbia,
-    ...canada.ontario,
-    ...canada.quebec,
-    ...us.new_york,
-    ...us.california,
-    ...us.texas,
-    ...us.michigan,
-  ];
-  const loblawsStores = stores.filter((store) => store.company === "Loblaws");
-  const metroStores = stores.filter((store) => store.company === "Metro");
-  const noFrillsStores = stores.filter(
-    (store) => store.company === "No Frills"
-  );
-  const wholeFoodsMarketStores = stores.filter(
-    (store) => store.company === "Whole Foods Market"
-  );
-  const aldiStores = stores.filter((store) => store.company === "Aldi");
 
-  if (loblawsStores.length) {
-    await getPricesLoblaws(loblawsStores, storeIndex, currentItemList);
-  } else if (aldiStores.length) {
-    await getPricesAldi(aldiStores, storeIndex, currentItemList, firstItems);
+  for (const prov in canada) {
+    console.log(`${prov}, Canada`);
+    const stores: Address[] = canada[prov];
+
+    if (storeStart < storeIndexeses.storeIndex) {
+      let max = Math.max(stores.length, storeIndexeses.storeIndex - storeStart);
+      storeStart += max;
+      if (max === stores.length) continue;
+    }
+
+    let counter = new Counter(storeIndexeses.storeIndex - storeStart);
+    const loblawsStores = filterByStore(stores, "Loblaws");
+    const metroStores = filterByStore(stores, "Metro");
+    const noFrillsStores = filterByStore(stores, "No Frills");
+
+    loblawsStores.slice(counter.count);
+    counter.subtract(loblawsStores.length);
+    metroStores.slice(counter.count);
+    counter.subtract(metroStores.length);
+    noFrillsStores.slice(counter.count);
+    counter.subtract(noFrillsStores.length);
+
+    await getPricesLoblaws(
+      loblawsStores,
+      currentItemList,
+      storeIndexeses,
+      counter.count
+    );
+
+    await getPricesMetro(
+      metroStores,
+      currentItemList,
+      storeIndexeses,
+      counter.count
+    );
+
+    await getPricesNoFrills(
+      noFrillsStores,
+      currentItemList,
+      storeIndexeses,
+      counter.count
+    );
+  }
+
+  for (const state in us) {
+    console.log(`${state}, United States`);
+    const stores: Address[] = us[state];
+
+    if (storeStart < storeIndexeses.storeIndex) {
+      let max = Math.max(stores.length, storeIndexeses.storeIndex - storeStart);
+      storeStart += max;
+      if (max === stores.length) continue;
+    }
+
+    let counter = new Counter(storeIndexeses.storeIndex - storeStart);
+    const aldiStores = filterByStore(stores, "Aldi");
+    const targetStores = filterByStore(stores, "Target");
+    const wholeFoodsMarketStores = filterByStore(stores, "Whole Foods Market");
+
+    aldiStores.slice(counter.count);
+    counter.subtract(aldiStores.length);
+    targetStores.slice(counter.count);
+    counter.subtract(targetStores.length);
+    wholeFoodsMarketStores.slice(counter.count);
+    counter.subtract(wholeFoodsMarketStores.length);
+
+    await getPricesAldi(
+      aldiStores,
+      currentItemList,
+      storeIndexeses,
+      counter.count
+    );
+
+    await getPricesWholeFoodsMarket(
+      wholeFoodsMarketStores,
+      currentItemList,
+      storeIndexeses,
+      counter.count
+    );
   }
 }
 
@@ -233,3 +285,14 @@ export const defaultItems = [
   "sausages",
   "turkey",
 ];
+
+class Counter {
+  count = 0;
+  constructor(count: number) {
+    this.count = count;
+  }
+
+  subtract(amt: number) {
+    this.count = Math.max(0, this.count - amt);
+  }
+}
