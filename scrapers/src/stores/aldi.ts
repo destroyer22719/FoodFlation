@@ -18,7 +18,8 @@ const __dirname = path.resolve();
 export async function getPricesAldi(
   stores: Address[],
   items: string[],
-  storeIndex: StoreIndexes,
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
   if (stores.length === 0) {
     return;
@@ -52,7 +53,7 @@ export async function getPricesAldi(
 
   const storeBar = multiBar.create(
     stores.length,
-    0,
+    storeStart,
     {},
     {
       format:
@@ -65,7 +66,9 @@ export async function getPricesAldi(
 
   const itemBar = multiBar.create(
     defaultItems.length,
-    0,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -92,10 +95,6 @@ export async function getPricesAldi(
     //searches up store postal code directly and set the store location
     let { city, zipCode, state, country, street } = store;
 
-    if (items.length !== defaultItems.length) {
-      itemBar.increment(defaultItems.length - items.length);
-    }
-
     zipCode = zipCode as string;
     state = state as string;
     country = country as string;
@@ -115,7 +114,9 @@ export async function getPricesAldi(
         defaultItems.length
       } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
         stores.length
-      }| ${item} at ${zipCode}`;
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode}`;
 
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
@@ -185,7 +186,9 @@ export async function getPricesAldi(
           defaultItems.length
         } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
           stores.length
-        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
         let itemObj = await Item.findOne({
           where: { name: result.name, storeId: store.id },
@@ -214,14 +217,14 @@ export async function getPricesAldi(
         await itemPrice.save();
       }
       itemBar.increment(1);
-      storeIndex.itemIndex++;
+      storeIndexes.itemIndex++;
     }
     // if itemStart is set, reset it back to the original for the next store
     if (items.length !== defaultItems.length) {
       items = defaultItems;
     }
 
-    storeIndex.storeIndex++;
+    storeIndexes.storeIndex++;
     storeBar.increment(1);
     itemBar.update(0);
   }

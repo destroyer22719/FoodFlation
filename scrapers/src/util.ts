@@ -84,21 +84,34 @@ export function generateStoresToScrape(
         )
       );
 
+      let filteredStores: Address[] = [];
       if (canadianStoreOptions && !americanStoreOptions) {
         const { metro, loblaws, noFrills } = canadianStoreOptions;
 
         if (metro || loblaws || noFrills) {
-          stores = [];
           if (metro) {
-            stores = filterByStore(stores, "Metro");
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Metro"),
+            ];
           }
           if (loblaws) {
-            stores = filterByStore(stores, "Loblaws");
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Loblaws"),
+            ];
           }
           if (noFrills) {
-            stores = filterByStore(stores, "No Frills");
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "No Frills"),
+            ];
           }
         }
+      }
+
+      if (canadianStoreOptions && !americanStoreOptions) {
+        stores = filteredStores;
       }
 
       totalStores += stores.length;
@@ -115,23 +128,35 @@ export function generateStoresToScrape(
           "utf-8"
         )
       );
+
+      let filteredStores: Address[] = [];
+
       if (americanStoreOptions && !canadianStoreOptions) {
         const { aldi, target, wholeFoodsMarket } = americanStoreOptions;
         if (aldi || target || wholeFoodsMarket) {
-          stores = [];
           if (aldi) {
-            stores = [...stores, ...filterByStore(stores, "Aldi")];
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Aldi"),
+            ];
           }
           if (target) {
-            stores = [...stores, ...filterByStore(stores, "Target")];
+            filteredStores = [
+              ...filteredStores,
+              ...filterByStore(stores, "Target"),
+            ];
           }
           if (wholeFoodsMarket) {
-            stores = [
+            filteredStores = [
               ...stores,
-              ...filterByStore(stores, "Whole Foods Market"),
+              ...filterByStore(filteredStores, "Whole Foods Market"),
             ];
           }
         }
+      }
+
+      if (canadianStoreOptions && !americanStoreOptions) {
+        stores = filteredStores;
       }
 
       totalStores += stores.length;
@@ -156,7 +181,6 @@ export async function scrapeStores(
   let currentItemList = firstItems || items;
 
   for (const prov in canada) {
-    console.log(`${prov}, Canada`);
     const stores: Address[] = canada[prov];
 
     if (storeStart < storeIndexeses.storeIndex) {
@@ -176,6 +200,8 @@ export async function scrapeStores(
     counter.subtract(metroStores.length);
     noFrillsStores.slice(counter.count);
     counter.subtract(noFrillsStores.length);
+
+    console.log(`${prov}, Canada`);
 
     await getPricesLoblaws(
       loblawsStores,
@@ -200,7 +226,6 @@ export async function scrapeStores(
   }
 
   for (const state in us) {
-    console.log(`${state}, United States`);
     const stores: Address[] = us[state];
 
     if (storeStart < storeIndexeses.storeIndex) {
@@ -221,6 +246,7 @@ export async function scrapeStores(
     wholeFoodsMarketStores.slice(counter.count);
     counter.subtract(wholeFoodsMarketStores.length);
 
+    console.log(`${state}, United States`);
     await getPricesAldi(
       aldiStores,
       currentItemList,

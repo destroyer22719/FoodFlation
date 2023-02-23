@@ -196,9 +196,9 @@ export async function getPricesLoblaws(
             defaultItems.length
           } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
             stores.length
-          }| ((${storeIndexes.itemIndex} / ${
+          }| (${storeIndexes.itemIndex} / ${
             storeIndexes.storeIndex
-          })) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
+          }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
           let itemObj = await Item.findOne({
             where: { name: result.name, storeId: store.id },

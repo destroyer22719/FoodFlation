@@ -10,25 +10,20 @@ import Price from "../../../backend/src/model/Price.js";
 import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndex } from "../global.js";
-import { msToTime } from "../util.js";
+import { Address, StoreIndexes } from "../global.js";
+import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
 
 export async function getPricesWholeFoodsMarket(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0,
-  storeIndex: StoreIndex
+  stores: Address[],
+  items: string[],
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
-  const stores = storesArray.slice(storeStart);
-
   if (stores.length === 0) {
     return;
   }
-
-  let items = itemsArray.slice(itemStart);
 
   const startTime = Date.now();
 
@@ -55,7 +50,7 @@ export async function getPricesWholeFoodsMarket(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    stores.length,
     storeStart,
     {},
     {
@@ -68,8 +63,10 @@ export async function getPricesWholeFoodsMarket(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    defaultItems.length,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -132,11 +129,13 @@ export async function getPricesWholeFoodsMarket(
 
     for (const item of items) {
       loader.color = "green";
-      loader.text = `${itemsArray.indexOf(item)}/${
-        itemsArray.length
-      } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-        storesArray.length
-      }| ${item} at ${zipCode}`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode}`;
 
       await page.goto(`https://www.wholefoodsmarket.com/search?text=${item}`, {
         waitUntil: "domcontentloaded",
@@ -225,11 +224,13 @@ export async function getPricesWholeFoodsMarket(
       }
 
       for (const result of results) {
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-          storesArray.length
-        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+          stores.length
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
         let itemObj = await Item.findOne({
           where: { name: result.name, storeId: store.id },
@@ -259,16 +260,20 @@ export async function getPricesWholeFoodsMarket(
       }
 
       itemBar.increment(1);
-      storeIndex.itemIndex++;
+      storeIndexes.itemIndex++;
     }
 
-    items = itemsArray;
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
+    }
+
     storeBar.increment(1);
-    storeIndex.storeIndex++;
+    storeIndexes.storeIndex++;
     itemBar.update(0);
   }
 
-  itemBar.update(itemsArray.length);
+  itemBar.update(defaultItems.length);
 
   storeBar.stop();
   itemBar.stop();

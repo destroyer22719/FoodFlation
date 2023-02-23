@@ -42,7 +42,7 @@ if (argv.all) {
   await scrapeStores(storesToScrape, indexes);
 } else if (argv.canada) {
   let canadianStoreOptions: CanadianStoresOptions | undefined;
-
+  
   if (argv.metro || argv.loblaws || argv.noFrills) {
     canadianStoreOptions = {
       metro: argv.metro,
@@ -50,6 +50,8 @@ if (argv.all) {
       noFrills: argv.noFrills,
     };
   }
+
+  console.log(canadianStoreOptions)
 
   const storesToScrape = generateStoresToScrape(indexes, {
     canadaOnly: true,
