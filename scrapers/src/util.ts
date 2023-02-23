@@ -174,22 +174,23 @@ export function generateStoresToScrape(
 
 export async function scrapeStores(
   storeList: StoreLists,
-  storeIndexeses: StoreIndexes
+  storeIndexes: StoreIndexes
 ) {
-  let { canada, us, items, firstItems, storeStart } = storeList;
+  let { canada, us, items, firstItems, storeStart} = storeList;
 
   let currentItemList = firstItems || items;
 
   for (const prov in canada) {
     const stores: Address[] = canada[prov];
-
-    if (storeStart < storeIndexeses.storeIndex) {
-      let max = Math.max(stores.length, storeIndexeses.storeIndex - storeStart);
-      storeStart += max;
-      if (max === stores.length) continue;
+    
+    if (!stores.length) continue;
+    if (storeStart < storeIndexes.storeIndex && stores.length) {
+      let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
+      storeStart += min;
+      if (min === stores.length) continue;
     }
 
-    let counter = new Counter(storeIndexeses.storeIndex - storeStart);
+    let counter = new Counter(storeIndexes.storeIndex - storeStart);
     const loblawsStores = filterByStore(stores, "Loblaws");
     const metroStores = filterByStore(stores, "Metro");
     const noFrillsStores = filterByStore(stores, "No Frills");
@@ -206,21 +207,21 @@ export async function scrapeStores(
     await getPricesLoblaws(
       loblawsStores,
       currentItemList,
-      storeIndexeses,
+      storeIndexes,
       counter.count
     );
 
     await getPricesMetro(
       metroStores,
       currentItemList,
-      storeIndexeses,
+      storeIndexes,
       counter.count
     );
 
     await getPricesNoFrills(
       noFrillsStores,
       currentItemList,
-      storeIndexeses,
+      storeIndexes,
       counter.count
     );
   }
@@ -228,13 +229,14 @@ export async function scrapeStores(
   for (const state in us) {
     const stores: Address[] = us[state];
 
-    if (storeStart < storeIndexeses.storeIndex) {
-      let max = Math.max(stores.length, storeIndexeses.storeIndex - storeStart);
-      storeStart += max;
-      if (max === stores.length) continue;
+    if (!stores.length) continue;
+    if (storeStart < storeIndexes.storeIndex && stores.length) {
+      let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
+      storeStart += min;
+      if (min === stores.length) continue;
     }
 
-    let counter = new Counter(storeIndexeses.storeIndex - storeStart);
+    let counter = new Counter(storeIndexes.storeIndex - storeStart);
     const aldiStores = filterByStore(stores, "Aldi");
     const targetStores = filterByStore(stores, "Target");
     const wholeFoodsMarketStores = filterByStore(stores, "Whole Foods Market");
@@ -250,14 +252,14 @@ export async function scrapeStores(
     await getPricesAldi(
       aldiStores,
       currentItemList,
-      storeIndexeses,
+      storeIndexes,
       counter.count
     );
 
     await getPricesWholeFoodsMarket(
       wholeFoodsMarketStores,
       currentItemList,
-      storeIndexeses,
+      storeIndexes,
       counter.count
     );
   }
