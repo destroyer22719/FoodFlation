@@ -190,12 +190,6 @@ export async function scrapeStores(
     let metroStores = filterByStore(stores, "Metro");
     let noFrillsStores = filterByStore(stores, "No Frills");
 
-    console.log(
-      loblawsStores.length,
-      metroStores.length,
-      noFrillsStores.length
-    );
-
     loblawsStores = loblawsStores.slice(counter.count);
     metroStores = metroStores.slice(counter.count);
     noFrillsStores = noFrillsStores.slice(counter.count);
