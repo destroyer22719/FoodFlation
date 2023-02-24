@@ -1,8 +1,7 @@
 "use client";
 
-import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import styles from "@/styles/StoreList.module.scss";
 type Props = {
   page: number;
@@ -10,12 +9,22 @@ type Props = {
 };
 
 const PaginationComponent: React.FC<Props> = ({ page, maxPages }) => {
-  const pathname = usePathname();
+  const pathname = window.location.href;
+
+  function navigatePages(page: number) {
+    const regex = /(?<=\?|\&)page=\d*/;
+
+    if (pathname.match(regex)) {
+      return pathname.replace(regex, `page=${page}`);
+    }
+
+    return pathname + `&page=${page}`;
+  }
 
   return (
     <div>
       <div className={styles["store-list__pagination-buttons"]}>
-        <Link href={pathname}>
+        <Link href={navigatePages(page - 1)}>
           <ButtonContained
             className={styles["store-list__pagination-button"]}
             disabled={page == 1}
@@ -31,15 +40,17 @@ const PaginationComponent: React.FC<Props> = ({ page, maxPages }) => {
             Page {page}/{maxPages}
           </div>
         </ButtonContained>
-        <ButtonContained
-          className={styles["store-list__pagination-button"]}
-          disabled={page == maxPages}
-          onClick={() => {}}
-        >
-          <div className={styles["store-list__pagination-button-link"]}>
-            {">"}
-          </div>
-        </ButtonContained>
+        <Link href={navigatePages(page + 1)}>
+          <ButtonContained
+            className={styles["store-list__pagination-button"]}
+            disabled={page == maxPages}
+            onClick={() => {}}
+          >
+            <div className={styles["store-list__pagination-button-link"]}>
+              {">"}
+            </div>
+          </ButtonContained>
+        </Link>
       </div>
     </div>
   );
