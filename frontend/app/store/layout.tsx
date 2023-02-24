@@ -1,7 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
-import Layout from "@/components/Layout";
+import { ReactNode, use, useState } from "react";
 import { API_URL } from "@/config/index";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/styles/StoreList.module.scss";
@@ -27,11 +26,6 @@ export type Location = {
   storeData: StoreData[];
 };
 
-const postalCodeRegex =
-  /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/;
-
-const zipCodeRegex = /^\d{5}/;
-
 const getLocations = async () => {
   const locationRes = await fetch(`${API_URL}/stores/locations`);
   const locations = await locationRes.json();
@@ -42,7 +36,7 @@ const getLocations = async () => {
 // https://github.com/vercel/next.js/issues/42265#issuecomment-1305260064
 const getLocationsCache = getLocations();
 
-const StoresPage: React.FC<{ children: React.Component }> = ({ children }) => {
+const StoresPage: React.FC<{ children: ReactNode}> = ({ children }) => {
   const [codeInput, setCodeInput] = useState("");
   const locations = use(getLocationsCache);
 
@@ -61,10 +55,7 @@ const StoresPage: React.FC<{ children: React.Component }> = ({ children }) => {
             }
           }}
         />
-        <ButtonOutlined
-          className={styles["store-list__search-button"]}
-          onClick={() => {}}
-        >
+        <ButtonOutlined className={styles["store-list__search-button"]}>
           <SearchIcon /> Find a Store
         </ButtonOutlined>
       </div>

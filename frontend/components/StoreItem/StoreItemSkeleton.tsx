@@ -3,7 +3,7 @@
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import style from "@/styles/StoreList.module.scss";
 
-const StoreItemSkeleton: React.FC<{}> = () => {
+const StoreItemSkeleton = () => {
   return (
     <div className={style["store-list__store-item"]}>
       <ButtonContained className={style["store-list__store-item-btn"]}>

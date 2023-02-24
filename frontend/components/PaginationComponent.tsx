@@ -33,7 +33,6 @@ const PaginationComponent: React.FC<Props> = ({ page, maxPages }) => {
           <ButtonContained
             className={styles["store-list__pagination-button"]}
             disabled={page == 1}
-            onClick={() => {}}
           >
             <div className={styles["store-list__pagination-button-link"]}>
               {"<"}
@@ -49,7 +48,6 @@ const PaginationComponent: React.FC<Props> = ({ page, maxPages }) => {
           <ButtonContained
             className={styles["store-list__pagination-button"]}
             disabled={page == maxPages}
-            onClick={() => {}}
           >
             <div className={styles["store-list__pagination-button-link"]}>
               {">"}
