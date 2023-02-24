@@ -1,4 +1,3 @@
-"use client";
 import Footer from "@/components/Footer";
 import Nav from "../components/Nav";
 import style from "../styles/Layout.module.scss";
