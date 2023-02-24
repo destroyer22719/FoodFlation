@@ -61,7 +61,6 @@ export async function getPricesMetro(
     cliProgress.Presets.shades_grey
   );
   
-  console.log(stores.length + storeStart)
   const storeBar = multiBar.create(
     stores.length + storeStart,
     storeStart,
