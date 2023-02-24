@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import Layout from "../../components/Layout";
-import StoreList from "../../components/StoreItem";
+import StoreList from "../../components/StoreItem/StoreItem";
 import { API_URL } from "../../config";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "../../styles/StoreList.module.scss";
