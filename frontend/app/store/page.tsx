@@ -1,4 +1,3 @@
-import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import { API_URL } from "@/config/index";

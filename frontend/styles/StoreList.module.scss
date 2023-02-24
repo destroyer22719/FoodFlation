@@ -47,7 +47,7 @@
       &-item {
         display: flex;
         justify-content: center;
-        
+
         & > div {
           display: flex;
           align-items: center;
@@ -170,6 +170,23 @@
       width: 80px;
       height: 80px;
       position: relative;
+
+      &--skeleton {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        background: linear-gradient(
+            to right,
+            rgba(lighten($purple, 25%), 0),
+            rgba(lighten($purple, 25%), 0.5) 50%,
+            rgba(lighten($purple, 25%), 0) 80%
+          ),
+          $purple;
+        background-repeat: repeat-y;
+        background-size: 50px 500px;
+        background-position: 0 0;
+        animation: shine 1s infinite;
+      }
     }
     & > *:hover {
       background-color: $blue-dark;
@@ -195,6 +212,27 @@
       margin-left: 25px;
       align-items: center;
 
+      &--skeleton {
+        span {
+          margin-bottom: 10px;
+          display: inline-block;
+          width: 150px;
+          height: 15px;
+          border-radius: 10px;
+          background: linear-gradient(
+              to right,
+              rgba(lighten($purple, 25%), 0),
+              rgba(lighten($purple, 25%), 0.5) 50%,
+              rgba(lighten($purple, 25%), 0) 80%
+            ),
+            $purple;
+          background-repeat: repeat-y;
+          background-size: 50px 500px;
+          background-position: 0 0;
+          animation: shine 1s infinite;
+        }
+      }
+
       & span {
         color: $blue-dark;
         font-weight: bold;
@@ -217,6 +255,12 @@
 
     .MuiCircularProgress-colorPrimary {
       color: $purple-light;
+    }
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 100% 0, /* move highlight to right */ 0 0;
     }
   }
 }
