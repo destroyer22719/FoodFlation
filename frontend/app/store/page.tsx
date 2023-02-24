@@ -1,11 +1,8 @@
-"use client";
-
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem";
 import { API_URL } from "@/config/index";
 import { Store } from "global";
-import { use } from "react";
 
 type searchOboject = {
   page?: string;
@@ -41,14 +38,14 @@ const getStores = async ({
   return storeRes;
 };
 
-const StorePage = ({
+const StorePage = async ({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | undefined };
 }) => {
-  const { total: totalStores, stores } = use(
+  const { total: totalStores, stores } = await 
     getStores(searchParams as searchOboject)
-  );
+  ;
   
   const pageSize = 10;
   const maxPages = Math.ceil(totalStores / pageSize);
@@ -56,7 +53,7 @@ const StorePage = ({
 
   return (
     <div>
-      {stores.length > 0 && (
+      {/* {stores.length > 0 && (
         <div className={styles["store-list__pagination-buttons"]}>
           <ButtonContained
             className={styles["store-list__pagination-button"]}
@@ -82,7 +79,7 @@ const StorePage = ({
             </div>
           </ButtonContained>
         </div>
-      )}
+      )} */}
       <div className={styles["store-list__list"]} id="storeList">
         {stores.map((store) => (
           <StoreItem key={store.id} store={store} />
