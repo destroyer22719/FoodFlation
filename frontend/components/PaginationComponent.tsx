@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import styles from "@/styles/StoreList.module.scss";
+
 type Props = {
   page: number;
   maxPages: number;
