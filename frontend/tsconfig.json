@@ -21,6 +21,7 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "react": ["./node_modules/@types/react"],
       "@/components/*": ["components/*"],
       "@/styles/*": ["styles/*"],
       "@/config/*": ["config/*"],

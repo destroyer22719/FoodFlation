@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Carousel from "react-material-ui-carousel";
 import CarouselItem from "./CarouselItem";
