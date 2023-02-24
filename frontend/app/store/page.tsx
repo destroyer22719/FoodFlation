@@ -3,6 +3,7 @@ import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem";
 import { API_URL } from "@/config/index";
 import { Store } from "global";
+import PaginationComponent from "@/components/PaginationComponent";
 
 type searchOboject = {
   page?: string;
@@ -43,43 +44,18 @@ const StorePage = async ({
 }: {
   searchParams?: { [key: string]: string | undefined };
 }) => {
-  const { total: totalStores, stores } = await 
-    getStores(searchParams as searchOboject)
-  ;
-  
+  const { total: totalStores, stores } = await getStores(
+    searchParams as searchOboject
+  );
   const pageSize = 10;
   const maxPages = Math.ceil(totalStores / pageSize);
   const page = searchParams?.page ? +searchParams.page : 1;
 
   return (
     <div>
-      {/* {stores.length > 0 && (
-        <div className={styles["store-list__pagination-buttons"]}>
-          <ButtonContained
-            className={styles["store-list__pagination-button"]}
-            disabled={page == 1}
-            onClick={() => {}}
-          >
-            <div className={styles["store-list__pagination-button-link"]}>
-              {"<"}
-            </div>
-          </ButtonContained>
-          <ButtonContained className={styles["store-list__pagination-button"]}>
-            <div className={styles["store-list__pagination-button-link"]}>
-              Page {page}/{maxPages}
-            </div>
-          </ButtonContained>
-          <ButtonContained
-            className={styles["store-list__pagination-button"]}
-            disabled={page == maxPages}
-            onClick={() => {}}
-          >
-            <div className={styles["store-list__pagination-button-link"]}>
-              {">"}
-            </div>
-          </ButtonContained>
-        </div>
-      )} */}
+      {stores.length > 0 && (
+        <PaginationComponent maxPages={maxPages} page={page} />
+      )}
       <div className={styles["store-list__list"]} id="storeList">
         {stores.map((store) => (
           <StoreItem key={store.id} store={store} />
