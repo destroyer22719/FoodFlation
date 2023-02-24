@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import styles from "@/styles/StoreList.module.scss";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type Props = {
   page: number;
@@ -10,16 +11,19 @@ type Props = {
 };
 
 const PaginationComponent: React.FC<Props> = ({ page, maxPages }) => {
-  const pathname = window.location.href;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   function navigatePages(page: number) {
+    let url = pathname;
     const regex = /(?<=\?|\&)page=\d*/;
+    url += `?${searchParams.toString()}`;
 
-    if (pathname.match(regex)) {
-      return pathname.replace(regex, `page=${page}`);
+    if (url.match(regex)) {
+      return url.replace(regex, `page=${page}`);
     }
 
-    return pathname + `&page=${page}`;
+    return url + `&page=${page}`;
   }
 
   return (
