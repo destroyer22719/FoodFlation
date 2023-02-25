@@ -23,6 +23,7 @@ const getStores = async ({
 }: searchOboject) => {
   if (!page && !province && !state && !postalCode && !zipCode)
     return { total: 0, stores: [] };
+
   const storeReq = await fetch(
     `${API_URL}/stores?page=${page || 1}&province=${province || ""}&state=${
       state || ""

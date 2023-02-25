@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "count": "cloc . --exclude-dir=node_modules,dist,next --exclude-ext=json",
+    "count": "cloc . --exclude-dir=node_modules, dist, next --exclude-ext=json",
     "scrape:all": "cd ./scrapers && npm run scrape:prod -- --all",
     "scrape:canada": "cd ./scrapers && npm run scrape:prod -- --canada",
     "scrape:alberta": "cd ./scrapers && npm run scrape:prod -- --canada --province=alberta",
