@@ -108,7 +108,7 @@ export async function getPricesLoblaws(
     );
 
     if (!popupDeleted) {
-      console.log("awaiting popup");
+      await page.waitForSelector(".modal-dialog__content__close");
       const popupButton = await page.$(".modal-dialog__content__close");
 
       popupButton!.click();
