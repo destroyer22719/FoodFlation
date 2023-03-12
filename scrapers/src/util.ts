@@ -66,7 +66,7 @@ export function generateStoresToScrape(
     ? [province]
     : ["alberta", "british_columbia", "ontario", "quebec"];
 
-  let states: State[] = state
+    let states: State[] = state
     ? [state]
     : ["new_york", "california", "texas", "michigan"];
 
