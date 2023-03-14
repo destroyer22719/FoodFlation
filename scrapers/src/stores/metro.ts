@@ -34,6 +34,7 @@ export async function getPricesMetro(
     ignoreHTTPSErrors: true,
   });
 
+  
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
