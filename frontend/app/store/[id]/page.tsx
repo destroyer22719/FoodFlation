@@ -1,9 +1,6 @@
-import React from 'react'
+const page = ({ params }: { params: { id: string } }) => {
+  const {id} = params;
+  return <div>{id}</div>;
+};
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
-}
-
-export default page
+export default page;

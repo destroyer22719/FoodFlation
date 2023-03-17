@@ -3,6 +3,7 @@ import StoreItem from "@/components/StoreItem/StoreItem";
 import { API_URL } from "@/config/index";
 import { Store } from "global";
 import PaginationComponent from "@/components/PaginationComponent";
+import ClientComponent from "./ClientComponent";
 
 type searchOboject = {
   page?: string;
@@ -52,14 +53,17 @@ const StorePage = async ({
   const page = searchParams?.page ? +searchParams.page : 1;
 
   return (
-    <div>
-      {stores.length > 0 && (
-        <PaginationComponent maxPages={maxPages} page={page} />
-      )}
-      <div className={styles["store-list__list"]} id="storeList">
-        {stores.map((store) => (
-          <StoreItem key={store.id} store={store} />
-        ))}
+    <div className={styles["store-list"]}>
+      <ClientComponent />
+      <div>
+        {stores.length > 0 && (
+          <PaginationComponent maxPages={maxPages} page={page} />
+        )}
+        <div className={styles["store-list__list"]} id="storeList">
+          {stores.map((store) => (
+            <StoreItem key={store.id} store={store} />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -36,12 +36,12 @@ const getLocations = async () => {
 // https://github.com/vercel/next.js/issues/42265#issuecomment-1305260064
 const getLocationsCache = getLocations();
 
-const StoresPage: React.FC<{ children: ReactNode}> = ({ children }) => {
+const ClientComponent: React.FC<{}> = ({}) => {
   const [codeInput, setCodeInput] = useState("");
   const locations = use(getLocationsCache);
 
   return (
-    <div className={styles["store-list"]}>
+    <>
       <div className={styles["store-list__search"]}>
         <InputOutlined
           className={styles["store-list__search-bar"]}
@@ -60,9 +60,8 @@ const StoresPage: React.FC<{ children: ReactNode}> = ({ children }) => {
         </ButtonOutlined>
       </div>
       <LocationTable locations={locations} />
-      <>{children}</>
-    </div>
+    </>
   );
 };
 
-export default StoresPage;
+export default ClientComponent;
