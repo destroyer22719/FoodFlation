@@ -40,7 +40,7 @@ const getStores = async ({
   return storeRes;
 };
 
-const StorePage = async ({
+const StorePages = async ({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | undefined };
@@ -69,4 +69,4 @@ const StorePage = async ({
   );
 };
 
-export default StorePage;
+export default StorePages;
