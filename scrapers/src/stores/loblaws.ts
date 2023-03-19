@@ -88,6 +88,8 @@ export async function getPricesLoblaws(
     )
   );
 
+  let popupDeleted = false;
+
   for (const store of stores) {
     //searches up store postal code directly and set the store location
     let { city, postalCode, province, country, street } = store;
@@ -101,9 +103,17 @@ export async function getPricesLoblaws(
     await page.goto(
       `https://www.loblaws.ca/store-locator?searchQuery=${postalCode}`,
       {
-        timeout: 2 * 60 * 1000,
+        waitUntil: "networkidle2",
       }
     );
+
+    if (!popupDeleted) {
+      await page.waitForSelector(".modal-dialog__content__close");
+      const popupButton = await page.$(".modal-dialog__content__close");
+
+      popupButton!.click();
+      popupDeleted = true;
+    }
 
     await page.waitForSelector(".location-set-store__button:first-of-type", {
       timeout: 60 * 1000,

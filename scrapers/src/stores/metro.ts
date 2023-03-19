@@ -34,6 +34,7 @@ export async function getPricesMetro(
     ignoreHTTPSErrors: true,
   });
 
+  
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
@@ -44,11 +45,7 @@ export async function getPricesMetro(
   await page.setRequestInterception(true);
 
   page.on("request", (req) => {
-    if (
-      req.resourceType() === "image" ||
-      req.resourceType() === "stylesheet" ||
-      req.resourceType() === "font"
-    )
+    if (req.resourceType() === "stylesheet" || req.resourceType() === "font")
       req.abort();
     else req.continue();
   });
@@ -60,7 +57,7 @@ export async function getPricesMetro(
     },
     cliProgress.Presets.shades_grey
   );
-  
+
   const storeBar = multiBar.create(
     stores.length + storeStart,
     storeStart,
@@ -226,6 +223,13 @@ export async function getPricesMetro(
           await itemObj.save();
         } else if (itemObj.category !== item2category[item]) {
           itemObj.category = item2category[item];
+          await itemObj.save();
+        } else if (
+          itemObj.imgUrl ===
+            "https://www.metro.ca/images/shared/placeholders/icon-no-picture.svg" &&
+          itemObj.imgUrl !== result.imgUrl
+        ) {
+          itemObj.imgUrl = result.imgUrl;
           await itemObj.save();
         }
 
