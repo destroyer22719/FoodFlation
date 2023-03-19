@@ -121,21 +121,19 @@ export async function getPricesAldi(
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-      await page.waitForSelector('div[aria-label*="Original price:"]', {
+      await page.waitForSelector('div[aria-label^="$"]', {
         timeout: 60 * 60 * 1000,
         visible: true,
       });
-      await page.waitForSelector("li h3", {
+      await page.waitForSelector("a>div+div>div>span", {
         timeout: 60 * 60 * 1000,
         visible: true,
       });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = document.querySelectorAll("li h3");
-        const price = document.querySelectorAll(
-          'div[aria-label*="Original price:"]'
-        );
+        const name = document.querySelectorAll("a>div+div>div>span");
+        const price = document.querySelectorAll('div[aria-label^="$"]');
         const img = document.querySelectorAll("li img[srcset]");
 
         //finds a maximum of 3 of each item
@@ -143,7 +141,7 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i]).innerText.match(
+            price: (<HTMLElement>price[i]).getAttribute("aria-label")!.match(
               /(?<=\$)(\d|\.)+/gm
             )![0],
             imgUrl: (<HTMLImageElement>img[i]).srcset
