@@ -109,7 +109,7 @@ export async function getPricesNoFrills(
 
     if (!popupDeleted) {
       const popupButton = await page.$(".modal-dialog__content__close");
-
+      
       popupButton!.click();
       popupDeleted = true;
     }
