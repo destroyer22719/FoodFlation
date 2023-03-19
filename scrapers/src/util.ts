@@ -103,9 +103,6 @@ export function generateStoresToScrape(
             ];
           }
         }
-      }
-
-      if (canadianStoreOptions && !americanStoreOptions) {
         stores = filteredStores;
       }
 
@@ -124,7 +121,6 @@ export function generateStoresToScrape(
       );
 
       let filteredStores: Address[] = [];
-
       if (americanStoreOptions && !canadianStoreOptions) {
         const { aldi, target, wholeFoodsMarket } = americanStoreOptions;
         if (aldi || target || wholeFoodsMarket) {
@@ -142,14 +138,11 @@ export function generateStoresToScrape(
           }
           if (wholeFoodsMarket) {
             filteredStores = [
-              ...stores,
-              ...filterByStore(filteredStores, "Whole Foods Market"),
+              ...filteredStores,
+              ...filterByStore(stores, "Whole Foods Market"),
             ];
           }
         }
-      }
-
-      if (canadianStoreOptions && !americanStoreOptions) {
         stores = filteredStores;
       }
 
