@@ -1,32 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { Item } from "../global";
-import styles from "../styles/Store.module.scss";
-import CategoryButton from "./CustomButtonComponents/CategoryButton";
-import ButtonContained from "./CustomButtonComponents/ButtonContained";
+
+import styles from "@/styles/Store.module.scss";
+import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
+import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 
 type Props = {
   item: Item;
 };
 
 const ItemCard: React.FC<Props> = ({ item }) => {
-  const router = useRouter();
-
   const [date, setDate] = useState<string | null>(null);
   useState(() => {
     setDate(new Date(item.lastUpdated as Date).toISOString().split("T")[0]);
   });
 
-  const query = { ...router.query };
-  if (!query.category) {
-    query.page = "1";
-    query.category = item.category
-      .replaceAll(" ", "%20")
-      .replaceAll("&", "%26");
-    query.storeId = undefined;
-  }
+  const searchParams = useSearchParams()
+  const searchString = searchParams.toString();
+  console.log(searchParams.get("search"));
+
+  // generate a new url with the same url except a different query parameter of category using nextjs13 app directory
 
   return (
     <div className={styles["store-page__item"]}>
@@ -51,10 +49,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
       <CategoryButton
         category={item.category}
         className={styles["store-page__item-category"]}
-        linkTo={{
-          pathname: router.asPath.split("?")[0],
-          query,
-        }}
+        linkTo={"#"}
       />
     </div>
   );
