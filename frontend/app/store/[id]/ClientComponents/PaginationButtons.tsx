@@ -18,7 +18,7 @@ const PaginationComponent: React.FC<Props> = ({ resultsFound }) => {
 
   const pageSize = 10;
   const page = searchParams.get("page")
-    ? +(searchParams.get("page") as String)
+    ? +(searchParams.get("page") as string)
     : 1;
 
   const maxPages = Math.ceil(resultsFound / pageSize);

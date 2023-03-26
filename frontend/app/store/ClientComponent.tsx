@@ -36,7 +36,7 @@ const getLocations = async () => {
 // https://github.com/vercel/next.js/issues/42265#issuecomment-1305260064
 const getLocationsCache = getLocations();
 
-const ClientComponent: React.FC<{}> = ({}) => {
+const ClientComponent = () => {
   const [codeInput, setCodeInput] = useState("");
   const locations = use(getLocationsCache);
 

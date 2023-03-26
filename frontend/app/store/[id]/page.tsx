@@ -25,6 +25,7 @@ const StoreIdPage = async ({
   searchParams: { page = "", category = "", search = "" },
 }: Props) => {
   const { id } = params;
+
   const storeReq = await fetch(`${API_URL}/stores/${id}`);
   const itemsReq = await fetch(
     `${API_URL}/items/store/${id}?page=${page}&search=${search}&${
