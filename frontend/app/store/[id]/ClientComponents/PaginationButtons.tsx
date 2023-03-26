@@ -37,9 +37,7 @@ const PaginationComponent: React.FC<Props> = ({ resultsFound }) => {
         </ButtonContained>
       </Link>
       <ButtonContained className={styles["store-page__pagination-button"]}>
-        <a href="#" className={styles["store-page__pagination-button-link"]}>
-          Page {page}/{maxPages}
-        </a>
+        Page {page}/{maxPages}
       </ButtonContained>
       <Link
         href={

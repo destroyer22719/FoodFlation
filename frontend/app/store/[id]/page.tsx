@@ -28,8 +28,8 @@ const StoreIdPage = async ({
 
   const storeReq = await fetch(`${API_URL}/stores/${id}`);
   const itemsReq = await fetch(
-    `${API_URL}/items/store/${id}?page=${page}&search=${search}&${
-      category ? `category=${category}` : ""
+    `${API_URL}/items/store/${id}?page=${page}&search=${search}${
+      category ? `&category=${category}` : ""
     }`
   );
 
