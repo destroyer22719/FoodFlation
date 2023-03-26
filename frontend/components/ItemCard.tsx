@@ -22,7 +22,6 @@ const ItemCard: React.FC<Props> = ({ item }) => {
 
   const searchParams = useSearchParams()
   const searchString = searchParams.toString();
-  console.log(searchParams.get("search"));
 
   // generate a new url with the same url except a different query parameter of category using nextjs13 app directory
 

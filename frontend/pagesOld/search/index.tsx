@@ -54,7 +54,6 @@ const SearchPage: React.FC<Props> = ({
   }
 
   function handleOrderChange() {
-    console.log("pressed");
     setAscToggle(!asc);
   }
 

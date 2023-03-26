@@ -4,7 +4,7 @@ import { API_URL } from "@/config/index";
 
 import styles from "@/styles/Store.module.scss";
 import ItemCard from "@/components/ItemCard";
-import { CategoryData, Item, Store } from "global";
+import { Item } from "global";
 import BackToTop from "./ClientComponents/BackToTop";
 import PaginationComponent from "./ClientComponents/PaginationButtons";
 import SearchSection from "./ClientComponents/SearchSection";
@@ -26,47 +26,39 @@ const StoreIdPage = async ({
 }: Props) => {
   const { id } = params;
 
-  const storeReq = await fetch(`${API_URL}/stores/${id}`);
   const itemsReq = await fetch(
     `${API_URL}/items/store/${id}?page=${page}&search=${search}${
       category ? `&category=${category}` : ""
-    }`
+    }`, {
+      next: {
+        revalidate: 60 * 60 * 24,
+      }
+    }
   );
 
-  const store = await storeReq.json();
   const itemData = await itemsReq.json();
 
   const { items, categoryData, resultsFound, total } = itemData;
 
-  if (!store || !items) {
+  if (!items) {
     notFound();
   }
 
   return (
     <div>
-      <div className={styles["store-page"]}>
-        <h1 id="header">{store.name}</h1>
-        <p>
-          {store.street}, {store.city}, {store.country} |{" "}
-          {store.postalCode ? store.postalCode : store.zipCode}
-        </p>
-        <div>{total} Items Tracked</div>
-        <SearchSection
-          resultsFound={resultsFound}
-          categoryData={categoryData}
-        />
-        <PaginationComponent resultsFound={resultsFound} />
-        <div className={styles["store-page__item-list"]}>
-          {items.length > 0 ? (
-            (items as Item[]).map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))
-          ) : (
-            <div>No stores found </div>
-          )}
-        </div>
-        {items.length >= 8 && <BackToTop />}
+      <div>{total} Items Tracked</div>
+      <SearchSection resultsFound={resultsFound} categoryData={categoryData} />
+      <PaginationComponent resultsFound={resultsFound} />
+      <div className={styles["store-page__item-list"]}>
+        {items.length > 0 ? (
+          (items as Item[]).map((item) => (
+            <ItemCard key={item.id} item={item} />
+          ))
+        ) : (
+          <div>No Items Found </div>
+        )}
       </div>
+      {items.length >= 8 && <BackToTop />}
     </div>
   );
 };
