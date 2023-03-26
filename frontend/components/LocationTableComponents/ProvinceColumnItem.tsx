@@ -4,7 +4,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
 import styles from "@/styles/StoreList.module.scss";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
-import { StoreData } from "app/store/layout";
+import { StoreData } from "../../app/store/ClientComponent";
 import Link from "next/link";
 
 type Prop = {
