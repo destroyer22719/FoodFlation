@@ -1,6 +1,8 @@
 import { API_URL } from "@/config/index";
 import { notFound } from "next/navigation";
 import styles from "@/styles/Store.module.scss";
+import SearchSection from "./ClientComponents/SearchSection";
+import PaginationComponent from "./ClientComponents/PaginationButtons";
 
 type Props = {
   children: React.ReactNode;
@@ -34,12 +36,12 @@ async function getItems(id: string) {
 const layout = async ({ children, params }: Props) => {
   const { id } = params;
 
-  const storeReq = await fetch(`${API_URL}/stores/${id}`);
-  const store = await storeReq.json();
+  const storeData = getStore(id);
+  const itemsData = getItems(id);
 
-  if (!store) {
-    notFound();
-  }
+  const [store, items] = await Promise.all([storeData, itemsData]);
+
+  const { categoryData, resultsFound, total } = items;
 
   return (
     <div className={styles["store-page"]}>
@@ -48,6 +50,9 @@ const layout = async ({ children, params }: Props) => {
         {store.street}, {store.city}, {store.country} |{" "}
         {store.postalCode ? store.postalCode : store.zipCode}
       </p>
+      <div>{total} Items Tracked</div>
+      <SearchSection resultsFound={resultsFound} categoryData={categoryData} />
+      <PaginationComponent resultsFound={resultsFound} />
       {children}
     </div>
   );

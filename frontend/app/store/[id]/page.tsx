@@ -29,16 +29,17 @@ const StoreIdPage = async ({
   const itemsReq = await fetch(
     `${API_URL}/items/store/${id}?page=${page}&search=${search}${
       category ? `&category=${category}` : ""
-    }`, {
+    }`,
+    {
       next: {
         revalidate: 60 * 60 * 24,
-      }
+      },
     }
   );
 
   const itemData = await itemsReq.json();
 
-  const { items, categoryData, resultsFound, total } = itemData;
+  const { items } = itemData;
 
   if (!items) {
     notFound();
@@ -46,9 +47,6 @@ const StoreIdPage = async ({
 
   return (
     <div>
-      <div>{total} Items Tracked</div>
-      <SearchSection resultsFound={resultsFound} categoryData={categoryData} />
-      <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__item-list"]}>
         {items.length > 0 ? (
           (items as Item[]).map((item) => (
