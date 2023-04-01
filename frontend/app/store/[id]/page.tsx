@@ -26,10 +26,15 @@ const StoreIdPage = async ({
 }: Props) => {
   const { id } = params;
 
+  const queryParamsUrl = new URLSearchParams({
+    page: page || "1",
+  });
+
+  if (category) queryParamsUrl.append("category", category);
+  if (search) queryParamsUrl.append("search", search);
+
   const itemsReq = await fetch(
-    `${API_URL}/items/store/${id}?page=${page}&search=${search}${
-      category ? `&category=${category}` : ""
-    }`,
+    `${API_URL}/items/store/${id}?${queryParamsUrl.toString()}`,
     {
       next: {
         revalidate: 60 * 60 * 24,
