@@ -1,3 +1,5 @@
+import { CategoryData, Item } from "global";
+
 export const newUrl = (path: string, key: string, value: string) => {
   const regex = new RegExp(`(?<=${key}=)[^&]+`);
   if (path.match(regex)) {
@@ -8,4 +10,11 @@ export const newUrl = (path: string, key: string, value: string) => {
     return `${path}${key}=${value}`;
   }
   return `${path}?${key}=${value}`;
+};
+
+export type ItemFetchRes = {
+  items: Item[];
+  total: number;
+  resultsFound: number;
+  categoryData: CategoryData[];
 };

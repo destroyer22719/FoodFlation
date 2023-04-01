@@ -14,7 +14,10 @@ const PaginationComponent: React.FC<Props> = ({ resultsFound }) => {
   const searchParams = useSearchParams();
   const paramsString = searchParams.toString();
   const pathName = usePathname();
-  const fullPath = `${pathName}?${paramsString}`;
+  const resultsFoundParam = searchParams.get("resultsFound");
+  const fullPath = resultsFoundParam
+    ? `${pathName}?${paramsString}`
+    : `${pathName}?${paramsString}&resultsFound=${resultsFound}`;
 
   const pageSize = 10;
   const page = searchParams.get("page")

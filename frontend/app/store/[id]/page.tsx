@@ -8,6 +8,7 @@ import { Item } from "global";
 import BackToTop from "./ClientComponents/BackToTop";
 import PaginationComponent from "./ClientComponents/PaginationButtons";
 import SearchSection from "./ClientComponents/SearchSection";
+import { ItemFetchRes } from "./util";
 
 type Props = {
   params: {
@@ -42,16 +43,17 @@ const StoreIdPage = async ({
     }
   );
 
-  const itemData = await itemsReq.json();
-
-  const { items } = itemData;
+  const itemData: ItemFetchRes = await itemsReq.json();
+  const { items, total, resultsFound, categoryData } = itemData;
 
   if (!items) {
+    console.log(itemData);
     notFound();
   }
 
   return (
     <div>
+      <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__item-list"]}>
         {items.length > 0 ? (
           (items as Item[]).map((item) => (
