@@ -1,7 +1,18 @@
-const loading = () => {
-  return (
-    <div>Loading</div>
-  )
-}
+"use client";
 
-export default loading
+import { useSearchParams } from "next/navigation";
+import PaginationComponent from "./ClientComponents/PaginationButtons";
+
+const loading = () => {
+  const searchParams = useSearchParams();
+  const resultsFound = searchParams.get("resultsFound");
+
+  return (
+    <div>
+      <PaginationComponent resultsFound={resultsFound ? +resultsFound : 0} />
+      <div>Loading...</div>
+    </div>
+  );
+};
+
+export default loading;

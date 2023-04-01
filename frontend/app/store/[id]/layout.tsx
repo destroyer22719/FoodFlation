@@ -52,7 +52,6 @@ const layout = async ({ children, params }: Props) => {
       </p>
       <div>{total} Items Tracked</div>
       <SearchSection resultsFound={resultsFound} categoryData={categoryData} />
-      <PaginationComponent resultsFound={resultsFound} />
       {children}
     </div>
   );
