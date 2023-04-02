@@ -111,7 +111,7 @@ export async function getPricesLoblaws(
       await page.waitForSelector(".modal-dialog__content__close");
       const popupButton = await page.$(".modal-dialog__content__close");
 
-      popupButton!.click();
+      await popupButton!.click();
       popupDeleted = true;
     }
 

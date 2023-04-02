@@ -103,14 +103,19 @@ export async function getPricesNoFrills(
     await page.goto(
       `https://www.nofrills.ca/store-locator?searchQuery=${postalCode}`,
       {
-        "waitUntil": "networkidle2",
+        waitUntil: "networkidle2",
       }
     );
 
     if (!popupDeleted) {
-      const popupButton = await page.$(".modal-dialog__content__close");
-      
-      popupButton!.click();
+      page.evaluate(() => {
+        const popupButton: HTMLElement | null = document.querySelector(
+          ".modal-dialog__content__close"
+        );
+        if (popupButton) {
+          popupButton.click();
+        }
+      });
       popupDeleted = true;
     }
 
