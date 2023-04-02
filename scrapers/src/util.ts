@@ -66,7 +66,7 @@ export function generateStoresToScrape(
     ? [province]
     : ["alberta", "british_columbia", "ontario", "quebec"];
 
-    let states: State[] = state
+  let states: State[] = state
     ? [state]
     : ["new_york", "california", "texas", "michigan"];
 
@@ -179,16 +179,13 @@ export async function scrapeStores(
     }
 
     const counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
-    let loblawsStores = filterByStore(stores, "Loblaws");
-    let metroStores = filterByStore(stores, "Metro");
-    let noFrillsStores = filterByStore(stores, "No Frills");
-
-    loblawsStores = loblawsStores.slice(counter.count);
-    metroStores = metroStores.slice(counter.count);
-    noFrillsStores = noFrillsStores.slice(counter.count);
+    const allLoblawsStores = filterByStore(stores, "Loblaws");
+    const allMetroStores = filterByStore(stores, "Metro");
+    const allNoFrillsStores = filterByStore(stores, "No Frills");
 
     console.log(`${prov}, Canada`);
 
+    const loblawsStores = allLoblawsStores.slice(counter.count);
     await getPricesLoblaws(
       loblawsStores,
       currentItemList,
@@ -196,7 +193,8 @@ export async function scrapeStores(
       counter.count
     );
 
-    counter.subtract(loblawsStores.length);
+    counter.subtract(Math.min(allLoblawsStores.length, counter.count));
+    const metroStores = allMetroStores.slice(counter.count);
 
     await getPricesMetro(
       metroStores,
@@ -205,7 +203,8 @@ export async function scrapeStores(
       counter.count
     );
 
-    counter.subtract(metroStores.length);
+    counter.subtract(Math.min(allMetroStores.length, counter.count));
+    const noFrillsStores = allNoFrillsStores.slice(counter.count);
 
     await getPricesNoFrills(
       noFrillsStores,
@@ -213,35 +212,47 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-    counter.subtract(noFrillsStores.length);
   }
 
   for (const state in us) {
     const stores: Address[] = us[state];
     const prevStoreStart = storeStart;
 
-    if (!stores.length) continue;
+    if (!stores.length) {
+      continue;
+    }
+
+    //we keep on increasing storeStart until it is equal to storeIndex
     if (storeStart < storeIndexes.storeIndex) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
       storeStart += min;
-      if (min === stores.length) continue;
+      if (min === stores.length) {
+        continue;
+      }
     }
 
+    //creating a counter to keep track of the amount of stores left to scrape
     const counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
-    let aldiStores = filterByStore(stores, "Aldi");
-    let wholeFoodsMarketStores = filterByStore(stores, "Whole Foods Market");
-
-    aldiStores = aldiStores.slice(counter.count);
-    wholeFoodsMarketStores = wholeFoodsMarketStores.slice(counter.count);
+    const allAldiStores = filterByStore(stores, "Aldi");
+    const allWholeFoodsMarketStores = filterByStore(
+      stores,
+      "Whole Foods Market"
+    );
 
     console.log(`${state}, United States`);
+    const aldiStores = allAldiStores.slice(counter.count);
+
     await getPricesAldi(
       aldiStores,
       currentItemList,
       storeIndexes,
       counter.count
     );
-    counter.subtract(aldiStores.length);
+
+    counter.subtract(Math.min(allAldiStores.length, counter.count));
+    const wholeFoodsMarketStores = allWholeFoodsMarketStores.slice(
+      counter.count
+    );
 
     await getPricesWholeFoodsMarket(
       wholeFoodsMarketStores,
@@ -249,7 +260,6 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-    counter.subtract(wholeFoodsMarketStores.length);
   }
 }
 
