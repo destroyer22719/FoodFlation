@@ -23,6 +23,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0",
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts", "loblaws.ts", "src/stores/nofrills.ts"]
