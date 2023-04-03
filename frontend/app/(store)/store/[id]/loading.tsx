@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import PaginationComponent from "./ClientComponents/PaginationButtons";
 
-const loading = () => {
+const Loading = () => {
   const searchParams = useSearchParams();
   const resultsFound = searchParams.get("resultsFound");
 
@@ -15,4 +15,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;

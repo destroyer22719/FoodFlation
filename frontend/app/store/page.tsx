@@ -23,10 +23,17 @@ const StorePages = async ({
 }) => {
   const searchParamsUrl = new URLSearchParams();
 
+  // if (searchParams?.search)
+  //   searchParamsUrl.append("search", searchParams.search);
+  // if (searchParams?.page) searchParamsUrl.append("page", searchParams.page);
+  // if (searchParams?.city) searchParamsUrl.append("city", searchParams.city);
+  // if (searchParams?.state) searchParamsUrl.append("state", searchParams.state);
+  // if (searchParams?.province)
+  //   searchParamsUrl.append("province", searchParams.province);
+  // console.log(searchParamsUrl.toString());
+
   for (const key in searchParams) {
-    if (searchParams[key]) {
-      searchParamsUrl.append(key, searchParams[key]!);
-    }
+    if (searchParams[key]) searchParamsUrl.append(key, searchParams[key]!);
   }
 
   const { total: totalStores, stores } = await getStores(
