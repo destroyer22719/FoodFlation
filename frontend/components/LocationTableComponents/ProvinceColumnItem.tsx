@@ -4,8 +4,18 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, ListItemButton } from "@mui/material";
 import styles from "@/styles/StoreList.module.scss";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
-import { StoreData } from "../../app/store/ClientComponent";
 import Link from "next/link";
+
+type CityData = {
+  city: string;
+  cityCount: number;
+};
+
+type StoreData = {
+  state?: string;
+  province?: string;
+  stores: CityData[];
+};
 
 type Prop = {
   prov: StoreData;
@@ -34,7 +44,7 @@ const ProvinceColumnItem: React.FC<Prop> = ({ prov, isCanada }) => {
               key={store.city}
               href={`/store?city=${store.city}&${
                 isCanada ? `province=${prov.province}` : `state=${prov.state}`
-              }`}
+              }#storeList`}
             >
               <ButtonContained
                 className={styles["store-list__location-city-item"]}

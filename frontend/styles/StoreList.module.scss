@@ -142,8 +142,10 @@
     flex-wrap: wrap;
     margin-top: 20px;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
+    min-height: 50vh;
+    border: 5px solid red;
 
     & > * {
       width: 285px;
@@ -262,5 +264,14 @@
     to {
       background-position: 100% 0, /* move highlight to right */ 0 0;
     }
+  }
+
+  &__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    font-size: 25px;
+    font-weight: bold;
   }
 }
