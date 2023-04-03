@@ -44,16 +44,16 @@ const SearchCityItems: React.FC<Props> = ({
   setCity,
   setSearch,
 }) => {
-  const [focused, setFocused] = useState(false);
+  // const [focused, setFocused] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (city) {
-      setFocused(true);
-    } else {
-      setFocused(false);
-    }
-  }, [city]);
+  // useEffect(() => {
+  //   if (city) {
+  //     setFocused(true);
+  //   } else {
+  //     setFocused(false);
+  //   }
+  // }, [city]);
 
   const cities: {
     label: string;

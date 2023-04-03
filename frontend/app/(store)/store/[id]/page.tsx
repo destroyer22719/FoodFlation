@@ -7,7 +7,6 @@ import ItemCard from "@/components/ItemCard";
 import { Item } from "global";
 import BackToTop from "./ClientComponents/BackToTop";
 import PaginationComponent from "./ClientComponents/PaginationButtons";
-import SearchSection from "./ClientComponents/SearchSection";
 import { ItemFetchRes } from "./util";
 
 type Props = {
@@ -44,7 +43,7 @@ const StoreIdPage = async ({
   );
 
   const itemData: ItemFetchRes = await itemsReq.json();
-  const { items, total, resultsFound, categoryData } = itemData;
+  const { items, resultsFound } = itemData;
 
   if (!items) {
     console.log(itemData);

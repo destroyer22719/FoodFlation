@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Item } from "../global";
 
 import styles from "@/styles/Store.module.scss";
@@ -16,14 +15,10 @@ type Props = {
 
 const ItemCard: React.FC<Props> = ({ item }) => {
   const [date, setDate] = useState<string | null>(null);
-  useState(() => {
+  
+  useEffect(() => {
     setDate(new Date(item.lastUpdated as Date).toISOString().split("T")[0]);
-  });
-
-  const searchParams = useSearchParams()
-  const searchString = searchParams.toString();
-
-  // generate a new url with the same url except a different query parameter of category using nextjs13 app directory
+  }, []);
 
   return (
     <div className={styles["store-page__item"]}>
