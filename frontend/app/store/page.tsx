@@ -2,7 +2,7 @@ import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import { API_URL } from "@/config/index";
 import { Store } from "global";
-import PaginationComponent from "./ClientComponents/PaginationComponent";
+import PaginationComponent from "./Components/PaginationComponent";
 import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
 
 const getStores = async (searchParams: string) => {
