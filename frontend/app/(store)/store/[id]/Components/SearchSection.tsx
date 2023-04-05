@@ -10,7 +10,7 @@ import styles from "@/styles/Store.module.scss";
 import InputOutlined from "@/components/InputOutlined";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import { useState } from "react";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import { CategoryData } from "global";
 import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
 

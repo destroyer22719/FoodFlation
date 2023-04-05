@@ -1,10 +1,12 @@
 import { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { Collapse, ListItemButton } from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import ListItemButton from "@mui/material/ListItemButton";
+import Link from "next/link";
+
 import styles from "@/styles/StoreList.module.scss";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
-import Link from "next/link";
 
 type CityData = {
   city: string;

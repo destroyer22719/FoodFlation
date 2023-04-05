@@ -1,5 +1,4 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
 import InputOutlined from "./InputOutlined";
 import styles from "../styles/SearchPage.module.scss";
 import { useRouter } from "next/router";
@@ -44,16 +43,7 @@ const SearchCityItems: React.FC<Props> = ({
   setCity,
   setSearch,
 }) => {
-  // const [focused, setFocused] = useState(false);
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (city) {
-  //     setFocused(true);
-  //   } else {
-  //     setFocused(false);
-  //   }
-  // }, [city]);
 
   const cities: {
     label: string;
