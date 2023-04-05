@@ -14,7 +14,7 @@ const Loading = () => {
     <div>
       <PaginationComponent resultsFound={resultsFound ? +resultsFound : 0} />
       <div className={styles["store-page__item-list"]}>
-        {[1, 2, 3].map((id) => (
+        {[1, 2, 3, 4].map((id) => (
           <ItemCardSkeleton key={id} />
         ))}
       </div>
