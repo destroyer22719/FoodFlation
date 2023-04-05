@@ -145,7 +145,7 @@
     align-items: center;
     flex-direction: column;
 
-    & > * {
+    .store-list__store-item {
       width: 285px;
       height: 150px;
       margin-bottom: 20px;
@@ -153,7 +153,7 @@
 
     @media only screen and (min-width: 400px) {
       flex-direction: row;
-      & > * {
+      .store-list__store-item {
         margin-left: 10px;
         margin-right: 10px;
         width: 350px;

@@ -10,9 +10,9 @@ type Props = {
 
 const StoreItem: React.FC<Props> = ({ store }) => {
   return (
-    <div className={style["store-list__store-item"]}>
-      <ButtonContained className={style["store-list__store-item-btn"]}>
-        <Link href={`/store/${store.id}`}>
+    <Link href={`/store/${store.id}`}>
+      <div className={style["store-list__store-item"]}>
+        <ButtonContained className={style["store-list__store-item-btn"]}>
           <div className={style["store-list__store-item--format"]}>
             <Image
               src={`/store-logos/${store.name
@@ -28,9 +28,9 @@ const StoreItem: React.FC<Props> = ({ store }) => {
               <span>{store.postalCode || store.zipCode}</span>
             </div>
           </div>
-        </Link>
-      </ButtonContained>
-    </div>
+        </ButtonContained>
+      </div>
+    </Link>
   );
 };
 
