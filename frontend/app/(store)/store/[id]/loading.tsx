@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import PaginationComponent from "./Components/PaginationButtons";
-import SkeletonItemCard from "./Components/SkeletonItemCard";
+import ItemCardSkeleton from "./Components/ItemCardSkeleton";
 
 const Loading = () => {
   const searchParams = useSearchParams();
@@ -13,7 +13,7 @@ const Loading = () => {
       <PaginationComponent resultsFound={resultsFound ? +resultsFound : 0} />
       <div>
         {[1, 2, 3].map((id) => (
-          <SkeletonItemCard key={id} />
+          <ItemCardSkeleton key={id} />
         ))}
       </div>
     </div>
