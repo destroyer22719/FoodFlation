@@ -13,12 +13,6 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <script
-            type="text/javascript"
-            id="tinyAnalytics"
-            defer
-            src={process.env.NEXT_PUBLIC_TINYANALYTICS_URI}
-          ></script>
         </Head>
         <body>
           <Main />
