@@ -9,6 +9,7 @@ import { ItemFetchRes } from "./util";
 
 import BackToTop from "./Components/BackToTop";
 import PaginationComponent from "./Components/PaginationButtons";
+import SkeletonItemCard from "./Components/SkeletonItemCard";
 
 type Props = {
   params: {
@@ -54,7 +55,8 @@ const StoreIdPage = async ({
       <div className={styles["store-page__item-list"]}>
         {items.length > 0 ? (
           (items as Item[]).map((item) => (
-            <ItemCard key={item.id} item={item} />
+            // <ItemCard key={item.id} item={item} />
+            <SkeletonItemCard key={item.id} />
           ))
         ) : (
           <div>No Items Found </div>

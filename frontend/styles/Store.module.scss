@@ -115,6 +115,13 @@
     width: 300px;
     height: 500px;
 
+    &-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
     &-button {
       margin-bottom: 10px;
       height: 400px;
@@ -128,6 +135,69 @@
     &-price {
       font-weight: bold;
       font-size: 18px;
+    }
+
+    &-name--skeleton {
+      border-radius: 5px;
+      background-color: linear-gradient(
+          to right,
+          rgba(lighten($purple, 25%), 0),
+          rgba(lighten($purple, 25%), 0.5) 50%,
+          rgba(lighten($purple, 25%), 0) 80%
+        ),
+        $purple;
+      padding: 10px;
+      width: 150px;
+      height: 30px;
+    }
+
+    &-image--skeleton {
+      border-radius: 5px;
+      background-color: linear-gradient(
+          to right,
+          rgba(lighten($purple, 25%), 0),
+          rgba(lighten($purple, 25%), 0.5) 50%,
+          rgba(lighten($purple, 25%), 0) 80%
+        ),
+        $purple;
+      padding: 10px;
+      width: 125px;
+      height: 125px;
+    }
+
+    &-price--skeleton {
+      width: 150px;
+      height: 35px;
+      margin: 16px 0;
+    }
+
+    &-last-updated--skeleton {
+      width: 125px;
+      height: 50px;
+    }
+
+    &-last-updated--skeleton,
+    &-price--skeleton,
+    &-name--skeleton,
+    &-image--skeleton {
+      border-radius: 10px;
+      background: linear-gradient(
+          to right,
+          rgba(lighten($purple, 25%), 0),
+          rgba(lighten($purple, 25%), 0.5) 50%,
+          rgba(lighten($purple, 25%), 0) 80%
+        ),
+        $purple;
+      background-repeat: repeat-y;
+      background-size: 50px 500px;
+      background-position: 0 0;
+      animation: shine 1s infinite;
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 100% 0, /* move highlight to right */ 0 0;
+      }
     }
   }
 }

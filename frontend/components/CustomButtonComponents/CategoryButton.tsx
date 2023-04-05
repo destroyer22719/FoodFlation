@@ -1,7 +1,7 @@
 "use client";
 
 import ButtonContained from "./ButtonContained";
-import styles from "../../styles/CategoryButton.module.scss";
+import styles from "@/styles/CategoryButton.module.scss";
 import Link from "next/link";
 import { UrlObject } from "url";
 import { Category } from "../../global";

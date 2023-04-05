@@ -24,7 +24,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
     <div className={styles["store-page__item"]}>
       <ButtonContained className={styles["store-page__item-button"]}>
         <Link href={`/item/${item.id}`}>
-          <div>
+          <div className={styles["store-page__item-content  "]}>
             <h3>{item.name}</h3>
             <Image
               width={125}
