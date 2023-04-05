@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";

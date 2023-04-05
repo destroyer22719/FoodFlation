@@ -1,4 +1,5 @@
-import { Autocomplete, TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 import { useEffect, useState } from "react";
 import InputOutlined from "./InputOutlined";
 import styles from "../styles/SearchPage.module.scss";

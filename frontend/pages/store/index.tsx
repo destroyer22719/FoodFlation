@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "../../styles/StoreList.module.scss";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
 import ButtonOutlined from "../../components/CustomButtonComponents/ButtonOutlined";
-import { CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import InputOutlined from "../../components/InputOutlined";
 import LocationTable from "../../components/LocationTableComponents/LocationTable";
 import { useStoreContext } from "../../providers/storeContext";

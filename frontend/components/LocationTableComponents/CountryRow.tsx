@@ -1,6 +1,7 @@
 import React from "react";
 import ProvinceColumn from "./ProvinceColumn";
-import { Collapse, ListItemButton } from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import ListItemButton from "@mui/material/ListItemButton";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import styles from "../../styles/StoreList.module.scss";
