@@ -37,9 +37,7 @@ const StoreIdPage = async ({
   const itemsReq = await fetch(
     `${API_URL}/items/store/${id}?${queryParamsUrl.toString()}`,
     {
-      next: {
-        revalidate: 60 * 60 * 24,
-      },
+      cache: "no-store",
     }
   );
 
@@ -47,7 +45,6 @@ const StoreIdPage = async ({
   const { items, resultsFound } = itemData;
 
   if (!items) {
-    console.log(itemData);
     notFound();
   }
 

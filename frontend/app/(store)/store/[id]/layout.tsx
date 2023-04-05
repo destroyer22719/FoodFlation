@@ -10,8 +10,12 @@ type Props = {
   };
 };
 
+//https://beta.nextjs.org/docs/data-fetching/fetching
+// implemented dynamic data fetching to prevent getting {message: "Internal Server Error"} when fetching
 async function getStore(id: string) {
-  const storeReq = await fetch(`${API_URL}/stores/${id}`);
+  const storeReq = await fetch(`${API_URL}/stores/${id}`, {
+    cache: "no-store",
+  });
   const store = await storeReq.json();
 
   if (!store) {
@@ -22,7 +26,9 @@ async function getStore(id: string) {
 }
 
 async function getItems(id: string) {
-  const itemsReq = await fetch(`${API_URL}/items/store/${id}`);
+  const itemsReq = await fetch(`${API_URL}/items/store/${id}`, {
+    cache: "no-store",
+  });
   const items = await itemsReq.json();
 
   if (!items) {
@@ -39,7 +45,6 @@ const layout = async ({ children, params }: Props) => {
   const itemsData = getItems(id);
 
   const [store, items] = await Promise.all([storeData, itemsData]);
-
   const { categoryData, resultsFound, total } = items;
 
   return (
