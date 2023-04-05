@@ -3,6 +3,7 @@ import StoreItem from "@/components/StoreItem/StoreItem";
 import { API_URL } from "@/config/index";
 import { Store } from "global";
 import PaginationComponent from "./ClientComponents/PaginationComponent";
+import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
 
 const getStores = async (searchParams: string) => {
   if (!searchParams) return { total: 0, stores: [] };

@@ -175,18 +175,6 @@
       &--skeleton {
         width: 80px;
         height: 80px;
-        border-radius: 10px;
-        background: linear-gradient(
-            to right,
-            rgba(lighten($purple, 25%), 0),
-            rgba(lighten($purple, 25%), 0.5) 50%,
-            rgba(lighten($purple, 25%), 0) 80%
-          ),
-          $purple;
-        background-repeat: repeat-y;
-        background-size: 50px 500px;
-        background-position: 0 0;
-        animation: shine 1s infinite;
       }
     }
     & > *:hover {
@@ -212,25 +200,14 @@
       flex-direction: column;
       margin-left: 25px;
       align-items: center;
-
+      height: 80px;
+      
       &--skeleton {
         span {
           margin-bottom: 10px;
           display: inline-block;
           width: 150px;
-          height: 15px;
-          border-radius: 10px;
-          background: linear-gradient(
-              to right,
-              rgba(lighten($purple, 25%), 0),
-              rgba(lighten($purple, 25%), 0.5) 50%,
-              rgba(lighten($purple, 25%), 0) 80%
-            ),
-            $purple;
-          background-repeat: repeat-y;
-          background-size: 50px 500px;
-          background-position: 0 0;
-          animation: shine 1s infinite;
+          height: 20px;
         }
       }
 
@@ -245,6 +222,22 @@
           font-size: 14px;
         }
       }
+    }
+
+    &-image--skeleton,
+    &-address--skeleton span {
+      border-radius: 10px;
+      background: linear-gradient(
+          to right,
+          rgba(lighten($purple, 25%), 0),
+          rgba(lighten($purple, 25%), 0.5) 50%,
+          rgba(lighten($purple, 25%), 0) 80%
+        ),
+        $purple;
+      background-repeat: repeat-y;
+      background-size: 50px 500px;
+      background-position: 0 0;
+      animation: shine 1s infinite;
     }
   }
 

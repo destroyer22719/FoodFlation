@@ -1,15 +1,12 @@
 import { notFound } from "next/navigation";
 
 import { API_URL } from "@/config/index";
-
 import styles from "@/styles/Store.module.scss";
 import ItemCard from "@/components/ItemCard";
-import { Item } from "global";
 import { ItemFetchRes } from "./util";
 
 import BackToTop from "./Components/BackToTop";
 import PaginationComponent from "./Components/PaginationButtons";
-import SkeletonItemCard from "./Components/SkeletonItemCard";
 
 type Props = {
   params: {
@@ -54,10 +51,7 @@ const StoreIdPage = async ({
       <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__item-list"]}>
         {items.length > 0 ? (
-          (items as Item[]).map((item) => (
-            // <ItemCard key={item.id} item={item} />
-            <SkeletonItemCard key={item.id} />
-          ))
+          items.map((item) => <ItemCard key={item.id} item={item} />)
         ) : (
           <div>No Items Found </div>
         )}
