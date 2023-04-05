@@ -53,7 +53,7 @@ const StoreIdPage = async ({
         {items.length > 0 ? (
           items.map((item) => <ItemCard key={item.id} item={item} />)
         ) : (
-          <div>No Items Found </div>
+          <h2>No Items Found </h2>
         )}
       </div>
       {items.length >= 8 && <BackToTop />}
