@@ -1,13 +1,14 @@
 import Footer from "@/components/Footer";
-import Nav from "../components/Nav";
-import style from "../styles/Layout.module.scss";
+import { Analytics } from "@vercel/analytics/react";
+
+import Nav from "@/components/Nav";
+import style from "@/styles/Layout.module.scss";
 import "../styles/global.scss";
 
 type Props = {
   title: string;
   children: React.ReactNode;
 };
-
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
@@ -19,6 +20,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           <Footer />
         </div>
       </body>
+      <Analytics />
     </html>
   );
 };
