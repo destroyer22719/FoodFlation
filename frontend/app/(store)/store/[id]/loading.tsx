@@ -1,6 +1,8 @@
 "use client";
-
 import { useSearchParams } from "next/navigation";
+
+import styles from "@/styles/Store.module.scss";
+
 import PaginationComponent from "./Components/PaginationButtons";
 import ItemCardSkeleton from "./Components/ItemCardSkeleton";
 
@@ -11,7 +13,7 @@ const Loading = () => {
   return (
     <div>
       <PaginationComponent resultsFound={resultsFound ? +resultsFound : 0} />
-      <div>
+      <div className={styles["store-page__item-list"]}>
         {[1, 2, 3].map((id) => (
           <ItemCardSkeleton key={id} />
         ))}
