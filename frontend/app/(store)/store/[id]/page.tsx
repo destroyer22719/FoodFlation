@@ -7,9 +7,8 @@ import ItemCard from "@/components/ItemCard";
 import { Item } from "global";
 import { ItemFetchRes } from "./util";
 
-import BackToTop from "./ClientComponents/BackToTop";
-import PaginationComponent from "./ClientComponents/PaginationButtons";
-
+import BackToTop from "./Components/BackToTop";
+import PaginationComponent from "./Components/PaginationButtons";
 
 type Props = {
   params: {

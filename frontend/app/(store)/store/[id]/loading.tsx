@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import PaginationComponent from "./ClientComponents/PaginationButtons";
+import PaginationComponent from "./Components/PaginationButtons";
 
 const Loading = () => {
   const searchParams = useSearchParams();

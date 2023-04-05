@@ -1,7 +1,7 @@
 import { API_URL } from "@/config/index";
 import { notFound } from "next/navigation";
 import styles from "@/styles/Store.module.scss";
-import SearchSection from "./ClientComponents/SearchSection";
+import SearchSection from "./Components/SearchSection";
 
 type Props = {
   children: React.ReactNode;
