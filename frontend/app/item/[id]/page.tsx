@@ -1,32 +1,24 @@
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-
-import styles from "@/styles/Item.module.scss";
+import Image from "next/image";
 
 import { API_URL } from "@/config/index";
 import { Item } from "global";
 import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
-import Image from "next/image";
 import BackButton from "./ClientComponents/BackButton";
 import { DataSet } from "./util";
 import ChartComponent from "./ClientComponents/ChartComponent";
 
+import styles from "@/styles/Item.module.scss";
+import timeAgo from "util/timeAgo";
+
 type Props = {
   params: { id: string };
 };
-
-TimeAgo.addLocale(en);
 
 const ItemPage = async ({ params }: Props) => {
   const { id } = params;
 
   const req = await fetch(`${API_URL}/items/${id}`);
   const item: Item = await req.json();
-
-  const timeAgo = new TimeAgo("en-US");
-  const latestPrice = item.prices[item.prices.length - 1].createdAt;
-  const timeNumAgo = Date.now() - new Date(latestPrice).getTime();
-  const timeStrAgo = timeAgo.format(new Date(latestPrice).getTime());
 
   const { prices } = item;
   //dates
@@ -75,6 +67,9 @@ const ItemPage = async ({ params }: Props) => {
     });
   }
 
+  const lastUpdated = new Date(parsedPrices[parsedPrices.length - 1].x);
+  const greaterThanTwoWeeks = Date.now() - lastUpdated.getTime() > 12096e5;
+
   return (
     <>
       <div className={styles["item-page__header"]}>
@@ -83,8 +78,11 @@ const ItemPage = async ({ params }: Props) => {
           <div>
             <h1>{item.name}</h1>
           </div>
-          {1000 * 60 * 60 * 24 * 14 < timeNumAgo && (
-            <h3>Warning: Price may be outdated as it is from {timeStrAgo}</h3>
+          {greaterThanTwoWeeks && (
+            <h3>
+              Warning: Price may be outdated as it is from{" "}
+              {timeAgo(lastUpdated)}
+            </h3>
           )}
           <div>
             <p>
@@ -101,21 +99,21 @@ const ItemPage = async ({ params }: Props) => {
             <div></div>
             <div>
               Latest Price: {"$"}
-              {parsedPrices[parsedPrices.length - 1].y} on{" "}
+              {parsedPrices[parsedPrices.length - 1].y} on
               {parsedPrices[parsedPrices.length - 1].x} {"("}
-              {timeStrAgo}
+              {timeAgo(lastUpdated)}
               {")"}
             </div>
             <div>
               Highest Price: {"$"}
               {highest.y} on {highest.x} {"("}
-              {timeAgo.format(new Date(highest.x))}
+              {timeAgo(new Date(highest.x))}
               {")"}
             </div>
             <div>
               Lowest Price: {"$"}
               {lowest.y} on {lowest.x} {"("}
-              {timeAgo.format(new Date(lowest.x))}
+              {timeAgo(new Date(lowest.x))}
               {")"}
             </div>
           </div>

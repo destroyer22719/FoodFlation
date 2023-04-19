@@ -18,8 +18,7 @@ import styles from "../../styles/Item.module.scss";
 import { useRouter } from "next/router";
 import CategoryButton from "../../components/CustomButtonComponents/CategoryButton";
 import ButtonContained from "../../components/CustomButtonComponents/ButtonContained";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
+import timeAgo from "../../util/timeAgo";
 
 ChartJS.register(
   CategoryScale,
@@ -46,11 +45,8 @@ ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
-TimeAgo.addLocale(en);
-
 const ItemPage: React.FC<Props> = ({ item, timeNumAgo, timeStrAgo }) => {
   const router = useRouter();
-  const timeAgo = new TimeAgo("en-US");
 
   const { prices } = item;
   //dates
@@ -154,13 +150,13 @@ const ItemPage: React.FC<Props> = ({ item, timeNumAgo, timeStrAgo }) => {
                 <div>
                   Highest Price: {"$"}
                   {highest.y} on {highest.x} {"("}
-                  {timeAgo.format(new Date(highest.x))}
+                  {timeAgo(new Date(highest.x))}
                   {")"}
                 </div>
                 <div>
                   Lowest Price: {"$"}
                   {lowest.y} on {lowest.x} {"("}
-                  {timeAgo.format(new Date(lowest.x))}
+                  {timeAgo(new Date(lowest.x))}
                   {")"}
                 </div>
               </div>
@@ -206,7 +202,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const timeAgo = new TimeAgo("en-US");
   const latestPrice = item.prices[item.prices.length - 1].createdAt;
   const timeNumAgo = Date.now() - new Date(latestPrice).getTime();
   const timeStrAgo = timeAgo.format(new Date(latestPrice).getTime());
