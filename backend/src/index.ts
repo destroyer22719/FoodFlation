@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import sequelize from "./config/db.js";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -10,9 +9,7 @@ import * as Tracing from "@sentry/tracing";
 import helmet from "helmet";
 import compression from "compression";
 import serverless from "serverless-http";
-import itemRouter from "./routes/items.js";
-import storeRouter from "./routes/stores.js";
-import companyRouter from "./routes/companies.js";
+
 
 const prisma = new PrismaClient();
 
@@ -54,18 +51,9 @@ app.use(limiter);
 app.use(helmet());
 app.use(compression());
 
-app.use("/items", itemRouter);
-app.use("/stores", storeRouter);
-app.use("/companies", companyRouter);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.get("/debug-sentry", (_req, _res) => {
-  throw new Error("My first Sentry error!");
-});
-
 app.use(Sentry.Handlers.errorHandler());
 
 app.listen(port, async () => {
-  await sequelize.sync();
   console.log(`listening on port ${port}`);
 });
 
