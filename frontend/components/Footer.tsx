@@ -1,27 +1,22 @@
-"use client"
+"use client";
 
-import GitHubIcon from "@mui/icons-material/GitHub";
-import EmailIcon from "@mui/icons-material/Email";
-import IconButton from "@mui/material/IconButton";
 import styles from "../styles/Footer.module.scss";
 import Link from "next/link";
+import { MdEmail } from "react-icons/md";
+import { BsGithub } from "react-icons/bs";
 
 const Footer = () => {
   return (
     <div className={styles["footer"]}>
       <Link href="mailto:nathan.cai.ca@gmail.com" title="Email">
-        <IconButton>
-          <EmailIcon className={styles["footer__item"]} />
-        </IconButton>
+        <BsGithub className={styles["footer__item"]} />
       </Link>
       <Link
         href="https://github.com/destroyer22719/FoodFlation"
         target="_blank"
         title="GitHub Repo"
       >
-        <IconButton>
-          <GitHubIcon className={styles["footer__item"]} />
-        </IconButton>
+        <MdEmail className={styles["footer__item"]} />
       </Link>
     </div>
   );
