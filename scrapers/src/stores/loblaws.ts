@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { prisma } from "../db/index.js";
 
-import { defaultItems, msToTime } from "../util.js";
+import { defaultItems, msToTime } from "../utils/cli.js";
 
 const __dirname = path.resolve();
 

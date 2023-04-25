@@ -11,7 +11,7 @@ import Item from "../../../backend/src/model/Item.js";
 import Store from "../../../backend/src/model/Store.js";
 import Company from "../../../backend/src/model/Company.js";
 import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../util.js";
+import { defaultItems, msToTime } from "../utils/cli.js";
 
 const __dirname = path.resolve();
 
@@ -34,7 +34,6 @@ export async function getPricesMetro(
     ignoreHTTPSErrors: true,
   });
 
-  
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();

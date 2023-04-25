@@ -1,12 +1,5 @@
 import yargs from "yargs/yargs";
-import {
-  AmericanStoresOptions,
-  CanadianStoresOptions,
-  Province,
-  State,
-  StoreIndexes,
-} from "./global.js";
-import { generateStoresToScrape, scrapeStores } from "./util.js";
+import { generateStoresToScrape, scrapeStores } from "./utils/cli.js";
 
 const argv = yargs(process.argv.slice(2))
   .options({
@@ -42,7 +35,7 @@ if (argv.all) {
   await scrapeStores(storesToScrape, indexes);
 } else if (argv.canada) {
   let canadianStoreOptions: CanadianStoresOptions | undefined;
-  
+
   if (argv.metro || argv.loblaws || argv.noFrills) {
     canadianStoreOptions = {
       metro: argv.metro,
