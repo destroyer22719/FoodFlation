@@ -33,6 +33,6 @@ export const locationsResolver = async () => {
       city: true,
     },
   });
-  console.log(storesByLocation);
+
   return storesByLocation;
 };

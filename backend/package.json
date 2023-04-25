@@ -28,7 +28,6 @@
     "graphql-scalars": "^1.21.3",
     "helmet": "^5.1.1",
     "morgan": "^1.10.0",
-    "mysql2": "^2.3.3",
     "serverless-http": "^3.1.0"
   },
   "devDependencies": {
