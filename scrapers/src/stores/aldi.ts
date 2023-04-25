@@ -3,7 +3,13 @@ import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
 
-import { defaultItems, msToTime, updateItem } from "../utils/scrapers.js";
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  msToTime,
+  updateItem,
+} from "../utils/scrapers.js";
 import { prisma } from "../db/index.js";
 
 export async function getPricesAldi(
@@ -72,17 +78,7 @@ export async function getPricesAldi(
 
   const loader = ora("Scraping Aldi...").start();
 
-  let company = await prisma.companies.findFirst({
-    where: { name: "Aldi" },
-  });
-
-  if (!company) {
-    company = await prisma.companies.create({
-      data: {
-        name: "Aldi",
-      },
-    });
-  }
+  const companyId = await getCompanyId("Aldi");
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -95,23 +91,14 @@ export async function getPricesAldi(
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
 
-    let storePrisma = await prisma.stores.findFirst({
-      where: { zipCode, companyId: company.id },
+    const storeId = await getStoreId({
+      companyId,
+      city,
+      zipCode,
+      state,
+      country: "us",
+      street,
     });
-
-    if (!storePrisma) {
-      storePrisma = await prisma.stores.create({
-        data: {
-          name: "Aldi",
-          street,
-          city,
-          state,
-          country,
-          zipCode,
-          companyId: company.id,
-        },
-      });
-    }
 
     await page.goto(
       `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
@@ -173,7 +160,7 @@ export async function getPricesAldi(
           storeIndexes.storeIndex
         }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-        updateItem({ result, storeId: storePrisma.id });
+        updateItem({ result, storeId });
       }
       itemBar.increment(1);
       storeIndexes.itemIndex++;

@@ -47,15 +47,6 @@ export const defaultItems = [
   "turkey",
 ];
 
-type UpdateItemParams = {
-  storeId: string;
-  result: {
-    name: string;
-    price: string;
-    imgUrl: string;
-  };
-};
-
 const __dirname = path.resolve();
 
 const item2category = JSON.parse(
@@ -64,6 +55,84 @@ const item2category = JSON.parse(
     "utf-8"
   )
 );
+
+export const getCompanyId = async (name: string) => {
+  let company = await prisma.companies.findFirst({
+    where: { name },
+  });
+
+  if (!company) {
+    company = await prisma.companies.create({
+      data: {
+        name,
+      },
+    });
+  }
+
+  return company.id;
+};
+
+type GetStoreIdParams = {
+  companyId: string;
+  city: string;
+  street: string;
+  country: Country;
+  province?: string;
+  postalCode?: string;
+  zipCode?: string;
+  state?: string;
+};
+
+export const getStoreId = async ({
+  companyId,
+  postalCode,
+  zipCode,
+  state,
+  province,
+  city,
+  street,
+  country,
+}: GetStoreIdParams) => {
+  const isCanada = country === "canada";
+  let store = await prisma.stores.findFirst({
+    where: {
+      ...(isCanada ? { postalCode } : { zipCode }),
+      companyId: companyId,
+    },
+  });
+
+  if (!store) {
+    store = await prisma.stores.create({
+      data: {
+        name: "Loblaws",
+        street,
+        city,
+        country,
+        companyId,
+        ...(isCanada
+          ? {
+              postalCode,
+              province,
+            }
+          : {
+              zipCode,
+              state,
+            }),
+      },
+    });
+  }
+
+  return store.id;
+};
+
+type UpdateItemParams = {
+  storeId: string;
+  result: {
+    name: string;
+    price: string;
+    imgUrl: string;
+  };
+};
 
 export const updateItem = async ({ result, storeId }: UpdateItemParams) => {
   let itemObj = await prisma.items.findFirst({
