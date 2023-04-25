@@ -1,12 +1,3 @@
-import {
-  Address,
-  CompanyName,
-  Province,
-  State,
-  StoreConfig,
-  StoreIndexes,
-  StoreLists,
-} from "./global";
 import fs from "fs";
 import path from "path";
 import { getPricesLoblaws } from "./stores/loblaws.js";
@@ -266,51 +257,6 @@ export async function scrapeStores(
 function filterByStore(array: Address[], company: CompanyName): Address[] {
   return array.filter((store) => store.company === company);
 }
-
-export const msToTime = (ms: number): string => {
-  const hours = Math.floor(ms / 3600000);
-  const minutes = Math.floor((ms % 3600000) / 60000);
-  const seconds = Math.floor(((ms % 3600000) % 60000) / 1000);
-
-  return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
-
-export const defaultItems = [
-  "eggs",
-  "milk",
-  "butter",
-  "flour",
-  "bacon",
-  "pork",
-  "beef",
-  "ground beef",
-  "chicken breasts",
-  "chicken wings",
-  "tomatoes",
-  "cheese",
-  "bananas",
-  "lettuce",
-  "onions",
-  "broccoli",
-  "rice",
-  "cooking oil",
-  "salmon",
-  "tuna",
-  "cucumbers",
-  "potatoes",
-  "bread",
-  "cereal",
-  "beets",
-  "radish",
-  "mushrooms",
-  "watermelons",
-  "garlic",
-  "ham",
-  "sausages",
-  "turkey",
-];
 
 class Counter {
   count = 0;

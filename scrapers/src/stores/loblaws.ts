@@ -1,16 +1,12 @@
 import puppeteer from "puppeteer";
-import sequelize from "../../src/db.js";
 import { v4 as uuidv4 } from "uuid";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
 import fs from "fs";
 import path from "path";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndexes } from "../../src/global.js";
+import { prisma } from "../db/index.js";
+
 import { defaultItems, msToTime } from "../util.js";
 
 const __dirname = path.resolve();
@@ -27,7 +23,6 @@ export async function getPricesLoblaws(
 
   const startTime = Date.now();
 
-  await sequelize.sync();
   const browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
@@ -112,7 +107,7 @@ export async function getPricesLoblaws(
       if (popupButton) {
         await popupButton!.click();
       }
-      
+
       popupDeleted = true;
     }
 
@@ -175,31 +170,34 @@ export async function getPricesLoblaws(
         });
 
         //inserts information to database
-        let company = await Company.findOne({
+        let company = await prisma.companies.findFirst({
           where: { name: "Loblaws" },
         });
 
         if (!company) {
-          company = new Company({ id: uuidv4(), name: "Loblaws" });
-          await company.save();
+          company = await prisma.companies.create({
+            data: {
+              name: "Loblaws",
+            },
+          });
         }
 
-        let store = await Store.findOne({
+        let store = await prisma.stores.findFirst({
           where: { postalCode, companyId: company.id },
         });
-        if (!store) {
-          store = new Store({
-            id: uuidv4(),
-            name: "Loblaws",
-            street,
-            city,
-            province,
-            country,
-            postalCode,
-            companyId: company.id,
-          });
 
-          await store.save();
+        if (!store) {
+          store = await prisma.stores.create({
+            data: {
+              name: "Loblaws",
+              street,
+              city,
+              province,
+              country,
+              postalCode,
+              companyId: company.id,
+            },
+          });
         }
 
         for (const result of results) {
@@ -211,22 +209,25 @@ export async function getPricesLoblaws(
             storeIndexes.storeIndex
           }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
-          let itemObj = await Item.findOne({
+          let itemObj = await prisma.items.findFirst({
             where: { name: result.name, storeId: store.id },
           });
 
           if (!itemObj) {
-            itemObj = new Item({
-              id: uuidv4(),
-              name: result.name,
-              storeId: store.id,
-              imgUrl: result.imgUrl,
+            itemObj = await prisma.items.create({
+              data: {
+                name: result.name,
+                storeId: store.id,
+                imgUrl: result.imgUrl,
+              },
             });
-
-            await itemObj.save();
           } else if (itemObj.category !== item2category[item]) {
-            itemObj.category = item2category[item];
-            await itemObj.save();
+            await prisma.items.update({
+              where: { id: itemObj.id },
+              data: {
+                category: item2category[item],
+              },
+            });
           }
 
           const itemPrice = new Price({

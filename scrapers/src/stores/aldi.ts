@@ -2,14 +2,9 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import fs from "fs";
-import path from "path";
 
-import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../util.js";
+import { defaultItems, msToTime, updateItem } from "../utils/scrapers.js";
 import { prisma } from "../db/index.js";
-
-const __dirname = path.resolve();
 
 export async function getPricesAldi(
   stores: Address[],
@@ -30,7 +25,6 @@ export async function getPricesAldi(
   });
 
   const page = await browser.newPage();
-  //disables location
   const context = browser.defaultBrowserContext();
   await context.overridePermissions(
     "https://shop.aldi.us/store/aldi/storefront/",
@@ -78,12 +72,17 @@ export async function getPricesAldi(
 
   const loader = ora("Scraping Aldi...").start();
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  let company = await prisma.companies.findFirst({
+    where: { name: "Aldi" },
+  });
+
+  if (!company) {
+    company = await prisma.companies.create({
+      data: {
+        name: "Aldi",
+      },
+    });
+  }
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -91,10 +90,28 @@ export async function getPricesAldi(
 
     zipCode = zipCode as string;
     state = state as string;
-    country = country as string;
+    country = country as Country;
 
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
+
+    let storePrisma = await prisma.stores.findFirst({
+      where: { zipCode, companyId: company.id },
+    });
+
+    if (!storePrisma) {
+      storePrisma = await prisma.stores.create({
+        data: {
+          name: "Aldi",
+          street,
+          city,
+          state,
+          country,
+          zipCode,
+          companyId: company.id,
+        },
+      });
+    }
 
     await page.goto(
       `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
@@ -147,95 +164,39 @@ export async function getPricesAldi(
         return results;
       });
 
-      //inserts information to database
-      // let company = await Company.findOne({ where: { name: "Aldi" } });
-      let company = await prisma.companies.findFirst({
-        where: { name: "Aldi" },
-      });
+      for (const result of results) {
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+          stores.length
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-      if (!company) {
-        company = await prisma.companies.create({
-          data: {
-            name: "Aldi",
-          },
-        });
+        updateItem({ result, storeId: storePrisma.id });
       }
-
-      let store = await prisma.stores.findFirst({
-        where: { zipCode, companyId: company.id },
-      });
-
-      if (!store) {
-        store = await prisma.stores.create({
-          data: {
-            name: "Aldi",
-            street,
-            city,
-            state,
-            country,
-            zipCode,
-            companyId: company.id,
-          },
-        });
-
-        for (const result of results) {
-          loader.text = `${defaultItems.indexOf(item)}/${
-            defaultItems.length
-          } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-            stores.length
-          }| (${storeIndexes.itemIndex} / ${
-            storeIndexes.storeIndex
-          }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
-
-          let itemObj = await prisma.items.findFirst({
-            where: { name: result.name, storeId: store.id },
-          });
-
-          if (!itemObj) {
-            itemObj = await prisma.items.create({
-              data: {
-                name: result.name,
-                storeId: store.id,
-                imgUrl: result.imgUrl,
-              },
-            });
-          } else if (itemObj.category !== item2category[item]) {
-            await prisma.items.update({
-              where: { id: itemObj.id },
-              data: { category: item2category[item] },
-            });
-          }
-
-          await prisma.prices.create({
-            data: {
-              price: parseFloat(result.price),
-              itemId: itemObj.id,
-            },
-          });
-        }
-        itemBar.increment(1);
-        storeIndexes.itemIndex++;
-      }
-      // if itemStart is set, reset it back to the original for the next store
-      if (items.length !== defaultItems.length) {
-        items = defaultItems;
-      }
-
-      storeIndexes.storeIndex++;
-      storeBar.increment(1);
-      itemBar.update(0);
+      itemBar.increment(1);
+      storeIndexes.itemIndex++;
+    }
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
     }
 
-    itemBar.update(items.length);
-
-    storeBar.stop();
-    itemBar.stop();
-    multiBar.stop();
-    loader.stop();
-    await browser.close();
-
-    const endTime = Date.now();
-    const timeTaken = endTime - startTime;
-    console.log(msToTime(timeTaken));
+    storeIndexes.storeIndex++;
+    storeBar.increment(1);
+    itemBar.update(0);
   }
+
+  itemBar.update(items.length);
+
+  storeBar.stop();
+  itemBar.stop();
+  multiBar.stop();
+  loader.stop();
+  await browser.close();
+
+  const endTime = Date.now();
+  const timeTaken = endTime - startTime;
+  console.log(msToTime(timeTaken));
 }
