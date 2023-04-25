@@ -2,16 +2,12 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
+
 import { Address, StoreIndexes } from "../global.js";
 import { defaultItems, msToTime } from "../util.js";
+import { prisma } from "../db/index.js";
 
 const __dirname = path.resolve();
 
@@ -26,8 +22,6 @@ export async function getPricesAldi(
   }
 
   const startTime = Date.now();
-
-  await sequelize.sync();
 
   const browser = await puppeteer.launch({
     headless: !process.argv.includes("--debug"),
@@ -141,9 +135,9 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i]).getAttribute("aria-label")!.match(
-              /(?<=\$)(\d|\.)+/gm
-            )![0],
+            price: (<HTMLElement>price[i])
+              .getAttribute("aria-label")!
+              .match(/(?<=\$)(\d|\.)+/gm)![0],
             imgUrl: (<HTMLImageElement>img[i]).srcset
               .split(", ")
               .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
@@ -154,88 +148,94 @@ export async function getPricesAldi(
       });
 
       //inserts information to database
-      let company = await Company.findOne({ where: { name: "Aldi" } });
+      // let company = await Company.findOne({ where: { name: "Aldi" } });
+      let company = await prisma.companies.findFirst({
+        where: { name: "Aldi" },
+      });
 
       if (!company) {
-        company = new Company({ id: uuidv4(), name: "Aldi" });
-        await company.save();
+        company = await prisma.companies.create({
+          data: {
+            name: "Aldi",
+          },
+        });
       }
 
-      let store = await Store.findOne({
+      let store = await prisma.stores.findFirst({
         where: { zipCode, companyId: company.id },
       });
+
       if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Aldi",
-          street,
-          city,
-          state,
-          country,
-          zipCode,
-          companyId: company.id,
+        store = await prisma.stores.create({
+          data: {
+            name: "Aldi",
+            street,
+            city,
+            state,
+            country,
+            zipCode,
+            companyId: company.id,
+          },
         });
 
-        await store.save();
-      }
+        for (const result of results) {
+          loader.text = `${defaultItems.indexOf(item)}/${
+            defaultItems.length
+          } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+            stores.length
+          }| (${storeIndexes.itemIndex} / ${
+            storeIndexes.storeIndex
+          }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
-
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
-        });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.imgUrl,
+          let itemObj = await prisma.items.findFirst({
+            where: { name: result.name, storeId: store.id },
           });
 
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
+          if (!itemObj) {
+            itemObj = await prisma.items.create({
+              data: {
+                name: result.name,
+                storeId: store.id,
+                imgUrl: result.imgUrl,
+              },
+            });
+          } else if (itemObj.category !== item2category[item]) {
+            await prisma.items.update({
+              where: { id: itemObj.id },
+              data: { category: item2category[item] },
+            });
+          }
+
+          const price = await prisma.prices.create({
+            data: {
+              price: parseFloat(result.price),
+              itemId: itemObj.id,
+            },
+          });
         }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: parseFloat(result.price),
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
+        itemBar.increment(1);
+        storeIndexes.itemIndex++;
       }
-      itemBar.increment(1);
-      storeIndexes.itemIndex++;
-    }
-    // if itemStart is set, reset it back to the original for the next store
-    if (items.length !== defaultItems.length) {
-      items = defaultItems;
+      // if itemStart is set, reset it back to the original for the next store
+      if (items.length !== defaultItems.length) {
+        items = defaultItems;
+      }
+
+      storeIndexes.storeIndex++;
+      storeBar.increment(1);
+      itemBar.update(0);
     }
 
-    storeIndexes.storeIndex++;
-    storeBar.increment(1);
-    itemBar.update(0);
+    itemBar.update(items.length);
+
+    storeBar.stop();
+    itemBar.stop();
+    multiBar.stop();
+    loader.stop();
+    await browser.close();
+
+    const endTime = Date.now();
+    const timeTaken = endTime - startTime;
+    console.log(msToTime(timeTaken));
   }
-
-  itemBar.update(items.length);
-
-  storeBar.stop();
-  itemBar.stop();
-  multiBar.stop();
-  loader.stop();
-  await browser.close();
-
-  const endTime = Date.now();
-  const timeTaken = endTime - startTime;
-  console.log(msToTime(timeTaken));
 }
