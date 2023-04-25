@@ -9,7 +9,7 @@ import * as Tracing from "@sentry/tracing";
 import helmet from "helmet";
 import compression from "compression";
 import serverless from "serverless-http";
-
+import { createHandler } from "graphql-http/lib/use/express";
 
 const prisma = new PrismaClient();
 
@@ -22,36 +22,33 @@ const app = express();
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   integrations: [
-    // enable HTTP calls tracing
     new Sentry.Integrations.Http({ tracing: true }),
-    // enable Express.js middleware tracing
     new Tracing.Integrations.Express({ app }),
   ],
 
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
 });
 
 app.use(Sentry.Handlers.requestHandler());
-// TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 500,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
 app.use(cors());
 app.use(morgan("tiny"));
-app.use(limiter);
+
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 500,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
+
 app.use(helmet());
 app.use(compression());
 
 app.use(Sentry.Handlers.errorHandler());
+
+app.all("/graphql", createHandler({  }));
 
 app.listen(port, async () => {
   console.log(`listening on port ${port}`);

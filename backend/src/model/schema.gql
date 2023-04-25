@@ -1,0 +1,56 @@
+type Company {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  stores: [Store!]!
+}
+
+type Store {
+  id: ID!
+  name: String!
+  street: String!
+  city: String!
+  postalCode: String
+  companyId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  province: String
+  state: String
+  zipCode: String
+  country: String!
+  items: [Item!]!
+  company: Company!
+}
+
+type Item {
+  id: ID!
+  name: String!
+  storeId: String!
+  imgUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: String!
+  store: Store!
+  prices: [Price!]!
+}
+
+type Price {
+  id: ID!
+  price: Float!
+  itemId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  item: Item!
+}
+
+type Query {
+  companies: [Company!]!
+  company(id: ID!): Company
+  stores: [Store!]!
+  store(id: ID!): Store
+  items: [Item!]!
+  item(id: ID!): Item
+  prices: [Price!]!
+  price(id: ID!): Price
+}
