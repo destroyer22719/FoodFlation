@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
 import morgan from "morgan";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -10,8 +9,8 @@ import helmet from "helmet";
 import compression from "compression";
 import serverless from "serverless-http";
 import { createHandler } from "graphql-http/lib/use/express";
-
-const prisma = new PrismaClient();
+import { schema } from "./model";
+import { root } from "./resolvers";
 
 const port = process.env.PORT || 4000;
 const dotEnvFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env";
@@ -48,7 +47,7 @@ app.use(compression());
 
 app.use(Sentry.Handlers.errorHandler());
 
-app.all("/graphql", createHandler({  }));
+app.all("/graphql", createHandler({ rootValue: root, schema }));
 
 app.listen(port, async () => {
   console.log(`listening on port ${port}`);
