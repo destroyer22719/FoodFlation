@@ -10,6 +10,12 @@ export const storeResolver = async ({ id }: { id: string }) => {
   return store;
 };
 
-const store = await storeResolver({ id: "25bb80e4-9041-4c4f-b753-3a1eb523795f" });
+export const storesResolver = async ({ companyId }: { companyId: string }) => {
+  const stores = await prisma.stores.findMany({
+    where: {
+      companyId,
+    },
+  });
 
-console.log(store);
+  return stores;
+};

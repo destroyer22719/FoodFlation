@@ -9,8 +9,8 @@ import helmet from "helmet";
 import compression from "compression";
 import serverless from "serverless-http";
 import { createHandler } from "graphql-http/lib/use/express";
-import { schema } from "./model";
-import { root } from "./resolvers";
+import { schema } from "./model/index.js";
+import { root } from "./resolvers/index.js";
 
 const port = process.env.PORT || 4000;
 const dotEnvFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env";

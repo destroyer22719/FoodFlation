@@ -1,5 +1,8 @@
+scalar UUID
+scalar DateTime
+
 type Company {
-  id: ID!
+  id: UUID!
   name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -7,7 +10,7 @@ type Company {
 }
 
 type Store {
-  id: ID!
+  id: UUID!
   name: String!
   street: String!
   city: String!
@@ -24,7 +27,7 @@ type Store {
 }
 
 type Item {
-  id: ID!
+  id: UUID!
   name: String!
   storeId: String!
   imgUrl: String
@@ -36,7 +39,7 @@ type Item {
 }
 
 type Price {
-  id: ID!
+  id: UUID!
   price: Float!
   itemId: String!
   createdAt: DateTime!
@@ -46,11 +49,9 @@ type Price {
 
 type Query {
   companies: [Company!]!
-  company(id: ID!): Company
-  stores: [Store!]!
-  store(id: ID!): Store
-  items: [Item!]!
-  item(id: ID!): Item
-  prices: [Price!]!
-  price(id: ID!): Price
+  company(id: UUID!): Company
+  stores(companyId: UUID!): [Store!]!
+  store(id: UUID!): Store
+  itemsFromStore(storeId: UUID!, page: Int, search: String): [Item!]!
+  item(id: UUID!, offset: Int, limit: Int): Item
 }
