@@ -2,14 +2,14 @@ import puppeteer from "puppeteer";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
-import fs from "fs";
-import path from "path";
-import { prisma } from "../db/index.js";
 
-import { defaultItems, getCompanyId, msToTime } from "../utils/scrapers.js";
+import {
+  defaultItems,
+  getCompanyId,
+  msToTime,
+  updateItem,
+} from "../utils/scrapers.js";
 import { getStoreId } from "src/utils/scrapers.js";
-
-const __dirname = path.resolve();
 
 export async function getPricesLoblaws(
   stores: Address[],
@@ -75,13 +75,6 @@ export async function getPricesLoblaws(
   multiBar.create(0, 0);
 
   const loader = ora("Scraping Loblaws...").start();
-
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
 
   let popupDeleted = false;
 
@@ -189,8 +182,12 @@ export async function getPricesLoblaws(
             storeIndexes.storeIndex
           }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
-          
+          await updateItem({
+            storeId,
+            result,
+          });
         }
+
         itemBar.increment(1);
         storeIndexes.itemIndex++;
       } catch (e) {

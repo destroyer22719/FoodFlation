@@ -10,7 +10,6 @@ import {
   msToTime,
   updateItem,
 } from "../utils/scrapers.js";
-import { prisma } from "../db/index.js";
 
 export async function getPricesAldi(
   stores: Address[],
@@ -160,8 +159,9 @@ export async function getPricesAldi(
           storeIndexes.storeIndex
         }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-        updateItem({ result, storeId });
+        await updateItem({ result, storeId });
       }
+
       itemBar.increment(1);
       storeIndexes.itemIndex++;
     }
