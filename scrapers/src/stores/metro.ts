@@ -98,7 +98,7 @@ export async function getPricesMetro(
       street,
       city,
       province,
-      country,
+      country: "canada",
       postalCode,
       companyId,
     });

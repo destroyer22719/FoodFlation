@@ -101,7 +101,7 @@ export async function getPricesNoFrills(
       companyId,
       postalCode,
       province,
-      country,
+      country: "canada",
       street,
       city,
     });
