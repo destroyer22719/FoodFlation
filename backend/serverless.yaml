@@ -12,9 +12,14 @@ plugins:
 
 functions:
   app:
-    handler: src/index.handler
+    handler: src/server.graphqlHandler
     events:
-      - httpApi: "*"
+      - httpApi:
+          path: /
+          method: POST
+      - httpApi:
+          path: /
+          method: GET
 
 package:
   patterns:
