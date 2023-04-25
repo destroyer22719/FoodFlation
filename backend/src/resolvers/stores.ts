@@ -26,7 +26,7 @@ export const storeCountResolver = async () => {
   return storeCount;
 };
 
-export const locationsResolver = async () => {
+export const locationsResolver = async () => {  
   const storesByLocation = await prisma.stores.groupBy({
     by: ["country", "state", "province", "city"],
     _count: {

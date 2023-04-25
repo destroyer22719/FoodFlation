@@ -12,7 +12,8 @@ import { createHandler } from "graphql-http/lib/use/express";
 import { schema } from "./model/index.js";
 import { root } from "./resolvers/index.js";
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
+
 const dotEnvFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env";
 dotenv.config({ path: dotEnvFile });
 

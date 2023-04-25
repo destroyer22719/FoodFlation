@@ -1,14 +1,75 @@
-import fs from "fs";
 import { buildSchema } from "graphql";
-import { fileURLToPath } from "url";
-import path from "path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const schema = buildSchema(`
+scalar UUID
+scalar DateTime
 
-const schemaString = fs.readFileSync(
-  path.join(__dirname, "../", "../", "src", "model", "schema.gql"),
-  "utf8"
-);
+type Company {
+  id: UUID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  stores: [Store!]!
+}
 
-export const schema = buildSchema(schemaString);
+type Store {
+  id: UUID!
+  name: String!
+  street: String!
+  city: String!
+  postalCode: String
+  companyId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  province: String
+  state: String
+  zipCode: String
+  country: String!
+  items: [Item!]!
+  company: Company!
+}
+
+type Item {
+  id: UUID!
+  name: String!
+  storeId: String!
+  imgUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: String!
+  store: Store!
+  prices: [Price!]!
+}
+
+type Price {
+  id: UUID!
+  price: Float!
+  itemId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  item: Item!
+}
+
+type CityCount {
+  city: Int!
+}
+
+type Location {
+  _count: CityCount
+  country: String!
+  city: String!
+  province: String
+  state: String
+}
+
+type Query {
+  companies: [Company!]!
+  company(id: UUID!): Company
+  stores(companyId: UUID!): [Store!]!
+  store(id: UUID!): Store
+  itemsFromStore(storeId: UUID!, page: Int, search: String): [Item!]!
+  item(id: UUID!, offset: Int, limit: Int): Item
+  itemCount: Int!
+  locations: [Location!]!
+}
+`);

@@ -4,11 +4,15 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
-	
+
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-plugin-warmup
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
 
 functions:
   app:
