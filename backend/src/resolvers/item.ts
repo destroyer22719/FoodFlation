@@ -2,31 +2,20 @@ import { prisma } from "../db/index.js";
 
 export const itemResolver = async ({
   id,
-  limit,
-  offset,
+  limit = 10,
+  offset = 0,
 }: {
   id: string;
   limit?: number;
   offset?: number;
 }) => {
   let item;
-  let pricesQuery;
-
-  if (limit || offset) {
-    limit = limit || 10;
-    offset = offset || 0;
-
-    pricesQuery = {
-      take: limit,
-      skip: offset,
-    };
-  }
 
   item = await prisma.items.findUnique({
     where: {
       id,
     },
-    include: { prices: { ...pricesQuery } },
+    include: { prices: { take: limit, skip: offset } },
   });
 
   return item;
@@ -56,14 +45,12 @@ export const itemStoreResolver = async ({
 
 export const itemCityResolver = async ({
   city,
-  page,
+  page = 1,
 }: {
   city: string;
   page?: number;
 }) => {
   let item;
-
-  page = page || 1;
 
   item = await prisma.items.findFirst({
     where: {
@@ -76,4 +63,9 @@ export const itemCityResolver = async ({
   });
 
   return item;
+};
+
+export const itemCountResolver = async () => {
+  const count = await prisma.items.count();
+  return count;
 };

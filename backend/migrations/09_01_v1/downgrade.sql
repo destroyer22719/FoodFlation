@@ -1,3 +1,0 @@
-ALTER TABLE items
-    MODIFY imgUrl VARCHAR(255) NULL;
-    

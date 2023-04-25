@@ -19,3 +19,20 @@ export const storesResolver = async ({ companyId }: { companyId: string }) => {
 
   return stores;
 };
+
+export const storeCountResolver = async () => {
+  const storeCount = await prisma.stores.count();
+
+  return storeCount;
+};
+
+export const locationsResolver = async () => {
+  const storesByLocation = await prisma.stores.groupBy({
+    by: ["country", "state", "province", "city"],
+    _count: {
+      city: true,
+    },
+  });
+  console.log(storesByLocation);
+  return storesByLocation;
+};
