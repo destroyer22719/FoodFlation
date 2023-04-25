@@ -2,18 +2,14 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../utils/cli.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  msToTime,
+  updateItem,
+} from "../utils/scrapers.js";
 
 export async function getPricesMetro(
   stores: Address[],
@@ -26,8 +22,6 @@ export async function getPricesMetro(
   }
 
   const startTime = Date.now();
-
-  await sequelize.sync();
 
   const browser = await puppeteer.launch({
     headless: !process.argv.includes("--debug"),
@@ -90,12 +84,7 @@ export async function getPricesMetro(
 
   const loader = ora("Scraping Metro...").start();
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const companyId = await getCompanyId("Metro");
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -103,7 +92,16 @@ export async function getPricesMetro(
 
     postalCode = postalCode as string;
     province = province as string;
-    country = country as string;
+    country = country as Country;
+
+    const storeId = await getStoreId({
+      street,
+      city,
+      province,
+      country,
+      postalCode,
+      companyId,
+    });
 
     loader.color = "green";
     loader.text = `Scraping ${postalCode}...`;
@@ -172,31 +170,6 @@ export async function getPricesMetro(
 
         return results;
       });
-      //inserts information to database
-      let company = await Company.findOne({ where: { name: "Metro" } });
-
-      if (!company) {
-        company = new Company({ id: uuidv4(), name: "Metro" });
-        await company.save();
-      }
-
-      let store = await Store.findOne({
-        where: { postalCode, companyId: company.id },
-      });
-      if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Metro",
-          street,
-          city,
-          province,
-          country,
-          postalCode,
-          companyId: company.id,
-        });
-
-        await store.save();
-      }
 
       for (const result of results) {
         loader.text = `${defaultItems.indexOf(item)}/${
@@ -207,39 +180,12 @@ export async function getPricesMetro(
           storeIndexes.storeIndex
         }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
+        await updateItem({
+          result,
+          storeId,
         });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.imgUrl,
-          });
-
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
-        } else if (
-          itemObj.imgUrl ===
-            "https://www.metro.ca/images/shared/placeholders/icon-no-picture.svg" &&
-          itemObj.imgUrl !== result.imgUrl
-        ) {
-          itemObj.imgUrl = result.imgUrl;
-          await itemObj.save();
-        }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: parseFloat(result.price),
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
       }
+
       itemBar.increment(1);
       storeIndexes.itemIndex++;
     }
