@@ -206,7 +206,7 @@ export async function getPricesAldi(
             });
           }
 
-          const price = await prisma.prices.create({
+          await prisma.prices.create({
             data: {
               price: parseFloat(result.price),
               itemId: itemObj.id,
