@@ -72,17 +72,6 @@ export const getCompanyId = async (name: string) => {
   return company.id;
 };
 
-type GetStoreIdParams = {
-  companyId: string;
-  city: string;
-  street: string;
-  country: Country;
-  province?: string;
-  postalCode?: string;
-  zipCode?: string;
-  state?: string;
-};
-
 export const getStoreId = async ({
   companyId,
   postalCode,
@@ -123,15 +112,6 @@ export const getStoreId = async ({
   }
 
   return store.id;
-};
-
-type UpdateItemParams = {
-  storeId: string;
-  result: {
-    name: string;
-    price: string;
-    imgUrl: string;
-  };
 };
 
 export const updateItem = async ({ result, storeId }: UpdateItemParams) => {

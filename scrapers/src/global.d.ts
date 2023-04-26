@@ -73,6 +73,24 @@ declare global {
     canadianStoreOptions?: CanadianStoresOptions;
     americanStoreOptions?: AmericanStoresOptions;
   };
+  type GetStoreIdParams = {
+    companyId: string;
+    city: string;
+    street: string;
+    country: Country;
+    province?: string;
+    postalCode?: string;
+    zipCode?: string;
+    state?: string;
+  };
+  type UpdateItemParams = {
+    storeId: string;
+    result: {
+      name: string;
+      price: string;
+      imgUrl: string;
+    };
+  };
 }
 
 export {};
