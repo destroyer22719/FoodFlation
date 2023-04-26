@@ -28,11 +28,9 @@ export const itemStoreResolver = async (
   _: {},
   { storeId, page }: QueryItemsFromStoreArgs
 ) => {
-  let item;
-
   page = page || 1;
 
-  item = await prisma.items.findFirst({
+  const item = await prisma.items.findMany({
     where: {
       storeId,
     },
