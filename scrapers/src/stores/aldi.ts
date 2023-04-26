@@ -103,7 +103,6 @@ export async function getPricesAldi(
       `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
     );
 
-    await page.waitForSelector('span[class*="AddressButton"]');
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
