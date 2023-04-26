@@ -2,24 +2,21 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../global.js";
-import { msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+
+import {
+  getCompanyId,
+  getStoreId,
+  msToTime,
+  updateItem,
+} from "../utils/scrapers.js";
 
 export async function getPricesTarget(
   itemsArray: string[],
   storesArray: Address[],
   storeStart: number = 0,
-  itemStart: number = 0
+  itemStart: number = 0,
+  storeIndex: StoreIndexes
 ) {
   const stores = storesArray.slice(storeStart);
 
@@ -30,8 +27,6 @@ export async function getPricesTarget(
   let items = itemsArray.slice(itemStart);
 
   const startTime = Date.now();
-
-  await sequelize.sync();
 
   const browser = await puppeteer.launch({
     headless: !process.argv.includes("--debug"),
@@ -55,7 +50,7 @@ export async function getPricesTarget(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    storesArray.length + storeStart,
     storeStart,
     {},
     {
@@ -85,19 +80,23 @@ export async function getPricesTarget(
 
   const loader = ora("Scraping Target...").start();
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const companyId = await getCompanyId("Target");
 
   for (const store of stores) {
     let { city, zipCode, state, country, street } = store;
 
     state = state as string;
     zipCode = zipCode as string;
-    country = country as string;
+    country = country as Country;
+
+    const storeId = await getStoreId({
+      companyId,
+      city,
+      zipCode,
+      state,
+      country: "us",
+      street,
+    });
 
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
@@ -168,44 +167,13 @@ export async function getPricesTarget(
         for (let i = 0; i < resultLength; i++) {
           resultData.push({
             name: names[i],
-            price: prices[i],
-            image: images[i],
+            price: prices[i].toString(),
+            imgUrl: images[i],
           });
         }
 
         return resultData;
       });
-
-      //inserts information to database
-      let company = await Company.findOne({
-        where: { name: "Target" },
-      });
-
-      if (!company) {
-        company = new Company({
-          id: uuidv4(),
-          name: "Target",
-        });
-        await company.save();
-      }
-
-      let store = await Store.findOne({
-        where: { zipCode, companyId: company.id },
-      });
-      if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Target",
-          street,
-          city,
-          state,
-          country,
-          zipCode,
-          companyId: company.id,
-        });
-
-        await store.save();
-      }
 
       for (const result of results) {
         loader.text = `${itemsArray.indexOf(item)}/${
@@ -214,38 +182,20 @@ export async function getPricesTarget(
           storesArray.length
         }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
+        await updateItem({
+          storeId,
+          result,
         });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.image,
-          });
-
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
-        }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: result.price,
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
       }
 
       itemBar.increment(1);
+      storeIndex.itemIndex++;
     }
 
     items = itemsArray;
     storeBar.increment(1);
+    storeIndex.storeIndex++;
+
     itemBar.update(0);
   }
 

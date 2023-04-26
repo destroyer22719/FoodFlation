@@ -2,36 +2,26 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../global.js";
-import { msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  msToTime,
+  updateItem,
+} from "../utils/scrapers.js";
 
 export async function getPricesAldi(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0
+  stores: Address[],
+  items: string[],
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
-  const stores = storesArray.slice(storeStart);
-
   if (stores.length === 0) {
     return;
   }
 
-  let items = itemsArray.slice(itemStart);
-
   const startTime = Date.now();
-
-  await sequelize.sync();
 
   const browser = await puppeteer.launch({
     headless: !process.argv.includes("--debug"),
@@ -40,7 +30,6 @@ export async function getPricesAldi(
   });
 
   const page = await browser.newPage();
-  //disables location
   const context = browser.defaultBrowserContext();
   await context.overridePermissions(
     "https://shop.aldi.us/store/aldi/storefront/",
@@ -56,7 +45,7 @@ export async function getPricesAldi(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    stores.length + storeStart,
     storeStart,
     {},
     {
@@ -69,8 +58,10 @@ export async function getPricesAldi(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    defaultItems.length,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -86,12 +77,7 @@ export async function getPricesAldi(
 
   const loader = ora("Scraping Aldi...").start();
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const companyId = await getCompanyId("Aldi");
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -99,40 +85,52 @@ export async function getPricesAldi(
 
     zipCode = zipCode as string;
     state = state as string;
-    country = country as string;
+    country = country as Country;
 
     loader.color = "green";
     loader.text = `Scraping ${zipCode}...`;
 
+    const storeId = await getStoreId({
+      companyId,
+      city,
+      zipCode,
+      state,
+      country: "us",
+      street,
+    });
+
     await page.goto(
-      `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`,
+      `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
     );
 
     await page.waitForSelector('span[class*="AddressButton"]');
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      loader.text = `${itemsArray.indexOf(item)}/${
-        itemsArray.length
-      } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-        storesArray.length
-      }| ${item} at ${zipCode}`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode}`;
 
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-      await page.waitForSelector('span[aria-label*="Original price:"]', {
+      await page.waitForSelector('div[aria-label^="$"]', {
         timeout: 60 * 60 * 1000,
         visible: true,
       });
-      await page.waitForSelector("li h3", { timeout: 60 * 60 * 1000, visible: true });
+      await page.waitForSelector("a>div+div>div>span", {
+        timeout: 60 * 60 * 1000,
+        visible: true,
+      });
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = document.querySelectorAll("li h3");
-        const price = document.querySelectorAll(
-          'span[aria-label*="Original price:"]'
-        );
+        const name = document.querySelectorAll("a>div+div>div>span");
+        const price = document.querySelectorAll('div[aria-label^="$"]');
         const img = document.querySelectorAll("li img[srcset]");
 
         //finds a maximum of 3 of each item
@@ -140,7 +138,9 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i]).innerText.slice(1),
+            price: (<HTMLElement>price[i])
+              .getAttribute("aria-label")!
+              .match(/(?<=\$)(\d|\.)+/gm)![0],
             imgUrl: (<HTMLImageElement>img[i]).srcset
               .split(", ")
               .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
@@ -150,73 +150,32 @@ export async function getPricesAldi(
         return results;
       });
 
-      //inserts information to database
-      let company = await Company.findOne({ where: { name: "Aldi" } });
-
-      if (!company) {
-        company = new Company({ id: uuidv4(), name: "Aldi" });
-        await company.save();
-      }
-
-      let store = await Store.findOne({
-        where: { zipCode, companyId: company.id },
-      });
-      if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Aldi",
-          street,
-          city,
-          state,
-          country,
-          zipCode,
-          companyId: company.id,
-        });
-
-        await store.save();
-      }
-
       for (const result of results) {
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray.map((store) => store.zipCode).indexOf(zipCode)}/${
-          storesArray.length
-        }|${item} at ${zipCode} |(${result.name} for ${result.price})`;
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+          stores.length
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
 
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
-        });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.imgUrl,
-          });
-
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
-        }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: parseFloat(result.price),
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
+        await updateItem({ result, storeId });
       }
+
       itemBar.increment(1);
+      storeIndexes.itemIndex++;
     }
-    items = itemsArray;
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
+    }
+
+    storeIndexes.storeIndex++;
     storeBar.increment(1);
     itemBar.update(0);
   }
 
-  itemBar.update(itemsArray.length);
+  itemBar.update(items.length);
 
   storeBar.stop();
   itemBar.stop();

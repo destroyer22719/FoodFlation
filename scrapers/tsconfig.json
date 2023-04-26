@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ES2020",
+    "module": "esnext",
     "lib": ["dom", "es6", "es2021", "esnext.asynciterable"],
     "skipLibCheck": true,
     "sourceMap": true,
@@ -21,8 +21,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0",
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts", "loblaws.ts"]
+  "include": ["./src/**/*.ts", "loblaws.ts", "src/stores/nofrills.ts"]
 }

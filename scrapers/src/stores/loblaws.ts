@@ -1,34 +1,28 @@
 import puppeteer from "puppeteer";
-import sequelize from "../../src/db.js";
-import { v4 as uuidv4 } from "uuid";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
-import fs from "fs";
-import path from "path";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address } from "../../src/global.js";
-import { msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  msToTime,
+  updateItem,
+  getStoreId
+} from "../utils/scrapers.js";
 
 export async function getPricesLoblaws(
-  itemsArray: string[],
-  storesArray: Address[],
-  storeStart: number = 0,
-  itemStart: number = 0
+  stores: Address[],
+  items: string[],
+  storeIndexes: StoreIndexes,
+  storeStart: number = 0
 ) {
-  const stores = storesArray.slice(storeStart);
   if (stores.length === 0) {
     return;
   }
 
   const startTime = Date.now();
 
-  await sequelize.sync();
   const browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
@@ -41,8 +35,6 @@ export async function getPricesLoblaws(
     "geolocation",
   ]);
 
-  let items = itemsArray.slice(itemStart);
-
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -52,7 +44,7 @@ export async function getPricesLoblaws(
   );
 
   const storeBar = multiBar.create(
-    storesArray.length,
+    stores.length + storeStart,
     storeStart,
     {},
     {
@@ -65,8 +57,10 @@ export async function getPricesLoblaws(
   );
 
   const itemBar = multiBar.create(
-    itemsArray.length,
-    itemStart,
+    defaultItems.length,
+    items.length !== defaultItems.length
+      ? defaultItems.length - items.length
+      : 0,
     {},
     {
       format:
@@ -82,12 +76,9 @@ export async function getPricesLoblaws(
 
   const loader = ora("Scraping Loblaws...").start();
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  let popupDeleted = false;
+
+  const companyId = await getCompanyId("Loblaws");
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -95,16 +86,34 @@ export async function getPricesLoblaws(
 
     postalCode = postalCode as string;
     province = province as string;
-    country = country as string;
+    country = country as Country;
+
+    const storeId = await getStoreId({
+      companyId,
+      city,
+      street,
+      country: "canada",
+      province,
+      postalCode,
+    });
 
     loader.color = "green";
     loader.text = `Scraping ${postalCode}...`;
     await page.goto(
       `https://www.loblaws.ca/store-locator?searchQuery=${postalCode}`,
       {
-        timeout: 2 * 60 * 1000,
+        waitUntil: "networkidle2",
       }
     );
+
+    if (!popupDeleted) {
+      const popupButton = await page.$(".modal-dialog__content__close");
+      if (popupButton) {
+        await popupButton!.click();
+      }
+
+      popupDeleted = true;
+    }
 
     await page.waitForSelector(".location-set-store__button:first-of-type", {
       timeout: 60 * 1000,
@@ -121,15 +130,15 @@ export async function getPricesLoblaws(
     for (const item of items) {
       try {
         loader.color = "green";
-        loader.text = `${itemsArray.indexOf(item)}/${
-          itemsArray.length
-        } - ${storesArray
-          .map((store) => store.postalCode)
-          .indexOf(postalCode)}/${
-          storesArray.length
-        }| ${item} at ${postalCode}`;
-        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
+        loader.text = `${defaultItems.indexOf(item)}/${
+          defaultItems.length
+        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+          stores.length
+        }| (${storeIndexes.itemIndex} / ${
+          storeIndexes.storeIndex
+        }) ${item} at ${postalCode}`;
 
+        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
         await page.waitForSelector(".product-tile__thumbnail__image", {
           timeout: 60 * 1000,
         });
@@ -164,79 +173,39 @@ export async function getPricesLoblaws(
           return results;
         });
 
-        //inserts information to database
-        let company = await Company.findOne({
-          where: { name: "Loblaws" },
-        });
-
-        if (!company) {
-          company = new Company({ id: uuidv4(), name: "Loblaws" });
-          await company.save();
-        }
-
-        let store = await Store.findOne({
-          where: { postalCode, companyId: company.id },
-        });
-        if (!store) {
-          store = new Store({
-            id: uuidv4(),
-            name: "Loblaws",
-            street,
-            city,
-            province,
-            country,
-            postalCode,
-            companyId: company.id,
-          });
-
-          await store.save();
-        }
-
         for (const result of results) {
-          loader.text = `${itemsArray.indexOf(item)}/${
-            itemsArray.length
-          } - ${storesArray
-            .map((store) => store.postalCode)
-            .indexOf(postalCode)}/${
-            storesArray.length
-          }|${item} at ${postalCode} |(${result.name} for ${result.price})`;
+          loader.text = `${defaultItems.indexOf(item)}/${
+            defaultItems.length
+          } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+            stores.length
+          }| (${storeIndexes.itemIndex} / ${
+            storeIndexes.storeIndex
+          }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
-          let itemObj = await Item.findOne({
-            where: { name: result.name, storeId: store.id },
+          await updateItem({
+            storeId,
+            result,
           });
-
-          if (!itemObj) {
-            itemObj = new Item({
-              id: uuidv4(),
-              name: result.name,
-              storeId: store.id,
-              imgUrl: result.imgUrl,
-            });
-
-            await itemObj.save();
-          } else if (itemObj.category !== item2category[item]) {
-            itemObj.category = item2category[item];
-            await itemObj.save();
-          }
-
-          const itemPrice = new Price({
-            id: uuidv4(),
-            price: parseFloat(result.price.slice(1)),
-            itemId: itemObj.id,
-          });
-
-          await itemPrice.save();
         }
+
         itemBar.increment(1);
+        storeIndexes.itemIndex++;
       } catch (e) {
         continue;
       }
     }
-    items = itemsArray;
+
+    // if itemStart is set, reset it back to the original for the next store
+    if (items.length !== defaultItems.length) {
+      items = defaultItems;
+    }
+
+    storeIndexes.storeIndex++;
     storeBar.increment(1);
     itemBar.update(0);
   }
-  itemBar.update(itemsArray.length);
+
+  itemBar.update(items.length);
   storeBar.stop();
   itemBar.stop();
   multiBar.stop();

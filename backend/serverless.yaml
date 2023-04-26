@@ -1,10 +1,10 @@
-service: foodflation-api
+service: foodflation-api-v2
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
-	
+
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
@@ -12,6 +12,18 @@ plugins:
 
 functions:
   app:
-    handler: src/index.handler
+    handler: src/server.graphqlHandler
     events:
-      - httpApi: "*"
+      - httpApi:
+          path: /
+          method: POST
+      - httpApi:
+          path: /
+          method: GET
+
+package:
+  patterns:
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/libquery_engine-rhel-*"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"

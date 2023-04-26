@@ -1,0 +1,61 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Companies {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  stores    Stores[]
+}
+
+model Items {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  storeId   String   @db.VarChar(255)
+  imgUrl    String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category  String   @default("Miscellaneous") @db.VarChar(255)
+  stores    Stores   @relation(fields: [storeId], references: [id], onDelete: NoAction, map: "items_ibfk_1")
+  prices    Prices[]
+
+  @@index([storeId], map: "storeId")
+}
+
+model Prices {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  price     Float    @db.Float
+  itemId    String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     Items    @relation(fields: [itemId], references: [id], onDelete: Cascade, map: "prices_ibfk_1")
+
+  @@index([itemId], map: "itemId")
+}
+
+model Stores {
+  id         String    @id @default(uuid()) @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  street     String    @db.VarChar(255)
+  city       String    @db.VarChar(255)
+  postalCode String?   @db.VarChar(255)
+  companyId  String    @db.VarChar(255)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  province   String?   @db.VarChar(255)
+  state      String?   @db.VarChar(255)
+  zipCode    String?   @db.VarChar(255)
+  country    String    @db.VarChar(255)
+  items      Items[]
+  companies  Companies @relation(fields: [companyId], references: [id], onDelete: NoAction, map: "stores_ibfk_1")
+
+  @@index([companyId], map: "companyId")
+}
