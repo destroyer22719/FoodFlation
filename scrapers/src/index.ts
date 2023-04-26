@@ -1,11 +1,6 @@
 import yargs from "yargs/yargs";
 import { generateStoresToScrape, scrapeStores } from "./utils/cli.js";
 
-console.log(
-  "Be sure verify the company names and their capitalizations in the scrapers"
-);
-process.exit(0);
-
 const argv = yargs(process.argv.slice(2))
   .options({
     storeStart: { type: "number", demand: false, default: 0 },

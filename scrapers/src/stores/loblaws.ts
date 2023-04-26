@@ -8,8 +8,8 @@ import {
   getCompanyId,
   msToTime,
   updateItem,
+  getStoreId
 } from "../utils/scrapers.js";
-import { getStoreId } from "src/utils/scrapers.js";
 
 export async function getPricesLoblaws(
   stores: Address[],

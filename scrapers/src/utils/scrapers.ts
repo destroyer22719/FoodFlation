@@ -1,6 +1,7 @@
-import { prisma } from "src/db";
 import fs from "fs";
 import path from "path";
+
+import { prisma } from "../db/index.js";
 
 export const msToTime = (ms: number): string => {
   const hours = Math.floor(ms / 3600000);
