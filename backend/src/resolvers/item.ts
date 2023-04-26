@@ -1,33 +1,33 @@
 import { prisma } from "../db/index.js";
+import {
+  Item,
+  QueryItemArgs,
+  QueryItemsFromCityArgs,
+  QueryItemsFromStoreArgs,
+} from "./resolvers-types.js";
 
-export const itemResolver = async ({
-  id,
-  limit = 10,
-  offset = 0,
-}: {
-  id: string;
-  limit?: number;
-  offset?: number;
-}) => {
+export const itemResolver = async (
+  _: {},
+  { id, limit, offset }: QueryItemArgs
+) => {
   let item;
 
   item = await prisma.items.findUnique({
     where: {
       id,
     },
-    include: { prices: { take: limit, skip: offset } },
+    include: {
+      prices: { ...(limit ? { take: limit } : {}), skip: offset || 0 },
+    },
   });
 
-  return item;
+  return item as unknown as Item;
 };
 
-export const itemStoreResolver = async ({
-  storeId,
-  page,
-}: {
-  storeId: string;
-  page?: number;
-}) => {
+export const itemStoreResolver = async (
+  _: {},
+  { storeId, page }: QueryItemsFromStoreArgs
+) => {
   let item;
 
   page = page || 1;
@@ -40,16 +40,13 @@ export const itemStoreResolver = async ({
     skip: (page - 1) * 10,
   });
 
-  return item;
+  return item as unknown as Item[];
 };
 
-export const itemCityResolver = async ({
-  city,
-  page = 1,
-}: {
-  city: string;
-  page?: number;
-}) => {
+export const itemCityResolver = async (
+  _: {},
+  { city, page }: QueryItemsFromCityArgs
+) => {
   let item;
 
   item = await prisma.items.findFirst({
@@ -59,10 +56,10 @@ export const itemCityResolver = async ({
       },
     },
     take: 10,
-    skip: (page - 1) * 10,
+    skip: ((page || 1) - 1) * 10,
   });
 
-  return item;
+  return item as unknown as Item[];
 };
 
 export const itemCountResolver = async () => {

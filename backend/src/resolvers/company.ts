@@ -1,15 +1,16 @@
 import { prisma } from "../db/index.js";
+import { Company, QueryCompanyArgs } from "./resolvers-types.js";
 
-export const companyResolver = async ({ id }: { id: string }) => {
+export const companyResolver = async (_: {}, { id }: QueryCompanyArgs) => {
   const company = await prisma.companies.findUnique({
     where: {
       id,
     },
   });
-  return company;
+  return company as unknown as Company;
 };
 
 export const companiesResolver = async () => {
   const companies = await prisma.companies.findMany();
-  return companies;
+  return companies as unknown as Company[];
 };
