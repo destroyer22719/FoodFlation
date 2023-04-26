@@ -78,7 +78,7 @@ export async function getPricesLoblaws(
 
   let popupDeleted = false;
 
-  const companyId = await getCompanyId("loblaws");
+  const companyId = await getCompanyId("Loblaws");
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
