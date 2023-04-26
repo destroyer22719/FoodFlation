@@ -67,6 +67,7 @@ export const getCompanyId = async (name: string) => {
         name,
       },
     });
+    console.log(`Created ${name}`);
   }
 
   return company.id;
@@ -109,6 +110,9 @@ export const getStoreId = async ({
             }),
       },
     });
+    console.log(
+      `Created ${store.name} in ${store.city}, ${store.country} | ${store.id}`
+    );
   }
 
   return store.id;
