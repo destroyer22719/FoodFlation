@@ -1,4 +1,5 @@
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ButtonContained from "./CustomButtonComponents/ButtonContained";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";

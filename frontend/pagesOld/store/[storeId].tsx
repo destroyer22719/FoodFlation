@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import ItemCard from "../../components/ItemCard";
 import Layout from "../../components/Layout";
 import { API_URL } from "../../config";
@@ -103,27 +103,27 @@ const StorePage: React.FC<Props> = ({
             ))}
           </div>
           <div className={styles["store-page__pagination-buttons"]}>
-            <ButtonContained
-              disabled={page == 1}
-              className={styles["store-page__pagination-button"]}
+            <Link
+              href={
+                page == 1
+                  ? "#"
+                  : {
+                      pathname: currentPath,
+                      query: {
+                        ...query,
+                        page: page - 1,
+                      },
+                    }
+              }
+              className={styles["store-page__pagination-button-link"]}
             >
-              <Link
-                href={
-                  page == 1
-                    ? "#"
-                    : {
-                        pathname: currentPath,
-                        query: {
-                          ...query,
-                          page: page - 1,
-                        },
-                      }
-                }
-                className={styles["store-page__pagination-button-link"]}
+              <ButtonContained
+                disabled={page == 1}
+                className={styles["store-page__pagination-button"]}
               >
                 {"<"}
-              </Link>
-            </ButtonContained>
+              </ButtonContained>
+            </Link>
             <ButtonContained
               className={styles["store-page__pagination-button"]}
             >
@@ -135,27 +135,27 @@ const StorePage: React.FC<Props> = ({
                 Page {page}/{maxPages}
               </a>
             </ButtonContained>
-            <ButtonContained
-              disabled={page >= maxPages}
-              className={styles["store-page__pagination-button"]}
+            <Link
+              href={
+                page == maxPages
+                  ? "#"
+                  : {
+                      pathname: currentPath,
+                      query: {
+                        ...query,
+                        page: page + 1,
+                      },
+                    }
+              }
+              className={styles["store-page__pagination-button-link"]}
             >
-              <Link
-                href={
-                  page == maxPages
-                    ? "#"
-                    : {
-                        pathname: currentPath,
-                        query: {
-                          ...query,
-                          page: page + 1,
-                        },
-                      }
-                }
-                className={styles["store-page__pagination-button-link"]}
+              <ButtonContained
+                disabled={page >= maxPages}
+                className={styles["store-page__pagination-button"]}
               >
                 {">"}
-              </Link>
-            </ButtonContained>
+              </ButtonContained>
+            </Link>
           </div>
           <div className={styles["store-page__item-list"]}>
             {items.length > 0 ? (
