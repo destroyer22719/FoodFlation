@@ -5,6 +5,7 @@ import { getPricesMetro } from "../stores/metro.js";
 import { getPricesWholeFoodsMarket } from "../stores/whole_foods_market.js";
 import { getPricesAldi } from "../stores/aldi.js";
 import { getPricesNoFrills } from "../stores/nofrills.js";
+import { storeStartSet } from "../index.js";
 
 const __dirname = path.resolve();
 
@@ -163,7 +164,7 @@ export async function scrapeStores(
     const prevStoreStart = storeStart;
 
     if (!stores.length) continue;
-    if (storeStart < storeIndexes.storeIndex) {
+    if (storeStartSet && storeStart < storeIndexes.storeIndex) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
       storeStart += min;
       if (min === stores.length) continue;
@@ -214,7 +215,7 @@ export async function scrapeStores(
     }
 
     //we keep on increasing storeStart until it is equal to storeIndex
-    if (storeStart < storeIndexes.storeIndex) {
+    if (storeStartSet && storeStart < storeIndexes.storeIndex) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
       storeStart += min;
       if (min === stores.length) {

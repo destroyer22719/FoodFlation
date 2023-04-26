@@ -19,6 +19,8 @@ const argv = yargs(process.argv.slice(2))
   })
   .parseSync();
 
+export const storeStartSet = argv.storeStart !== 0;
+
 const indexes: StoreIndexes = {
   storeIndex: 0,
   itemIndex: 0,
