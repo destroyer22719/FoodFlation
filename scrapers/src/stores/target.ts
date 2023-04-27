@@ -167,7 +167,7 @@ export async function getPricesTarget(
         for (let i = 0; i < resultLength; i++) {
           resultData.push({
             name: names[i],
-            price: prices[i].toString(),
+            price: prices[i],
             imgUrl: images[i],
           });
         }

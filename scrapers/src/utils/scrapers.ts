@@ -141,7 +141,7 @@ export const updateItem = async ({ result, storeId }: UpdateItemParams) => {
 
   await prisma.prices.create({
     data: {
-      price: parseFloat(result.price),
+      price: result.price,
       itemId: itemObj.id,
     },
   });

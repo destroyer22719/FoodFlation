@@ -161,9 +161,10 @@ export async function getPricesMetro(
             ) as HTMLElement)!.innerText.slice(4);
             prices.splice(i + 1, 1);
           }
+          
           results.push({
             name: name[i],
-            price: price,
+            price: parseFloat(price),
             imgUrl: img[i],
           });
         }

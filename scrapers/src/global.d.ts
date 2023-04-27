@@ -87,7 +87,7 @@ declare global {
     storeId: string;
     result: {
       name: string;
-      price: string;
+      price: number;
       imgUrl: string;
     };
   };

@@ -137,9 +137,11 @@ export async function getPricesAldi(
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: (<HTMLElement>price[i])
-              .getAttribute("aria-label")!
-              .match(/(?<=\$)(\d|\.)+/gm)![0],
+            price: parseFloat(
+              (<HTMLElement>price[i])
+                .getAttribute("aria-label")!
+                .match(/(?<=\$)(\d|\.)+/gm)![0]
+            ),
             imgUrl: (<HTMLImageElement>img[i]).srcset
               .split(", ")
               .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
