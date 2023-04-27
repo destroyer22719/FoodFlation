@@ -5,7 +5,7 @@ import { getPricesMetro } from "../stores/metro.js";
 import { getPricesWholeFoodsMarket } from "../stores/whole_foods_market.js";
 import { getPricesAldi } from "../stores/aldi.js";
 import { getPricesNoFrills } from "../stores/nofrills.js";
-import { storeStartSet, storeStartSetOrNotFound } from "../index.js";
+import { storeStartSet } from "../index.js";
 
 const __dirname = path.resolve();
 
