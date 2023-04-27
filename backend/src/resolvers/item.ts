@@ -33,7 +33,11 @@ export const itemStoreResolver = async (
   page = page || 1;
 
   if ((!search || search === "") && (!storeId || storeId === "")) {
-    throw new GraphQLError("No search term or storeId provided");
+    throw new GraphQLError("No search term or storeId provided", {
+      extensions: {
+        code: "BAD_USER_INPUT",
+      }
+    });
   }
 
   const searchQuery = {
