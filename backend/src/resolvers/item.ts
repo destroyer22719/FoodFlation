@@ -1,3 +1,5 @@
+import { GraphQLError } from "graphql";
+
 import { prisma } from "../db/index.js";
 import {
   Item,
@@ -26,34 +28,45 @@ export const itemResolver = async (
 
 export const itemStoreResolver = async (
   _: {},
-  { storeId, page }: QueryItemsFromStoreArgs
+  { storeId, page, search }: QueryItemsFromStoreArgs
 ) => {
   page = page || 1;
 
-  // const item = await prisma.items.findMany({
-  //   where: {
-  //     storeId,
-  //   },
-  //   take: 10,
-  //   skip: (page - 1) * 10,
-  // });
+  if ((!search || search === "") && (!storeId || storeId === "")) {
+    throw new GraphQLError("No search term or storeId provided");
+  }
 
-  const [item, count] = await Promise.all([
+  const searchQuery = {
+    ...(storeId && { storeId }),
+    ...(search && { name: { contains: search } }),
+  };
+
+  const [item, count, categoryData] = await Promise.all([
     prisma.items.findMany({
-      where: {
-        storeId,
-      },
+      where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
     }),
     prisma.items.count({
-      where: {
-        storeId,
+      where: searchQuery,
+    }),
+    prisma.items.groupBy({
+      by: ["category"],
+      where: searchQuery,
+      _count: {
+        category: true,
       },
     }),
   ]);
 
-  return item as unknown as Item[];
+  return {
+    items: item as unknown as Item[],
+    total: count,
+    categories: categoryData.map((data) => ({
+      category: data.category,
+      count: data._count.category,
+    })),
+  };
 };
 
 export const itemCityResolver = async (
