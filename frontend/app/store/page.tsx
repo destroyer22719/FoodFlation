@@ -1,21 +1,7 @@
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem/StoreItem";
-import { API_URL } from "@/config/index";
-import { Store } from "global";
 import PaginationComponent from "./Components/PaginationComponent";
-import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
 
-const getStores = async (searchParams: string) => {
-  if (!searchParams) return { total: 0, stores: [] };
-
-  const storeReq = await fetch(`${API_URL}/stores?${searchParams}`);
-  const storeRes = (await storeReq.json()) as {
-    total: number;
-    stores: Store[];
-  };
-
-  return storeRes;
-};
 
 const StorePages = async ({
   searchParams,
@@ -33,12 +19,9 @@ const StorePages = async ({
   //   searchParamsUrl.append("province", searchParams.province);
   // console.log(searchParamsUrl.toString());
 
-  for (const key in searchParams) {
-    if (searchParams[key]) searchParamsUrl.append(key, searchParams[key]!);
-  }
+
 
   const { total: totalStores, stores } = await getStores(
-    searchParamsUrl.toString()
   );
 
   const pageSize = 10;

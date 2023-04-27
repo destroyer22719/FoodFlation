@@ -3,6 +3,7 @@ import {
   storeResolver,
   storeCountResolver,
   storesResolver,
+  storeSearchResolver,
 } from "./stores.js";
 import { companiesResolver, companyResolver } from "./company.js";
 import {
@@ -15,6 +16,7 @@ import { Resolvers } from "./resolvers-types.js";
 
 export const resolvers: Resolvers = {
   Query: {
+    storesSearch: storeSearchResolver,
     store: storeResolver,
     stores: storesResolver,
     storeCount: storeCountResolver,

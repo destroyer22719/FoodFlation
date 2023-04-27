@@ -64,7 +64,8 @@ type Location {
 type Query {
   companies: [Company!]!
   company(id: ID!): Company
-  stores(companyId: ID!): [Store!]!
+  storesSearch(city: String, postalCode: String, zipCode: String, page: Int): [Store!]!
+  storesFromCompany(companyId: ID!): [Store!]!
   store(id: ID!): Store
   storeCount: Int!
   itemsFromStore(storeId: ID!, page: Int, search: String): [Item!]!

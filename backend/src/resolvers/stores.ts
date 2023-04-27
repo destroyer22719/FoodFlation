@@ -2,7 +2,8 @@ import { prisma } from "../db/index.js";
 import {
   Location,
   QueryStoreArgs,
-  QueryStoresArgs,
+  QueryStoresFromCompanyArgs,
+  QueryStoresSearchArgs,
   Store,
 } from "./resolvers-types.js";
 
@@ -16,7 +17,10 @@ export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
   return store as unknown as Store;
 };
 
-export const storesResolver = async (_: {}, { companyId }: QueryStoresArgs) => {
+export const storesResolver = async (
+  _: {},
+  { companyId }: QueryStoresFromCompanyArgs
+) => {
   const stores = await prisma.stores.findMany({
     where: {
       companyId,
@@ -40,4 +44,31 @@ export const locationsResolver = async () => {
   });
 
   return storesByLocation as Location[];
+};
+
+export const storeSearchResolver = async (
+  _: {},
+  { city, page, postalCode, zipCode }: QueryStoresSearchArgs
+) => {
+  const stores = await prisma.stores.findMany({
+    where: {
+      ...(city && { city }),
+      ...(postalCode || zipCode
+        ? {
+            OR: [
+              {
+                postalCode,
+              },
+              {
+                zipCode,
+              },
+            ],
+          }
+        : {}),
+    },
+    skip: ((page || 1) - 1) * 10,
+    take: 10,
+  });
+
+  return stores as unknown as Store[];
 };
