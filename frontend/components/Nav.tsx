@@ -2,42 +2,30 @@
 
 import Link from "next/link";
 import styles from "@/styles/Nav.module.scss";
-import ButtonOutlined from "./CustomButtonComponents/ButtonOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import ButtonContained from "./CustomButtonComponents/ButtonContained";
+import { MdSearch } from "react-icons/md";
 
 const Nav = () => {
   return (
     <nav className={styles["nav"]}>
       <div className={styles["nav__section"]}>
         <Link href={"/"} className={styles["nav__item"]}>
-          <ButtonOutlined className={styles["nav__item--bold"]}>
-            Home
-          </ButtonOutlined>
+          Home
         </Link>
       </div>
       <div className={styles["nav__item--center"]}>
         <Link href={"/store/"} className={styles["nav__item"]}>
-          <ButtonContained className={styles["nav__item--bold"]}>
-            <SearchIcon /> Search Stores
-          </ButtonContained>
+          <MdSearch /> Search Stores
         </Link>
         <Link href={"/search/"} className={styles["nav__item"]}>
-          <ButtonContained className={styles["nav__item--bold"]}>
-            <SearchIcon /> Search Items
-          </ButtonContained>
+          <MdSearch /> Search Items
         </Link>
       </div>
       <div className={styles["nav__section"]}>
         <Link href={"/faq"} className={styles["nav__item"]}>
-          <ButtonOutlined className={styles["nav__item--bold"]}>
-            FAQ
-          </ButtonOutlined>
+          FAQ
         </Link>
         <Link href={"/about"} className={styles["nav__item"]}>
-          <ButtonOutlined className={styles["nav__item--bold"]}>
-            About
-          </ButtonOutlined>
+          About
         </Link>
       </div>
     </nav>
