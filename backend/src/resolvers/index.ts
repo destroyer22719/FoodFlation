@@ -1,7 +1,7 @@
 import {
   locationsResolver,
   storeResolver,
-  storesCountResolver,
+  storeCountResolver,
   storesResolver,
 } from "./stores.js";
 import { companiesResolver, companyResolver } from "./company.js";
@@ -17,7 +17,7 @@ export const resolvers: Resolvers = {
   Query: {
     store: storeResolver,
     stores: storesResolver,
-    storesCount: storesCountResolver,
+    storeCount: storeCountResolver,
     company: companyResolver,
     companies: companiesResolver,
     item: itemResolver,

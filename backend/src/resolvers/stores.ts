@@ -26,15 +26,9 @@ export const storesResolver = async (_: {}, { companyId }: QueryStoresArgs) => {
   return stores as unknown as Store[];
 };
 
-export const storesCountResolver = async () => {
+export const storeCountResolver = async () => {
   const storesCount = await prisma.stores.count();
   return storesCount;
-};
-
-export const storeCountResolver = async () => {
-  const storeCount = await prisma.stores.count();
-
-  return storeCount;
 };
 
 export const locationsResolver = async () => {
