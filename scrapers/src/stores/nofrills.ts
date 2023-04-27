@@ -166,7 +166,7 @@ export async function getPricesNoFrills(
         while (i < totalIters) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: parseFloat((<HTMLElement>price[i]).innerText),
+            price: parseFloat((<HTMLElement>price[i]).innerText.slice(1)),
             imgUrl: (<HTMLImageElement>img[i]).src,
           });
           i++;
