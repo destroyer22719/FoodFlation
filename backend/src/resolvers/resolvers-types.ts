@@ -14,6 +14,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type CategoryData = {
+  __typename?: 'CategoryData';
+  category: Scalars['String'];
+  count: Scalars['Int'];
+};
+
 export type CityCount = {
   __typename?: 'CityCount';
   city: Scalars['Int'];
@@ -39,6 +45,13 @@ export type Item = {
   store: Store;
   storeId: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type ItemSearchResult = {
+  __typename?: 'ItemSearchResult';
+  categories: Array<CategoryData>;
+  items: Array<Item>;
+  total: Scalars['Int'];
 };
 
 export type Location = {
@@ -67,7 +80,7 @@ export type Query = {
   item?: Maybe<Item>;
   itemCount: Scalars['Int'];
   itemsFromCity: Array<Item>;
-  itemsFromStore: Array<Item>;
+  itemsFromStore: ItemSearchResult;
   locations: Array<Location>;
   store?: Maybe<Store>;
   storeCount: Scalars['Int'];
@@ -215,12 +228,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CategoryData: ResolverTypeWrapper<CategoryData>;
   CityCount: ResolverTypeWrapper<CityCount>;
   Company: ResolverTypeWrapper<Company>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Item: ResolverTypeWrapper<Item>;
+  ItemSearchResult: ResolverTypeWrapper<ItemSearchResult>;
   Location: ResolverTypeWrapper<Location>;
   Price: ResolverTypeWrapper<Price>;
   Query: ResolverTypeWrapper<{}>;
@@ -232,18 +247,26 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
+  CategoryData: CategoryData;
   CityCount: CityCount;
   Company: Company;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Item: Item;
+  ItemSearchResult: ItemSearchResult;
   Location: Location;
   Price: Price;
   Query: {};
   Store: Store;
   StoresSearchResult: StoresSearchResult;
   String: Scalars['String'];
+}>;
+
+export type CategoryDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategoryData'] = ResolversParentTypes['CategoryData']> = ResolversObject<{
+  category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CityCountResolvers<ContextType = any, ParentType extends ResolversParentTypes['CityCount'] = ResolversParentTypes['CityCount']> = ResolversObject<{
@@ -273,6 +296,13 @@ export type ItemResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ItemSearchResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItemSearchResult'] = ResolversParentTypes['ItemSearchResult']> = ResolversObject<{
+  categories?: Resolver<Array<ResolversTypes['CategoryData']>, ParentType, ContextType>;
+  items?: Resolver<Array<ResolversTypes['Item']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type LocationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']> = ResolversObject<{
   _count?: Resolver<Maybe<ResolversTypes['CityCount']>, ParentType, ContextType>;
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -298,7 +328,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   item?: Resolver<Maybe<ResolversTypes['Item']>, ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
   itemCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   itemsFromCity?: Resolver<Array<ResolversTypes['Item']>, ParentType, ContextType, RequireFields<QueryItemsFromCityArgs, 'city'>>;
-  itemsFromStore?: Resolver<Array<ResolversTypes['Item']>, ParentType, ContextType, RequireFields<QueryItemsFromStoreArgs, 'storeId'>>;
+  itemsFromStore?: Resolver<ResolversTypes['ItemSearchResult'], ParentType, ContextType, RequireFields<QueryItemsFromStoreArgs, 'storeId'>>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   store?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoreArgs, 'id'>>;
   storeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -331,9 +361,11 @@ export type StoresSearchResultResolvers<ContextType = any, ParentType extends Re
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  CategoryData?: CategoryDataResolvers<ContextType>;
   CityCount?: CityCountResolvers<ContextType>;
   Company?: CompanyResolvers<ContextType>;
   Item?: ItemResolvers<ContextType>;
+  ItemSearchResult?: ItemSearchResultResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   Price?: PriceResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

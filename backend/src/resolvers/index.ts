@@ -18,7 +18,7 @@ export const resolvers: Resolvers = {
   Query: {
     storesSearch: storeSearchResolver,
     store: storeResolver,
-    stores: storesResolver,
+    storesFromCompany: storesResolver,
     storeCount: storeCountResolver,
     company: companyResolver,
     companies: companiesResolver,

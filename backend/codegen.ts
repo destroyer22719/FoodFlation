@@ -66,6 +66,17 @@ type StoresSearchResult {
   total: Int!
 }
 
+type CategoryData {
+  count: Int!
+  category: String!
+}
+
+type ItemSearchResult {
+  items: [Item!]!
+  total: Int!
+  categories: [CategoryData!]!
+}
+
 type Query {
   companies: [Company!]!
   company(id: ID!): Company
@@ -73,7 +84,7 @@ type Query {
   storesFromCompany(companyId: ID!): [Store!]!
   store(id: ID!): Store
   storeCount: Int!
-  itemsFromStore(storeId: ID!, page: Int, search: String): [Item!]!
+  itemsFromStore(storeId: ID!, page: Int, search: String): ItemSearchResult!
   itemsFromCity(city: String!, page: Int): [Item!]!
   item(id: ID!, offset: Int, limit: Int): Item
   itemCount: Int!

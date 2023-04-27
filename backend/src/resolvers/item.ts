@@ -30,13 +30,28 @@ export const itemStoreResolver = async (
 ) => {
   page = page || 1;
 
-  const item = await prisma.items.findMany({
-    where: {
-      storeId,
-    },
-    take: 10,
-    skip: (page - 1) * 10,
-  });
+  // const item = await prisma.items.findMany({
+  //   where: {
+  //     storeId,
+  //   },
+  //   take: 10,
+  //   skip: (page - 1) * 10,
+  // });
+
+  const [item, count] = await Promise.all([
+    prisma.items.findMany({
+      where: {
+        storeId,
+      },
+      take: 10,
+      skip: (page - 1) * 10,
+    }),
+    prisma.items.count({
+      where: {
+        storeId,
+      },
+    }),
+  ]);
 
   return item as unknown as Item[];
 };
