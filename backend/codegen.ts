@@ -66,6 +66,7 @@ type Query {
   company(id: ID!): Company
   stores(companyId: ID!): [Store!]!
   store(id: ID!): Store
+  storesCount: Int!
   itemsFromStore(storeId: ID!, page: Int, search: String): [Item!]!
   itemsFromCity(city: String!, page: Int): [Item!]!
   item(id: ID!, offset: Int, limit: Int): Item

@@ -1,5 +1,10 @@
 import { prisma } from "../db/index.js";
-import { Location, QueryStoreArgs, QueryStoresArgs, Store } from "./resolvers-types.js";
+import {
+  Location,
+  QueryStoreArgs,
+  QueryStoresArgs,
+  Store,
+} from "./resolvers-types.js";
 
 export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
   const store = await prisma.stores.findUnique({
@@ -19,6 +24,11 @@ export const storesResolver = async (_: {}, { companyId }: QueryStoresArgs) => {
   });
 
   return stores as unknown as Store[];
+};
+
+export const storesCountResolver = async () => {
+  const storesCount = await prisma.stores.count();
+  return storesCount;
 };
 
 export const storeCountResolver = async () => {

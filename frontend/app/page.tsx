@@ -1,4 +1,3 @@
-import CarouselComponent from "@/components/CarouselComponent/CarouselComponent";
 import style from "@/styles/Index.module.scss";
 import { API_URL } from "@/config/index";
 
@@ -15,7 +14,6 @@ const HomePage = async () => {
         <h1>FoodFlation</h1>
         <p>Tracking the prices of {itemCount} from {storeCount} different stores across Canada and the US!</p>
       </div>
-      <CarouselComponent />
     </>
   );
 };
