@@ -9,14 +9,18 @@ const Footer = () => {
   return (
     <div className={styles["footer"]}>
       <Link href="mailto:nathan.cai.ca@gmail.com" title="Email">
-        <BsGithub className={styles["footer__item"]} />
+        <div className={styles["footer__item--left"]}>
+          <MdEmail className={styles["footer__icon"]} />
+        </div>
       </Link>
       <Link
         href="https://github.com/destroyer22719/FoodFlation"
         target="_blank"
         title="GitHub Repo"
       >
-        <MdEmail className={styles["footer__item"]} />
+        <div className={styles["footer__item--right"]}>
+          <BsGithub className={styles["footer__icon"]} />
+        </div>
       </Link>
     </div>
   );
