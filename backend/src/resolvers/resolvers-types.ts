@@ -72,7 +72,7 @@ export type Query = {
   store?: Maybe<Store>;
   storeCount: Scalars['Int'];
   storesFromCompany: Array<Store>;
-  storesSearch: Array<Store>;
+  storesSearch: StoresSearchResult;
 };
 
 
@@ -134,6 +134,12 @@ export type Store = {
   street: Scalars['String'];
   updatedAt: Scalars['String'];
   zipCode?: Maybe<Scalars['String']>;
+};
+
+export type StoresSearchResult = {
+  __typename?: 'StoresSearchResult';
+  stores: Array<Store>;
+  total: Scalars['Int'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -219,6 +225,7 @@ export type ResolversTypes = ResolversObject<{
   Price: ResolverTypeWrapper<Price>;
   Query: ResolverTypeWrapper<{}>;
   Store: ResolverTypeWrapper<Store>;
+  StoresSearchResult: ResolverTypeWrapper<StoresSearchResult>;
   String: ResolverTypeWrapper<Scalars['String']>;
 }>;
 
@@ -235,6 +242,7 @@ export type ResolversParentTypes = ResolversObject<{
   Price: Price;
   Query: {};
   Store: Store;
+  StoresSearchResult: StoresSearchResult;
   String: Scalars['String'];
 }>;
 
@@ -295,7 +303,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   store?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoreArgs, 'id'>>;
   storeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   storesFromCompany?: Resolver<Array<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoresFromCompanyArgs, 'companyId'>>;
-  storesSearch?: Resolver<Array<ResolversTypes['Store']>, ParentType, ContextType, Partial<QueryStoresSearchArgs>>;
+  storesSearch?: Resolver<ResolversTypes['StoresSearchResult'], ParentType, ContextType, Partial<QueryStoresSearchArgs>>;
 }>;
 
 export type StoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['Store'] = ResolversParentTypes['Store']> = ResolversObject<{
@@ -316,6 +324,12 @@ export type StoreResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type StoresSearchResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['StoresSearchResult'] = ResolversParentTypes['StoresSearchResult']> = ResolversObject<{
+  stores?: Resolver<Array<ResolversTypes['Store']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   CityCount?: CityCountResolvers<ContextType>;
   Company?: CompanyResolvers<ContextType>;
@@ -324,5 +338,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Price?: PriceResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Store?: StoreResolvers<ContextType>;
+  StoresSearchResult?: StoresSearchResultResolvers<ContextType>;
 }>;
 

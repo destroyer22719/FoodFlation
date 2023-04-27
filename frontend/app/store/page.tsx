@@ -1,7 +1,7 @@
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import PaginationComponent from "./Components/PaginationComponent";
-
+import { searchStores } from "queries";
 
 const StorePages = async ({
   searchParams,
@@ -19,10 +19,11 @@ const StorePages = async ({
   //   searchParamsUrl.append("province", searchParams.province);
   // console.log(searchParamsUrl.toString());
 
-
-
-  const { total: totalStores, stores } = await getStores(
-  );
+  const { total: totalStores, stores } = await searchStores({
+    city: searchParams?.city,
+    postalCode: searchParams?.postalCode,
+    zipCode: searchParams?.zipCode,
+  });
 
   const pageSize = 10;
   const maxPages = Math.ceil(totalStores / pageSize);

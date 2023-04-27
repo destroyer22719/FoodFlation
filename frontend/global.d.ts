@@ -4,6 +4,17 @@ declare global {
     storeCount: number;
   };
 
+  type QuerySearchStoreParams = {
+    city?: string;
+    postalCode?: string;
+    zipCode?: string;
+  };
+
+  type QuerySearchStoreResult = {
+    stores: Store[];
+    total: number;
+  }
+
   type Store = {
     id: string;
     name: string;

@@ -61,10 +61,15 @@ type Location {
   state: String
 }
 
+type StoresSearchResult {
+  stores: [Store!]!
+  total: Int!
+}
+
 type Query {
   companies: [Company!]!
   company(id: ID!): Company
-  storesSearch(city: String, postalCode: String, zipCode: String, page: Int): [Store!]!
+  storesSearch(city: String, postalCode: String, zipCode: String, page: Int): StoresSearchResult!
   storesFromCompany(companyId: ID!): [Store!]!
   store(id: ID!): Store
   storeCount: Int!
@@ -74,7 +79,7 @@ type Query {
   itemCount: Int!
   locations: [Location!]!
 }
-`
+`;
 
 const config: CodegenConfig = {
   schema,
@@ -87,5 +92,5 @@ const config: CodegenConfig = {
     },
   },
 };
- 
+
 export default config;

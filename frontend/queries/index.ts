@@ -18,7 +18,7 @@ export const getCounts = async () => {
   return res.data as QueryCountResult;
 };
 
-export const getStores = async () => {
+export const searchStores = async ({}: QuerySearchStoreParams) => {
   const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
     method: "POST",
     headers: {
@@ -26,14 +26,22 @@ export const getStores = async () => {
     },
     body: JSON.stringify({
       query: `
-        query {
-          itemCount
-          storeCount
+        query ($city: String, $postalCode: String, $zipCode: String){
+          storesSearch(city: $city, postalCode: $postalCode, zipCode: $zipCode) {
+            stores {
+              id
+              name
+              street
+              city
+              postalCode
+              zipCode
+            }
+            total
         }
       `,
     }),
   });
 
   const res = await req.json();
-  return res.data as Store[];
+  return res.data as QuerySearchStoreResult;
 };

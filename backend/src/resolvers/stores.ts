@@ -50,25 +50,32 @@ export const storeSearchResolver = async (
   _: {},
   { city, page, postalCode, zipCode }: QueryStoresSearchArgs
 ) => {
-  const stores = await prisma.stores.findMany({
-    where: {
-      ...(city && { city }),
-      ...(postalCode || zipCode
-        ? {
-            OR: [
-              {
-                postalCode,
-              },
-              {
-                zipCode,
-              },
-            ],
-          }
-        : {}),
-    },
-    skip: ((page || 1) - 1) * 10,
-    take: 10,
-  });
+  const searchCondition = {
+    ...(city && { city }),
+    ...(postalCode || zipCode
+      ? {
+          OR: [
+            {
+              postalCode,
+            },
+            {
+              zipCode,
+            },
+          ],
+        }
+      : {}),
+  };
 
-  return stores as unknown as Store[];
+  const [total, stores] = await prisma.$transaction([
+    prisma.stores.count({
+      where: searchCondition,
+    }),
+    prisma.stores.findMany({
+      where: searchCondition,
+      skip: ((page || 1) - 1) * 10,
+      take: 10,
+    }),
+  ]);
+
+  return { stores: stores as unknown as Store[], total };
 };
