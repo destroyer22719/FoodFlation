@@ -8,7 +8,7 @@ import {
   getCompanyId,
   msToTime,
   updateItem,
-  getStoreId
+  getStoreId,
 } from "../utils/scrapers.js";
 
 export async function getPricesLoblaws(
@@ -128,71 +128,67 @@ export async function getPricesLoblaws(
     await page.click(".fulfillment-location-confirmation__actions__button");
 
     for (const item of items) {
-      try {
-        loader.color = "green";
+      loader.color = "green";
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${postalCode}`;
+
+      await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
+      await page.waitForSelector(".product-tile__thumbnail__image", {
+        timeout: 60 * 1000,
+      });
+
+      //retrieves the value of the first 3 items
+      const results = await page.evaluate(() => {
+        const results = [];
+
+        const name = document.getElementsByClassName(
+          "product-name__item product-name__item--name"
+        );
+        const price = document.querySelectorAll(
+          ".selling-price-list__item__price--now-price__value"
+        );
+        const img = document.querySelectorAll(
+          ".product-tile__thumbnail__image > img"
+        );
+
+        //finds a maximum of 3 of each item
+        const totalIters = name.length > 3 ? 3 : name.length;
+
+        let i = 0;
+        while (i < totalIters) {
+          results.push({
+            name: (<HTMLElement>name[i]).innerText,
+            price: (<HTMLElement>price[i]).innerText,
+            imgUrl: (<HTMLImageElement>img[i]).src,
+          });
+          i++;
+        }
+
+        return results;
+      });
+
+      for (const result of results) {
         loader.text = `${defaultItems.indexOf(item)}/${
           defaultItems.length
         } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
           stores.length
         }| (${storeIndexes.itemIndex} / ${
           storeIndexes.storeIndex
-        }) ${item} at ${postalCode}`;
+        }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
 
-        await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
-        await page.waitForSelector(".product-tile__thumbnail__image", {
-          timeout: 60 * 1000,
+        await updateItem({
+          storeId,
+          result,
         });
-
-        //retrieves the value of the first 3 items
-        const results = await page.evaluate(() => {
-          const results = [];
-
-          const name = document.getElementsByClassName(
-            "product-name__item product-name__item--name"
-          );
-          const price = document.querySelectorAll(
-            ".selling-price-list__item__price--now-price__value"
-          );
-          const img = document.querySelectorAll(
-            ".product-tile__thumbnail__image > img"
-          );
-
-          //finds a maximum of 3 of each item
-          const totalIters = name.length > 3 ? 3 : name.length;
-
-          let i = 0;
-          while (i < totalIters) {
-            results.push({
-              name: (<HTMLElement>name[i]).innerText,
-              price: (<HTMLElement>price[i]).innerText,
-              imgUrl: (<HTMLImageElement>img[i]).src,
-            });
-            i++;
-          }
-
-          return results;
-        });
-
-        for (const result of results) {
-          loader.text = `${defaultItems.indexOf(item)}/${
-            defaultItems.length
-          } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-            stores.length
-          }| (${storeIndexes.itemIndex} / ${
-            storeIndexes.storeIndex
-          }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
-
-          await updateItem({
-            storeId,
-            result,
-          });
-        }
-
-        itemBar.increment(1);
-        storeIndexes.itemIndex++;
-      } catch (e) {
-        continue;
       }
+
+      itemBar.increment(1);
+      storeIndexes.itemIndex++;
     }
 
     // if itemStart is set, reset it back to the original for the next store

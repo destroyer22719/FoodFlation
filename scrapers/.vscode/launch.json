@@ -7,12 +7,12 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/src/index.ts",
+      "program": "${workspaceFolder}/dist/index.js",
       "sourceMaps": true,
       "preLaunchTask": "npm: debug",
-      "outFiles": ["${workspaceFolder}/dist/scrapers/src/index.js", "${workspaceFolder}/dist/scrapers/src/util.js"],
+      "outFiles": ["${workspaceFolder}/dist/**"],
       "skipFiles": ["<node_internals>/**"],
-      "args": ["--usa", "--storeStart=7"]
+      "args": ["--canada", "--loblaws", "--storeStart=2"]
     }
   ]
 }
