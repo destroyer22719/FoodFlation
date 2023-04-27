@@ -66,7 +66,7 @@ export const storeSearchResolver = async (
       : {}),
   };
 
-  const [total, stores] = await prisma.$transaction([
+  const [total, stores] = await Promise.all([
     prisma.stores.count({
       where: searchCondition,
     }),
