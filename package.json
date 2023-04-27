@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "count": "cloc --exclude-dir=node_modules, dist, .next, .build, .serverless, .git --exclude-ext=json frontend"
+    "count": "cloc --exclude-dir=node_modules,dist,.next,.build,.serverless,.git --exclude-ext=json ."
   }
 }
