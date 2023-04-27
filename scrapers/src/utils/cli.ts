@@ -5,7 +5,7 @@ import { getPricesMetro } from "../stores/metro.js";
 import { getPricesWholeFoodsMarket } from "../stores/whole_foods_market.js";
 import { getPricesAldi } from "../stores/aldi.js";
 import { getPricesNoFrills } from "../stores/nofrills.js";
-import { storeStartSet } from "../index.js";
+import { storeStartSet, storeStartSetOrNotFound } from "../index.js";
 
 const __dirname = path.resolve();
 
@@ -159,18 +159,23 @@ export async function scrapeStores(
 
   let currentItemList = firstItems || items;
 
+  let storeStartSetOrNotFound = storeStartSet;
+
   for (const prov in canada) {
     const stores: Address[] = canada[prov];
     const prevStoreStart = storeStart;
 
     if (!stores.length) continue;
-    if (storeStartSet && storeStart < storeIndexes.storeIndex) {
+    if (storeStartSetOrNotFound && storeStart < storeIndexes.storeIndex) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
       storeStart += min;
       if (min === stores.length) continue;
     }
 
-    const counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
+    const counter = new Counter(
+      storeStartSetOrNotFound ? storeIndexes.storeIndex - prevStoreStart : 0
+    );
+
     const allLoblawsStores = filterByStore(stores, "Loblaws");
     const allMetroStores = filterByStore(stores, "Metro");
     const allNoFrillsStores = filterByStore(stores, "No Frills");
@@ -204,6 +209,8 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
+
+    storeStartSetOrNotFound = false;
   }
 
   for (const state in us) {
@@ -215,7 +222,7 @@ export async function scrapeStores(
     }
 
     //we keep on increasing storeStart until it is equal to storeIndex
-    if (storeStartSet && storeStart < storeIndexes.storeIndex) {
+    if (storeStartSetOrNotFound && storeStart < storeIndexes.storeIndex) {
       let min = Math.min(stores.length, storeIndexes.storeIndex - storeStart);
       storeStart += min;
       if (min === stores.length) {
@@ -224,7 +231,10 @@ export async function scrapeStores(
     }
 
     //creating a counter to keep track of the amount of stores left to scrape
-    const counter = new Counter(storeIndexes.storeIndex - prevStoreStart);
+    const counter = new Counter(
+      storeStartSetOrNotFound ? storeIndexes.storeIndex - prevStoreStart : 0
+    );
+
     const allAldiStores = filterByStore(stores, "Aldi");
     const allWholeFoodsMarketStores = filterByStore(
       stores,
@@ -252,6 +262,8 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
+
+    storeStartSetOrNotFound = false;
   }
 }
 
