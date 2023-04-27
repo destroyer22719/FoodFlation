@@ -6,11 +6,11 @@
   transition: background 0.8s;
 
   &:hover {
-    background: color.scale($color, $lightness: 15%)
+    background: color.scale($color, $lightness: 20%)
       radial-gradient(
         circle,
         transparent 1%,
-        color.scale($color, $lightness: 15%) 0
+        color.scale($color, $lightness: 20%) 1%
       )
       center/15000%;
   }
@@ -18,7 +18,7 @@
   transition: all 0.5s ease;
 
   &:active {
-    background-color: color.scale($color, $lightness: 25%);
+    background-color: color.scale($color, $lightness: 40%);
     background-size: 100%;
     transition: background 0s;
   }

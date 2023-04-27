@@ -12,12 +12,14 @@ const Nav = () => {
           Home
         </Link>
       </div>
-      <div className={styles["nav__item--center"]}>
+      <div className={styles["nav__section--center"]}>
         <Link href={"#"} className={styles["nav__item"]}>
-          <MdSearch /> Search Stores
+          <MdSearch />
+          <div>Search Stores</div>
         </Link>
         <Link href={"#"} className={styles["nav__item"]}>
-          <MdSearch /> Search Items
+          <MdSearch />
+          <div>Search Items</div>
         </Link>
       </div>
       <div className={styles["nav__section"]}>

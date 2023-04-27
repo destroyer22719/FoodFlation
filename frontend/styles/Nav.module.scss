@@ -26,27 +26,29 @@
       justify-content: left;
     }
 
-    background-color: $purple-light;
-    @include mui($purple-light);
+    &--center {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      @media screen and (max-width: 379px) {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 
   &__item {
     margin: 8px 5px;
     font-weight: bold;
+    background-color: $purple-light;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &--center {
-      @media screen and (min-width: 500px) and (max-width: 720px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      @media screen and (max-width: 379px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-    }
+    @include mui($purple-light);
 
     &--bold {
       font-weight: bold;
