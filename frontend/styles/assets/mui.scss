@@ -1,15 +1,24 @@
+@use "sass:color";
+
 //https://css-tricks.com/how-to-recreate-the-ripple-effect-of-material-design-buttons/
 @mixin mui($color) {
   background-position: center;
   transition: background 0.8s;
 
   &:hover {
-    background: lighten($color, $amount: 0.4)
-      radial-gradient(circle, transparent 1%, $color 1%) center/15000%;
+    background: color.scale($color, $lightness: 15%)
+      radial-gradient(
+        circle,
+        transparent 1%,
+        color.scale($color, $lightness: 15%) 0
+      )
+      center/15000%;
   }
+
   transition: all 0.5s ease;
+
   &:active {
-    background-color: lighten($color, $amount: 0.25);
+    background-color: color.scale($color, $lightness: 25%);
     background-size: 100%;
     transition: background 0s;
   }

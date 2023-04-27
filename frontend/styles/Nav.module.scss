@@ -1,4 +1,5 @@
 @import "assets/vars";
+@import "assets/mui";
 
 .nav {
   display: flex;
@@ -24,6 +25,9 @@
     @media only screen and (min-width: 500px) {
       justify-content: left;
     }
+
+    background-color: $purple-light;
+    @include mui($purple-light);
   }
 
   &__item {
