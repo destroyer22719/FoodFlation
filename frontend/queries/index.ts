@@ -18,7 +18,19 @@ export const getCounts = async () => {
   return res.data as QueryCountResult;
 };
 
-export const searchStores = async ({}: QuerySearchStoreParams) => {
+export const searchStores = async ({
+  city,
+  zipCode,
+  postalCode,
+}: QuerySearchStoreParams) => {
+  if (!city && !zipCode && !postalCode) {
+    throw new Error(
+      "At least one of city, zipCode or postalCode must be provided"
+    );
+  } else if (zipCode && postalCode) {
+    throw new Error("Only one of zipCode or postalCode must be provided");
+  }
+
   const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
     method: "POST",
     headers: {
@@ -39,6 +51,11 @@ export const searchStores = async ({}: QuerySearchStoreParams) => {
             total
         }
       `,
+      variables: {
+        city,
+        postalCode,
+        zipCode,
+      },
     }),
   });
 
