@@ -1,8 +1,9 @@
 import styles from "@/styles/StoreList.module.scss";
+import SearchTable from "./Components/SearchTable";
 import { getLocations } from "@/queries/index";
-import LocationTable from "./Components/LocationTable/LocationTable";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
+  //we're getting locations here instead of the locations table so that it doesn't fetch every render
   const locationData = await getLocations();
 
   const locations: LocationObj = {};
@@ -20,7 +21,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className={styles["store-list"]}>
-      <LocationTable locations={locations} />
+      <SearchTable locations={locations} />
       <div>{children}</div>
     </div>
   );

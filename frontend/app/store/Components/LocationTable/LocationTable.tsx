@@ -1,5 +1,3 @@
-"use client";
-
 import CountryItem from "./CountryItem";
 
 type Props = {

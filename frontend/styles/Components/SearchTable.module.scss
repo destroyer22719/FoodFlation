@@ -1,0 +1,28 @@
+@import "../assets/vars";
+@import "../assets/mui.scss";
+
+.search-table {
+  width: 80%;
+  max-width: 850px;
+  margin: 25px auto;
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__button {
+    background-color: $purple;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    @include mui($purple);
+
+    & > * {
+      font-size: 40px;
+      fill: $purple-light;
+    }
+  }
+}
