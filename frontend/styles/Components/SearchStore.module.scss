@@ -36,7 +36,10 @@
     font-size: 20px;
   }
 
-  &__disclaimer {
+  &__warning {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: $purple;
     margin-top: 10px;
     text-align: center;
   }
