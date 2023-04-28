@@ -8,6 +8,8 @@ declare global {
     city?: string;
     postalCode?: string;
     zipCode?: string;
+    companyId?: string;
+    page?: number;
   };
 
   type QuerySearchStoreResult = {

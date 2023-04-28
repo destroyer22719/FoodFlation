@@ -22,10 +22,11 @@ export const searchStores = async ({
   city,
   zipCode,
   postalCode,
+  companyId,
 }: QuerySearchStoreParams) => {
-  if (!city && !zipCode && !postalCode) {
+  if (!city && !zipCode && !postalCode && !companyId) {
     throw new Error(
-      "At least one of city, zipCode or postalCode must be provided"
+      "At least one of city, zipCode, companyId or postalCode must be provided"
     );
   } else if (zipCode && postalCode) {
     throw new Error("Only one of zipCode or postalCode must be provided");
@@ -91,4 +92,3 @@ export const getLocationsAndCompanies = async () => {
   const res = await req.json();
   return res.data as QueryLocationAndCompaniesResult;
 };
-

@@ -79,7 +79,6 @@ export type Query = {
   locations: Array<Location>;
   store?: Maybe<Store>;
   storeCount: Scalars['Int'];
-  storesFromCompany: Array<Store>;
   storesSearch: StoresSearchResult;
 };
 
@@ -114,14 +113,9 @@ export type QueryStoreArgs = {
 };
 
 
-export type QueryStoresFromCompanyArgs = {
-  companyId: Scalars['ID'];
-  page?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryStoresSearchArgs = {
   city?: InputMaybe<Scalars['String']>;
+  companyId?: InputMaybe<Scalars['ID']>;
   page?: InputMaybe<Scalars['Int']>;
   postalCode?: InputMaybe<Scalars['String']>;
   zipCode?: InputMaybe<Scalars['String']>;
@@ -321,7 +315,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   store?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoreArgs, 'id'>>;
   storeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  storesFromCompany?: Resolver<Array<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoresFromCompanyArgs, 'companyId'>>;
   storesSearch?: Resolver<ResolversTypes['StoresSearchResult'], ParentType, ContextType, Partial<QueryStoresSearchArgs>>;
 }>;
 

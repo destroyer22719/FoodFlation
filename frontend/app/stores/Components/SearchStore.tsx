@@ -15,9 +15,9 @@ const SearchStore = () => {
     const postalCodeRegex = /^[A-Z]\d[A-Z][ ]\d[A-Z]\d$/;
     const zipCodeRegex = /^\d{5}$/;
     if (postalCodeRegex.test(codeInput)) {
-      router.push(`/store?postalCode=${codeInput}`);
+      router.push(`/stores?postalCode=${codeInput}`);
     } else if (zipCodeRegex.test(codeInput)) {
-      router.push(`/store?zipCode=${codeInput}`);
+      router.push(`/stores?zipCode=${codeInput}`);
     } else {
       setShowWarning(true);
       setTimeout(() => {
