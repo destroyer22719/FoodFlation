@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+
 import ProvItem from "./ProvItem";
+import styles from "@/styles/Components/LocationTable.module.scss";
 
 type Props = {
   country: string;
@@ -16,10 +18,10 @@ const CountryItem: React.FC<Props> = ({ provs, country }) => {
   const [open, setOpen] = useState(false);
 
   const provinces = Object.keys(provs);
-  
+
   return (
-    <div>
-      <div onClick={() => setOpen(!open)}>{country}</div>
+    <div className={styles["location-table__country"]}>
+      <div className={styles["location-table__country-header"]} onClick={() => setOpen(!open)}>{country}</div>
       <div>
         {open &&
           provinces.map((province) => (

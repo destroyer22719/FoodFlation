@@ -1,3 +1,5 @@
+import styles from "@/styles/Components/LocationTable.module.scss";
+
 import CountryItem from "./CountryItem";
 
 type Props = {
@@ -8,7 +10,7 @@ const LocationTable: React.FC<Props> = ({ locations }) => {
   const countries = Object.keys(locations);
 
   return (
-    <div>
+    <div className={styles["location-table"]}>
       {countries.map((country) => (
         <CountryItem
           provs={locations[country]}

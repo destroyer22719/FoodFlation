@@ -48,7 +48,7 @@
     align-items: center;
     justify-content: center;
 
-    @include mui($purple-light);
+    @include mui-light($purple-light);
 
     &--bold {
       font-weight: bold;

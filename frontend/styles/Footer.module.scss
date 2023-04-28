@@ -25,11 +25,12 @@
     font-size: 50px;
   }
 
-  &__item--left, &__item--right {
+  &__item--left,
+  &__item--right {
     background-color: $blue-dark;
     padding: 15px 40px;
 
-    @include mui($blue-dark);
+    @include mui-light($blue-dark);
   }
 
   &__item--left {
