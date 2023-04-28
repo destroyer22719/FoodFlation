@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { MdOutlineLocationOn, MdSearch } from "react-icons/md";
+import {
+  MdOutlineLocationOn,
+  MdSearch,
+} from "react-icons/md";
 import { BsInputCursor } from "react-icons/bs";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 import styles from "@/styles/Components/SearchTable.module.scss";
 import LocationTable from "./LocationTable/LocationTable";
+import SearchStore from "./SearchStore";
 
 type Props = {
   locations: LocationObj;
@@ -58,7 +62,7 @@ const SearchTable = ({ locations }: Props) => {
           (() => {
             switch (showComponent) {
               case 1:
-                return <div>PostalCode</div>;
+                return <SearchStore/>;
               case 2:
                 return <div>Company</div>;
               default:
