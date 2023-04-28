@@ -63,7 +63,7 @@ export const searchStores = async ({
   return res.data as QuerySearchStoreResult;
 };
 
-export const getLocations = async () => {
+export const getLocationsAndCompanies = async () => {
   const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
     method: "POST",
     headers: {
@@ -72,6 +72,10 @@ export const getLocations = async () => {
     body: JSON.stringify({
       query: `
         query {
+          companies {
+            id
+            name
+          }
           locations {
             _count
             country
@@ -85,5 +89,6 @@ export const getLocations = async () => {
   });
 
   const res = await req.json();
-  return res.data.locations as QueryLocationResult;
+  return res.data as QueryLocationAndCompaniesResult;
 };
+

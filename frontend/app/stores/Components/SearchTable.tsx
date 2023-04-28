@@ -12,9 +12,10 @@ import CompanyButtons from "./CompanyButtons";
 
 type Props = {
   locations: LocationObj;
+  companies: Company[];
 };
 
-const SearchTable = ({ locations }: Props) => {
+const SearchTable = ({ locations, companies }: Props) => {
   const [showComponent, setShowComponent] = useState(0);
   const [show, setShow] = useState(true);
 
@@ -62,7 +63,7 @@ const SearchTable = ({ locations }: Props) => {
               case 1:
                 return <SearchStore />;
               case 2:
-                return <CompanyButtons />;
+                return <CompanyButtons companies={companies} />;
               default:
                 return <LocationTable locations={locations} />;
             }

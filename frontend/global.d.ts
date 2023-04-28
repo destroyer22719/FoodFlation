@@ -15,13 +15,21 @@ declare global {
     total: number;
   };
 
-  type QueryLocationResult = {
-    _count: number;
-    country: string;
-    city: string;
-    province?: string;
-    state?: string;
-  }[];
+  type Company = {
+    id: string;
+    name: string;
+  };
+
+  type QueryLocationAndCompaniesResult = {
+    companies: Company[];
+    locations: {
+      _count: number;
+      country: string;
+      city: string;
+      province?: string;
+      state?: string;
+    }[];
+  };
 
   type Store = {
     id: string;
