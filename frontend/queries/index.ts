@@ -4,6 +4,7 @@ export const getCounts = async () => {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
     body: JSON.stringify({
       query: `
         query {
@@ -38,9 +39,10 @@ export const searchStores = async ({
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
     body: JSON.stringify({
       query: `
-        query ($city: String, $postalCode: String, $zipCode: String, $companyId: String, $page: Int){
+        query ($city: String, $postalCode: String, $zipCode: String, $companyId: ID, $page: Int){
           storesSearch(city: $city, postalCode: $postalCode, zipCode: $zipCode, companyId: $companyId, page: $page) {
             stores {
               id
@@ -51,6 +53,7 @@ export const searchStores = async ({
               zipCode
             }
             total
+          }
         }
       `,
       variables: {
@@ -64,7 +67,8 @@ export const searchStores = async ({
   });
 
   const res = await req.json();
-  return res.data as QuerySearchStoreResult;
+
+  return res.data.storesSearch as QuerySearchStoreResult;
 };
 
 export const getLocationsAndCompanies = async () => {
@@ -73,6 +77,7 @@ export const getLocationsAndCompanies = async () => {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
     body: JSON.stringify({
       query: `
         query {

@@ -1,4 +1,4 @@
-import { API_URL } from "@/config/index";
+// import { API_URL } from "@/config/index";
 import { notFound } from "next/navigation";
 import styles from "@/styles/Store.module.scss";
 import SearchSection from "./Components/SearchSection";
@@ -13,7 +13,7 @@ type Props = {
 //https://beta.nextjs.org/docs/data-fetching/fetching
 // implemented dynamic data fetching to prevent getting {message: "Internal Server Error"} when fetching
 async function getStore(id: string) {
-  const storeReq = await fetch(`${API_URL}/stores/${id}`, {
+  const storeReq = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores/${id}`, {
     cache: "no-store",
   });
   const store = await storeReq.json();

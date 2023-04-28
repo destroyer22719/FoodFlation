@@ -3,14 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Item } from "../global";
 
 import styles from "@/styles/Store.module.scss";
 import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
 import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 
 type Props = {
-  item: Item;
+  item: any;
 };
 
 const ItemCard: React.FC<Props> = ({ item }) => {

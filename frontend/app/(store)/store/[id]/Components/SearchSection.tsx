@@ -3,19 +3,19 @@
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
+// import SearchIcon from "@mui/icons-material/Search";
+// import CloseIcon from "@mui/icons-material/Close";
 
-import styles from "@/styles/Store.module.scss";
-import InputOutlined from "@/components/InputOutlined";
-import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
+// import styles from "@/styles/Store.module.scss";
+// import InputOutlined from "@/components/InputOutlined";
+// import ButtonContained from "@/components/CustomButtonComponents/ButtonContained";
 import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import { CategoryData } from "global";
-import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
+// import IconButton from "@mui/material/IconButton";
+// import { CategoryData } from "global";
+// import CategoryButton from "@/components/CustomButtonComponents/CategoryButton";
 
 type Props = {
-  categoryData: CategoryData[];
+  categoryData: [];
   resultsFound: number;
 };
 
@@ -31,7 +31,7 @@ const SearchSection: React.FC<Props> = ({ categoryData, resultsFound }) => {
 
   return (
     <>
-      <div className={styles["store-page__search"]}>
+      {/* <div className={styles["store-page__search"]}>
         <InputOutlined
           className={styles["store-page__search-bar"]}
           value={search || ""}
@@ -74,7 +74,7 @@ const SearchSection: React.FC<Props> = ({ categoryData, resultsFound }) => {
               .replaceAll("&", "%26")}`}
           />
         ))}
-      </div>
+      </div> */}
     </>
   );
 };
