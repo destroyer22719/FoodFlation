@@ -1,0 +1,43 @@
+@import "../assets/vars";
+@import "../assets/mui.scss";
+
+.search-stores {
+  width: 375px;
+  margin: 20px auto;
+
+  &__section {
+    height: 75px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    margin-right: 10px;
+    padding: 20px;
+    background: $purple;
+    border-radius: 5px;
+    font-size: 30px;
+
+    @include mui-dark($purple);
+
+    & > * {
+      fill: $black;
+    }
+  }
+
+  &__input {
+    padding: 12px;
+    height: 100%;
+    border-radius: 5px;
+    outline: none;
+    background-color: $black;
+    border: 5px solid $purple;
+    font-size: 20px;
+  }
+
+  &__disclaimer {
+    margin-top: 10px;
+    text-align: center;
+  }
+}
