@@ -8,17 +8,9 @@
   align-items: center;
   padding: 20px;
 
-  @media only screen and (min-width: 400px) {
+  @media only screen and (min-width: 600px) {
     justify-content: flex-end;
   }
-
-  // &__container {
-  //   padding: 10px 25px;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   background-color: $blue-dark;
-  //   border-radius: 10px;
-  // }
 
   &__icon {
     fill: $purple-light;
