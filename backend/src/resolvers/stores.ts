@@ -43,7 +43,15 @@ export const locationsResolver = async () => {
     },
   });
 
-  return storesByLocation as Location[];
+  const result: Location[] = storesByLocation.map((location) => ({
+    country: location.country,
+    city: location.city,
+    province: location.province,
+    state: location.state,
+    _count: location._count.city,
+  }));
+
+  return result;
 };
 
 export const storeSearchResolver = async (

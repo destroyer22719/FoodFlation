@@ -72,16 +72,18 @@ export const getLocations = async () => {
     body: JSON.stringify({
       query: `
         query {
-          _count
-          country
-          city
-          province
-          state
+          locations {
+            _count
+            country
+            city
+            province
+            state
+          }
         }
       `,
     }),
   });
 
   const res = await req.json();
-  return res.data as QueryLocationResult;
+  return res.data.locations as QueryLocationResult;
 };

@@ -13,7 +13,7 @@ const Nav = () => {
         </Link>
       </div>
       <div className={styles["nav__section--center"]}>
-        <Link href={"#"} className={styles["nav__item"]}>
+        <Link href={"/store"} className={styles["nav__item"]}>
           <MdSearch />
           <div>Search Stores</div>
         </Link>

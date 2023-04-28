@@ -49,12 +49,8 @@ type Price {
   item: Item!
 }
 
-type CityCount {
-  city: Int!
-}
-
 type Location {
-  _count: CityCount
+  _count: Int!
   country: String!
   city: String!
   province: String

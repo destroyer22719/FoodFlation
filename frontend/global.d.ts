@@ -21,7 +21,7 @@ declare global {
     city: string;
     province?: string;
     state?: string;
-  };
+  }[];
 
   type Store = {
     id: string;
@@ -30,6 +30,14 @@ declare global {
     city: string;
     postalCode?: string;
     zipCode?: string;
+  };
+
+  type LocationObj = {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: number;
+      };
+    };
   };
 }
 
