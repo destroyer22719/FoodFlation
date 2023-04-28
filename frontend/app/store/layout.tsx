@@ -10,11 +10,14 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   locationData.forEach(({ _count, city, country, province, state }) => {
     if (!locations[country]) {
       locations[country] = {};
-    } else if (state && !locations[country][state]) {
+    }
+    if (state && !locations[country][state]) {
       locations[country][state] = {};
-    } else if (province && !locations[country][province]) {
+    }
+    if (province && !locations[country][province]) {
       locations[country][province] = {};
-    } else if (city && !locations[country][state || province!][city]) {
+    }
+    if (city && !locations[country][state || province!][city]) {
       locations[country][state || province!][city] = _count;
     }
   });

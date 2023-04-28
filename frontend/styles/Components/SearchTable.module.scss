@@ -3,7 +3,7 @@
 
 .search-table {
   width: 80%;
-  max-width: 850px;
+  max-width: 1000px;
   margin: 25px auto;
 
   &__buttons {
@@ -18,7 +18,7 @@
     padding: 10px;
     margin: 10px;
     border-radius: 10px;
-    @include mui-light($purple);
+    @include mui-dark($purple);
 
     & > * {
       font-size: 40px;

@@ -29,5 +29,5 @@
 }
 
 @mixin mui-dark($color) {
-  @include mui($color, 5%, 5%);
+  @include mui($color, 5%, 7.5%);
 }

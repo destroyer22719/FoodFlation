@@ -21,16 +21,24 @@ const CountryItem: React.FC<Props> = ({ provs, country }) => {
 
   return (
     <div className={styles["location-table__country"]}>
-      <div className={styles["location-table__country-header"]} onClick={() => setOpen(!open)}>{country}</div>
+      <div
+        className={styles["location-table__country-header"]}
+        onClick={() => setOpen(!open)}
+      >
+        {country}
+      </div>
       <div>
-        {open &&
-          provinces.map((province) => (
-            <ProvItem
-              cities={provs[province]}
-              province={province}
-              key={province}
-            />
-          ))}
+        {open && (
+          <div className={styles["location-table__provinces"]}>
+            {provinces.map((province) => (
+              <ProvItem
+                cities={provs[province]}
+                province={province}
+                key={province}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

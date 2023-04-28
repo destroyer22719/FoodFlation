@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import styles from "@/styles/Components/LocationTable.module.scss";
+
 type Props = {
   province: string;
   cities: {
@@ -13,17 +15,25 @@ const ProvItem: React.FC<Props> = ({ cities, province }) => {
   const cityNames = Object.keys(cities);
 
   return (
-    <div>
-      <div onClick={() => setOpen(!open)}>{province}</div>
+    <div className={styles["location-table__province"]}>
+      <div
+        onClick={() => setOpen(!open)}
+        className={styles["location-table__province--header"]}
+      >
+        {province}
+      </div>
       <div>
-        {open &&
-          cityNames.map((cityName) => (
-            <Link href={`./?city=${cityName}`} key={cityName}>
-              <div>
-                {cityName} - {cities[cityName]}
-              </div>
-            </Link>
-          ))}
+        {open && (
+          <div className={styles["location-table__cities"]}>
+            {cityNames.map((cityName) => (
+              <Link href={`/store/?city=${cityName}`} key={cityName}>
+                <div className={styles["location-table__city"]}>
+                  {cityName} - {cities[cityName]}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
