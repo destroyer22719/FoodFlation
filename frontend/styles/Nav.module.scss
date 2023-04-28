@@ -31,8 +31,7 @@
       flex-direction: row;
       align-items: center;
 
-      @media screen and (max-width: 379px) {
-        display: flex;
+      @media screen and (max-width: 680px) {
         flex-direction: column;
       }
     }
