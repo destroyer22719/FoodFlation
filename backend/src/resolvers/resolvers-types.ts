@@ -116,6 +116,7 @@ export type QueryStoreArgs = {
 
 export type QueryStoresFromCompanyArgs = {
   companyId: Scalars['ID'];
+  page?: InputMaybe<Scalars['Int']>;
 };
 
 

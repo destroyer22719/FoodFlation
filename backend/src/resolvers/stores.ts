@@ -19,12 +19,15 @@ export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
 
 export const storesResolver = async (
   _: {},
-  { companyId }: QueryStoresFromCompanyArgs
+  { companyId, page }: QueryStoresFromCompanyArgs
 ) => {
+  page = page || 1;
   const stores = await prisma.stores.findMany({
     where: {
       companyId,
     },
+    skip: (page - 1) * 10,
+    take: 10,
   });
 
   return stores as unknown as Store[];

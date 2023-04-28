@@ -77,7 +77,7 @@ type Query {
   companies: [Company!]!
   company(id: ID!): Company
   storesSearch(city: String, postalCode: String, zipCode: String, page: Int): StoresSearchResult!
-  storesFromCompany(companyId: ID!): [Store!]!
+  storesFromCompany(companyId: ID!, page: Int): [Store!]!
   store(id: ID!): Store
   storeCount: Int!
   itemsFromStore(storeId: ID, page: Int, search: String): ItemSearchResult!
