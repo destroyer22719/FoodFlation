@@ -25,4 +25,16 @@
       fill: $purple-light;
     }
   }
+
+  &__companies {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__company {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: $purple-light;
+  }
 }
