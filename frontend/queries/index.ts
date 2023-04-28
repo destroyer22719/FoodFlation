@@ -23,6 +23,7 @@ export const searchStores = async ({
   zipCode,
   postalCode,
   companyId,
+  page,
 }: QuerySearchStoreParams) => {
   if (!city && !zipCode && !postalCode && !companyId) {
     throw new Error(
@@ -39,8 +40,8 @@ export const searchStores = async ({
     },
     body: JSON.stringify({
       query: `
-        query ($city: String, $postalCode: String, $zipCode: String){
-          storesSearch(city: $city, postalCode: $postalCode, zipCode: $zipCode) {
+        query ($city: String, $postalCode: String, $zipCode: String, $companyId: String, $page: Int){
+          storesSearch(city: $city, postalCode: $postalCode, zipCode: $zipCode, companyId: $companyId, page: $page) {
             stores {
               id
               name
@@ -56,6 +57,8 @@ export const searchStores = async ({
         city,
         postalCode,
         zipCode,
+        companyId,
+        page: page || 1,
       },
     }),
   });
