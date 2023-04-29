@@ -11,6 +11,9 @@ export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
     where: {
       id,
     },
+    include: {
+      companies: true,
+    },
   });
 
   return store as unknown as Store;

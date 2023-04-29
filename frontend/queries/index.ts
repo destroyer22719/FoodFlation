@@ -100,3 +100,44 @@ export const getLocationsAndCompanies = async () => {
   const res = await req.json();
   return res.data as QueryLocationAndCompaniesResult;
 };
+
+export const getStoreData = async (id: string) => {
+  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    body: JSON.stringify({
+      query: `
+        query ($id: ID!) {
+          store(id: $id) {
+            id
+            name
+            street
+            city
+            postalCode
+            zipCode
+            company {
+              id
+              name
+            }
+          }
+          itemsFromStore(storeId: $id) {
+            total
+            categories {
+              count
+              category
+            }
+          }
+        }
+      `,
+      variables: {
+        id,
+      },
+    }),
+  });
+
+  const res = await req.json();
+  return res.data as QueryStoreResult;
+};

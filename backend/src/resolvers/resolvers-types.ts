@@ -124,7 +124,7 @@ export type QueryStoresSearchArgs = {
 export type Store = {
   __typename?: 'Store';
   city: Scalars['String'];
-  company: Company;
+  companies: Company;
   companyId: Scalars['String'];
   country: Scalars['String'];
   createdAt: Scalars['String'];
@@ -320,7 +320,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type StoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['Store'] = ResolversParentTypes['Store']> = ResolversObject<{
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  company?: Resolver<ResolversTypes['Company'], ParentType, ContextType>;
+  companies?: Resolver<ResolversTypes['Company'], ParentType, ContextType>;
   companyId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

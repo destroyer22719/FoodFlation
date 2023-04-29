@@ -25,7 +25,7 @@ type Store {
   zipCode: String
   country: String!
   items: [Item!]!
-  company: Company!
+  companies: Company!
 }
 
 type Item {
