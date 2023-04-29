@@ -6,11 +6,11 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import styles from "@/styles/Components/Pagination.module.scss";
 
 type Props = {
-  resultsFound: number;
   resultsPerPage?: number;
 };
 
-const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
+const PaginationLoaderComponent = ({ resultsPerPage = 10 }: Props) => {
+  const resultsFound = Number(useSearchParams().get("resultsFound")) || 0;
   const maxPages = Math.ceil(resultsFound / resultsPerPage);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,4 +57,4 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
   );
 };
 
-export default PaginationComponent;
+export default PaginationLoaderComponent;
