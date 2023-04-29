@@ -2,6 +2,7 @@ import { searchStores } from "@/queries/index";
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "./Components/StoreItem/StoreItem";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
+import StoreItemSkeleton from "./Components/StoreItem/StoreItemSkeleton";
 // import StoreItem from "@/components/StoreItem/StoreItem";
 // import PaginationComponent from "./Components/PaginationComponent";
 // import { searchStores } from "queries";

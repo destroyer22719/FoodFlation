@@ -41,11 +41,10 @@
     height: 80px;
 
     &--skeleton {
-      span {
+      div {
         margin-bottom: 10px;
-        display: inline-block;
-        width: 150px;
-        height: 20px;
+        width: 120px;
+        height: 15px;
       }
     }
 
@@ -57,16 +56,10 @@
       width: 120px;
       text-align: center;
     }
-
-    @media only screen and (min-width: 400px) {
-      & span {
-        font-size: 14px;
-      }
-    }
   }
 
   &__image--skeleton,
-  &__address--skeleton span {
+  &__address--skeleton div {
     border-radius: 10px;
     background: linear-gradient(
         to right,
@@ -79,5 +72,11 @@
     background-size: 50px 500px;
     background-position: 0 0;
     animation: shine 1s infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 100% 0, /* move highlight to right */ 0 0;
+    }
   }
 }
