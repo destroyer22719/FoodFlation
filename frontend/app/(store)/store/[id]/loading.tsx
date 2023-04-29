@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import styles from "@/styles/Store.module.scss";
 
 import PaginationComponent from "./Components/PaginationButtons";
-import ItemCardSkeleton from "./Components/ItemCardSkeleton";
+import ItemCardSkeleton from "./Components/ItemCard/ItemCardSkeleton";
 
 const Loading = () => {
   const searchParams = useSearchParams();

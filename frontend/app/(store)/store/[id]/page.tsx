@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 // import { API_URL } from "@/config/index";
 import styles from "@/styles/Store.module.scss";
 import ItemCard from "@/components/ItemCard";
-import { ItemFetchRes } from "./util";
 
 import BackToTop from "./Components/BackToTop";
 import PaginationComponent from "./Components/PaginationButtons";
