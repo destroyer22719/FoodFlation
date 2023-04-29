@@ -6,7 +6,7 @@ import { BsInputCursor } from "react-icons/bs";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 import styles from "@/styles/Components/SearchTable.module.scss";
-import LocationTable from "./LocationTable/LocationTable";
+import LocationTable from "../LocationTable/LocationTable";
 import SearchStore from "./SearchStore";
 import CompanyButtons from "./CompanyButtons";
 
