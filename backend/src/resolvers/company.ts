@@ -1,8 +1,12 @@
-import { prisma } from "../db/index.js";
+import { Context } from "../db/context.js";
 import { Company, QueryCompanyArgs } from "./resolvers-types.js";
 
-export const companyResolver = async (_: {}, { id }: QueryCompanyArgs) => {
-  const company = await prisma.companies.findUnique({
+export const companyResolver = async (
+  _: {},
+  { id }: QueryCompanyArgs,
+  ctx: Context
+) => {
+  const company = await ctx.prisma.companies.findUnique({
     where: {
       id,
     },
@@ -10,7 +14,7 @@ export const companyResolver = async (_: {}, { id }: QueryCompanyArgs) => {
   return company as unknown as Company;
 };
 
-export const companiesResolver = async () => {
-  const companies = await prisma.companies.findMany();
+export const companiesResolver = async (_: {}, __: {}, ctx: Context) => {
+  const companies = await ctx.prisma.companies.findMany();
   return companies as unknown as Company[];
 };

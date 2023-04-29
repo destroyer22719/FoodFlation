@@ -6,13 +6,19 @@ import {
 
 import { resolvers } from "./resolvers/index.js";
 import { typeDefs } from "./model/schema.js";
+import { context } from "./db/context.js";
 
 const server = new ApolloServer({
   typeDefs: typeDefs,
   resolvers: resolvers,
+
+  // context: context,
 });
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(
   server,
-  handlers.createAPIGatewayProxyEventV2RequestHandler()
+  handlers.createAPIGatewayProxyEventV2RequestHandler(),
+  {
+    context,
+  }
 );

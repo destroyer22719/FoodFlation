@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 
-import { prisma } from "../db/index.js";
+import { Context } from "../db/context.js";
 import {
   Item,
   QueryItemArgs,
@@ -10,11 +10,12 @@ import {
 
 export const itemResolver = async (
   _: {},
-  { id, limit, offset }: QueryItemArgs
+  { id, limit, offset }: QueryItemArgs,
+  ctx: Context
 ) => {
   let item;
 
-  item = await prisma.items.findUnique({
+  item = await ctx.prisma.items.findUnique({
     where: {
       id,
     },
@@ -28,7 +29,8 @@ export const itemResolver = async (
 
 export const itemStoreResolver = async (
   _: {},
-  { storeId, page, search }: QueryItemsFromStoreArgs
+  { storeId, page, search }: QueryItemsFromStoreArgs,
+  ctx: Context
 ) => {
   page = page || 1;
 
@@ -36,7 +38,7 @@ export const itemStoreResolver = async (
     throw new GraphQLError("No search term or storeId provided", {
       extensions: {
         code: "BAD_USER_INPUT",
-      }
+      },
     });
   }
 
@@ -46,15 +48,15 @@ export const itemStoreResolver = async (
   };
 
   const [item, count, categoryData] = await Promise.all([
-    prisma.items.findMany({
+    ctx.prisma.items.findMany({
       where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
     }),
-    prisma.items.count({
+    ctx.prisma.items.count({
       where: searchQuery,
     }),
-    prisma.items.groupBy({
+    ctx.prisma.items.groupBy({
       by: ["category"],
       where: searchQuery,
       _count: {
@@ -75,11 +77,12 @@ export const itemStoreResolver = async (
 
 export const itemCityResolver = async (
   _: {},
-  { city, page }: QueryItemsFromCityArgs
+  { city, page }: QueryItemsFromCityArgs,
+  ctx: Context
 ) => {
   let item;
 
-  item = await prisma.items.findFirst({
+  item = await ctx.prisma.items.findFirst({
     where: {
       stores: {
         city,
@@ -92,7 +95,7 @@ export const itemCityResolver = async (
   return item as unknown as Item[];
 };
 
-export const itemCountResolver = async () => {
-  const count = await prisma.items.count();
+export const itemCountResolver = async (_: {}, __: {}, ctx: Context) => {
+  const count = await ctx.prisma.items.count();
   return count;
 };

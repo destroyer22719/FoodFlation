@@ -1,4 +1,4 @@
-import { prisma } from "../db/index.js";
+import { Context } from "../db/context.js";
 import {
   Location,
   QueryStoreArgs,
@@ -6,8 +6,12 @@ import {
   Store,
 } from "./resolvers-types.js";
 
-export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
-  const store = await prisma.stores.findUnique({
+export const storeResolver = async (
+  _: {},
+  { id }: QueryStoreArgs,
+  ctx: Context
+) => {
+  const store = await ctx.prisma.stores.findUnique({
     where: {
       id,
     },
@@ -19,13 +23,13 @@ export const storeResolver = async (_: {}, { id }: QueryStoreArgs) => {
   return store as unknown as Store;
 };
 
-export const storeCountResolver = async () => {
-  const storesCount = await prisma.stores.count();
+export const storeCountResolver = async (_: {}, __: {}, ctx: Context) => {
+  const storesCount = await ctx.prisma.stores.count();
   return storesCount;
 };
 
-export const locationsResolver = async () => {
-  const storesByLocation = await prisma.stores.groupBy({
+export const locationsResolver = async (_: {}, __: {}, ctx: Context) => {
+  const storesByLocation = await ctx.prisma.stores.groupBy({
     by: ["country", "state", "province", "city"],
     _count: {
       city: true,
@@ -45,7 +49,8 @@ export const locationsResolver = async () => {
 
 export const storeSearchResolver = async (
   _: {},
-  { city, page, postalCode, zipCode, companyId }: QueryStoresSearchArgs
+  { city, page, postalCode, zipCode, companyId }: QueryStoresSearchArgs,
+  ctx: Context
 ) => {
   const searchCondition = {
     ...(city && { city }),
@@ -65,10 +70,10 @@ export const storeSearchResolver = async (
   };
 
   const [total, stores] = await Promise.all([
-    prisma.stores.count({
+    ctx.prisma.stores.count({
       where: searchCondition,
     }),
-    prisma.stores.findMany({
+    ctx.prisma.stores.findMany({
       where: searchCondition,
       skip: ((page || 1) - 1) * 10,
       take: 10,
