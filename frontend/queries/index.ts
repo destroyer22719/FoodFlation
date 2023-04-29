@@ -112,12 +112,15 @@ export const getStoreData = async (id: string) => {
       query: `
         query ($id: ID!) {
           store(id: $id) {
+            country
             id
             name
             street
             city
             postalCode
             zipCode
+            state
+            province
             company {
               id
               name

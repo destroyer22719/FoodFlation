@@ -18,7 +18,14 @@ declare global {
   };
 
   type QueryStoreResult = {
-    store: Store & { companies: Company };
+    store: Store & { companies: { id: string } };
+    itemsFromStore: {
+      total: number;
+      categories: {
+        count: number;
+        category: string;
+      };
+    };
   };
 
   type QueryLocationAndCompaniesResult = {
@@ -37,8 +44,11 @@ declare global {
     name: string;
     street: string;
     city: string;
+    country: string;
     postalCode?: string;
     zipCode?: string;
+    state?: string;
+    province?: string;
   }
 
   interface Company {
