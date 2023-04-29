@@ -26,7 +26,7 @@ const ProvItem: React.FC<Props> = ({ cities, province }) => {
         {open && (
           <div className={styles["location-table__cities"]}>
             {cityNames.map((cityName) => (
-              <Link href={`/stores/?city=${cityName}`} key={cityName}>
+              <Link href={`/stores/?city=${cityName}#list`} key={cityName}>
                 <div className={styles["location-table__city"]}>
                   {cityName} - {cities[cityName]}
                 </div>
