@@ -8,7 +8,7 @@ import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderC
 
 const loading = () => {
   const searchParams = useSearchParams();
-  const searchQueryExists = !searchParams.toString();
+  const searchQueryExists = !!searchParams.toString();
 
   return (
     <div>
