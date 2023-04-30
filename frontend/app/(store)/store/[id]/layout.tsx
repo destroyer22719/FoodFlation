@@ -1,6 +1,7 @@
 import { getStoreData } from "@/queries/index";
 import StoreInfo from "./Components/StoreInfo";
 import Categories from "./Components/Categories";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: {
@@ -11,6 +12,10 @@ type Props = {
 const Layout = async ({ params }: Props) => {
   const { id } = params;
   const { store, itemsFromStore } = await getStoreData(id);
+
+  if (!store) {
+    notFound();
+  }
 
   return (
     <div>

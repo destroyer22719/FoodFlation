@@ -1,6 +1,7 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 const Categories = ({ categoriesData }: Props) => {
   const searchParams = useSearchParams();
   const categorySelected = searchParams.get("category");
+  const pathName = usePathname();
 
   return (
     <div>
@@ -23,11 +25,11 @@ const Categories = ({ categoriesData }: Props) => {
       )}
       <div>
         {categoriesData.map(({ count, category }) => (
-          <div>
+          <Link href={`${pathName}?category=${category}`}>
             <div>
               {count} - {category}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
