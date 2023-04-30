@@ -32,7 +32,7 @@ type Item {
   id: ID!
   name: String!
   storeId: String!
-  imgUrl: String
+  imgUrl: String!
   createdAt: String!
   updatedAt: String!
   category: String!
@@ -71,6 +71,7 @@ type ItemSearchResult {
   items: [Item!]!
   total: Int!
   categories: [CategoryData!]!
+  resultsFound: Int!
 }
 
 type Query {

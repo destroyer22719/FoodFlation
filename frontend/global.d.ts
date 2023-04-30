@@ -21,10 +21,7 @@ declare global {
     store: Store & { companies: { id: string } };
     itemsFromStore: {
       total: number;
-      categories: {
-        count: number;
-        category: string;
-      }[];
+      categories: Category[];
     };
   };
 
@@ -38,6 +35,29 @@ declare global {
       state?: string;
     }[];
   };
+
+  type QueryItemsFromStoreResult = {
+    items: Item[];
+    total: number;
+    categories: Category[];
+  };
+
+  interface Item {
+    id: string;
+    name: string;
+    storeId: string;
+    imgUrl: string;
+    createdAt: string;
+    updatedAt: string;
+    category: string;
+    storeId: string;
+    price: Price[];
+  }
+
+  interface Price {
+    price: number;
+    createdAt: string;
+  }
 
   interface Store {
     id: string;
@@ -54,6 +74,11 @@ declare global {
   interface Company {
     id: string;
     name: string;
+  }
+
+  interface Category {
+    category: string;
+    count: number;
   }
 
   type LocationObj = {

@@ -30,7 +30,7 @@ export const searchStores = async ({
     return {
       stores: [],
       total: 0,
-    }
+    };
   } else if (zipCode && postalCode) {
     throw new Error("Only one of zipCode or postalCode must be provided");
   }
@@ -143,4 +143,54 @@ export const getStoreData = async (id: string) => {
 
   const res = await req.json();
   return res.data as QueryStoreResult;
+};
+
+export const getItemsFromStore = async (
+  id: string,
+  {
+    search,
+    category,
+    page,
+  }: {
+    search?: string;
+    category?: string;
+    page?: number;
+  }
+) => {
+  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    body: JSON.stringify({
+      query: `
+        query ($id: ID!, $search: String, $category: String, $page: Int) {
+          itemsFromStore(storeId: $id, search: $search, category: $category, page: $page) {
+            items {
+              id
+              name
+              imgUrl
+              category
+              prices {
+                price
+                createdAt
+              }
+            }
+            resultsFound
+          }
+        }
+      `,
+      variables: {
+        id,
+        search,
+        category,
+        page,
+      },
+    }),
+  });
+
+  const res = await req.json();
+
+  return res.data.itemsFromStore as QueryItemsFromStoreResult;
 };

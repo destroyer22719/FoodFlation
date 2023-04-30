@@ -48,15 +48,21 @@ export const itemStoreResolver = async (
     ...(category && { category }),
   };
 
-  const [item, count, categoryData] = await Promise.all([
+  const [items, count, categoryData, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
       where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
+      include: {
+        prices: {
+          take: 1,
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
     }),
-    ctx.prisma.items.count({
-      where: searchQuery,
-    }),
+    ctx.prisma.items.count(),
     ctx.prisma.items.groupBy({
       by: ["category"],
       where: searchQuery,
@@ -64,15 +70,19 @@ export const itemStoreResolver = async (
         category: true,
       },
     }),
+    ctx.prisma.items.count({
+      where: searchQuery,
+    }),
   ]);
 
   return {
-    items: item as unknown as Item[],
+    items: items as unknown as Item[],
     total: count,
     categories: categoryData.map((data) => ({
       category: data.category,
       count: data._count.category,
     })),
+    resultsFound,
   };
 };
 

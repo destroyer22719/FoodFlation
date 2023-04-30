@@ -17,8 +17,6 @@ const StoreIdPage = async ({
 }: Props) => {
   const { id } = params;
 
-  
-
   return (
     <div>
 

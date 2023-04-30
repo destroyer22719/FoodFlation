@@ -46,6 +46,7 @@ export type ItemSearchResult = {
   __typename?: 'ItemSearchResult';
   categories: Array<CategoryData>;
   items: Array<Item>;
+  resultsFound: Scalars['Int'];
   total: Scalars['Int'];
 };
 
@@ -283,6 +284,7 @@ export type ItemResolvers<ContextType = any, ParentType extends ResolversParentT
 export type ItemSearchResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItemSearchResult'] = ResolversParentTypes['ItemSearchResult']> = ResolversObject<{
   categories?: Resolver<Array<ResolversTypes['CategoryData']>, ParentType, ContextType>;
   items?: Resolver<Array<ResolversTypes['Item']>, ParentType, ContextType>;
+  resultsFound?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
