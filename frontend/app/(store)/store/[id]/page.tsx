@@ -1,4 +1,7 @@
+import { getItemsFromStore } from "@/queries/index";
 import styles from "@/styles/Store.module.scss";
+import ItemCard from "./Components/ItemCard/ItemCard";
+import PaginationComponent from "@/components/Pagination/PaginationComponent";
 
 type Props = {
   params: {
@@ -17,9 +20,23 @@ const StoreIdPage = async ({
 }: Props) => {
   const { id } = params;
 
+  const { items, resultsFound } = await getItemsFromStore(id, {
+    page: +page || 1,
+    category,
+    search,
+  });
+
+  console.log(items);
+
   return (
     <div>
-
+      <div>{resultsFound} Results Found</div>
+      <PaginationComponent resultsFound={resultsFound}/>
+      <div>
+        {items.map((item) => (
+          <ItemCard item={item} key={item.id} />
+        ))}
+      </div>
     </div>
   );
 };

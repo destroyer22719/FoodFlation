@@ -37,9 +37,8 @@ declare global {
   };
 
   type QueryItemsFromStoreResult = {
-    items: Item[];
-    total: number;
-    categories: Category[];
+    items: Omit<Item, "createdAt" | "updatedAt" | "storeId">[];
+    resultsFound: number;
   };
 
   interface Item {
@@ -51,7 +50,7 @@ declare global {
     updatedAt: string;
     category: string;
     storeId: string;
-    price: Price[];
+    prices: Price[];
   }
 
   interface Price {
