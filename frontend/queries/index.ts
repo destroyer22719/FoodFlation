@@ -27,9 +27,10 @@ export const searchStores = async ({
   page,
 }: QuerySearchStoreParams) => {
   if (!city && !zipCode && !postalCode && !companyId) {
-    throw new Error(
-      "At least one of city, zipCode, companyId or postalCode must be provided"
-    );
+    return {
+      stores: [],
+      total: 0,
+    }
   } else if (zipCode && postalCode) {
     throw new Error("Only one of zipCode or postalCode must be provided");
   }
@@ -121,9 +122,8 @@ export const getStoreData = async (id: string) => {
             zipCode
             state
             province
-            company {
+            companies {
               id
-              name
             }
           }
           itemsFromStore(storeId: $id) {

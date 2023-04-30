@@ -27,9 +27,7 @@ const StorePages = async ({ searchParams }: Props) => {
 
   return (
     <div className={styles["store-list"]}>
-      <div>
-        <PaginationComponent resultsFound={total} />
-      </div>
+      <div>{total > 0 && <PaginationComponent resultsFound={total} />}</div>
       <div className={styles["store-list__stores"]} id="list">
         {stores.map((store) => (
           <StoreItem store={store} key={store.id} />

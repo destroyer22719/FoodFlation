@@ -24,7 +24,7 @@ declare global {
       categories: {
         count: number;
         category: string;
-      };
+      }[];
     };
   };
 
