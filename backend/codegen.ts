@@ -79,7 +79,7 @@ type Query {
   storesSearch(city: String, postalCode: String, zipCode: String, page: Int, companyId: ID): StoresSearchResult!
   store(id: ID!): Store
   storeCount: Int!
-  itemsFromStore(storeId: ID, page: Int, search: String): ItemSearchResult!
+  itemsFromStore(storeId: ID!, page: Int, search: String, category: String): ItemSearchResult!
   itemsFromCity(city: String!, page: Int): [Item!]!
   item(id: ID!, offset: Int, limit: Int): Item
   itemCount: Int!

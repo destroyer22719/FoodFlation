@@ -29,12 +29,12 @@ export const itemResolver = async (
 
 export const itemStoreResolver = async (
   _: {},
-  { storeId, page, search }: QueryItemsFromStoreArgs,
+  { storeId, page, search, category }: QueryItemsFromStoreArgs,
   ctx: Context
 ) => {
   page = page || 1;
 
-  if ((!search || search === "") && (!storeId || storeId === "")) {
+  if (!search && !storeId && !category) {
     throw new GraphQLError("No search term or storeId provided", {
       extensions: {
         code: "BAD_USER_INPUT",
@@ -45,6 +45,7 @@ export const itemStoreResolver = async (
   const searchQuery = {
     ...(storeId && { storeId }),
     ...(search && { name: { contains: search } }),
+    ...(category && { category }),
   };
 
   const [item, count, categoryData] = await Promise.all([

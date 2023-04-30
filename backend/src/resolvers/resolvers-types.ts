@@ -102,9 +102,10 @@ export type QueryItemsFromCityArgs = {
 
 
 export type QueryItemsFromStoreArgs = {
+  category?: InputMaybe<Scalars['String']>;
   page?: InputMaybe<Scalars['Int']>;
   search?: InputMaybe<Scalars['String']>;
-  storeId?: InputMaybe<Scalars['ID']>;
+  storeId: Scalars['ID'];
 };
 
 
@@ -311,7 +312,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   item?: Resolver<Maybe<ResolversTypes['Item']>, ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
   itemCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   itemsFromCity?: Resolver<Array<ResolversTypes['Item']>, ParentType, ContextType, RequireFields<QueryItemsFromCityArgs, 'city'>>;
-  itemsFromStore?: Resolver<ResolversTypes['ItemSearchResult'], ParentType, ContextType, Partial<QueryItemsFromStoreArgs>>;
+  itemsFromStore?: Resolver<ResolversTypes['ItemSearchResult'], ParentType, ContextType, RequireFields<QueryItemsFromStoreArgs, 'storeId'>>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   store?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryStoreArgs, 'id'>>;
   storeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
