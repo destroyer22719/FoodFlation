@@ -1,0 +1,42 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.item-card {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $blue-dark;
+  margin-bottom: 25px;
+  padding: 25px;
+  border-radius: 5px;
+  @include mui-dark($blue-dark);
+
+  h3 {
+    margin: 0;
+  }
+
+  &__image {
+    margin-top: 0;
+    border-radius: 5px;
+  }
+
+  &__info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+  }
+
+  &__price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    flex-grow: 1;
+    border-radius: 5px;
+    background-color: $purple-light;
+    height: 40px;
+    text-align: center;
+    padding: 7.5px;
+  }
+}
