@@ -19,7 +19,7 @@ model Companies {
 
 model Items {
   id        String   @id @default(uuid()) @db.VarChar(255)
-  name      String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(255)
   storeId   String   @db.VarChar(255)
   imgUrl    String?  @db.VarChar(500)
   createdAt DateTime @default(now())
