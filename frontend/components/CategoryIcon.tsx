@@ -15,7 +15,10 @@ const CategoryIcon: React.FC<Category> = ({ category }) => {
     "Dairy",
     "Miscellaneous",
   ];
-  let categoryClassName = category.toLowerCase().replace(/\s/g, "-");
+  let categoryClassName = category
+    .toLowerCase()
+    .replace(/\s/g, "-")
+    .replace("&", "and");
 
   if (!categories.includes(category)) {
     categoryClassName = "miscellaneous";
