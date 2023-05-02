@@ -4,13 +4,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Companies {
   id        String   @id @default(uuid()) @db.VarChar(255)
-  name      String   @db.VarChar(255)
+  name      String   @unique @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   stores    Stores[]
@@ -18,13 +19,13 @@ model Companies {
 
 model Items {
   id        String   @id @default(uuid()) @db.VarChar(255)
-  name      String   @db.VarChar(255)
+  name      String   @unique @db.VarChar(255)
   storeId   String   @db.VarChar(255)
   imgUrl    String?  @db.VarChar(500)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   category  String   @default("Miscellaneous") @db.VarChar(255)
-  stores    Stores   @relation(fields: [storeId], references: [id], onDelete: NoAction, map: "items_ibfk_1")
+  stores    Stores   @relation(fields: [storeId], references: [id], onDelete: Cascade, map: "items_ibfk_1")
   prices    Prices[]
 
   @@index([storeId], map: "storeId")
@@ -55,7 +56,7 @@ model Stores {
   zipCode    String?   @db.VarChar(255)
   country    String    @db.VarChar(255)
   items      Items[]
-  companies  Companies @relation(fields: [companyId], references: [id], onDelete: NoAction, map: "stores_ibfk_1")
+  companies  Companies @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
 
   @@index([companyId], map: "companyId")
 }
