@@ -11,8 +11,6 @@ import { context } from "./db/context.js";
 const server = new ApolloServer({
   typeDefs: typeDefs,
   resolvers: resolvers,
-
-  // context: context,
 });
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(

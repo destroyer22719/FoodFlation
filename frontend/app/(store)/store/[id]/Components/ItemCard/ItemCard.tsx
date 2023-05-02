@@ -9,7 +9,7 @@ type Props = {
 const ItemCard = ({ item }: Props) => {
   const { category, id, imgUrl, name, prices } = item;
   const price = prices[0].price;
-  const lastUpdated = new Date(prices[0].createdAt).toLocaleDateString();
+  const lastUpdated = new Date(+prices[0].createdAt).toLocaleDateString();
   
   return (
     <Link href={`/item/${id}`}>

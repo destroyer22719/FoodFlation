@@ -26,8 +26,6 @@ const StoreIdPage = async ({
     search,
   });
 
-  console.log(items);
-
   return (
     <div>
       <div>{resultsFound} Results Found</div>
