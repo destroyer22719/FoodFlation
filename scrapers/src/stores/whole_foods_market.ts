@@ -159,19 +159,16 @@ export async function getPricesWholeFoodsMarket(
           document.querySelectorAll(".regular_price > b")
         )
           .map((e) => parseFloat((e as HTMLElement).innerText.slice(1)))
-          .slice(0, 3);
 
         const names = Array.from(
           document.querySelectorAll(`h2[data-testid="product-tile-name"]`)
         )
           .map((e) => (e as HTMLElement).innerText)
-          .slice(0, 3);
 
         const images = Array.from(
           document.querySelectorAll(`img[data-testid="product-tile-image"]`)
         )
           .map((e) => (e as HTMLImageElement).src)
-          .slice(0, 3);
 
         const resultData = [];
         const resultLength = Math.min(names.length, 5);
