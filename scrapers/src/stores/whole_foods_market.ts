@@ -8,7 +8,7 @@ import {
   getCompanyId,
   getStoreId,
   msToTime,
-  updateItem,
+  updateItems,
 } from "../utils/scrapers.js";
 
 export async function getPricesWholeFoodsMarket(
@@ -174,11 +174,7 @@ export async function getPricesWholeFoodsMarket(
           .slice(0, 3);
 
         const resultData = [];
-        const resultLength = Math.min(
-          prices.length,
-          names.length,
-          images.length
-        );
+        const resultLength = Math.min(names.length, 5);
 
         for (let i = 0; i < resultLength; i++) {
           resultData.push({
@@ -191,20 +187,26 @@ export async function getPricesWholeFoodsMarket(
         return resultData;
       });
 
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode} | Inserting prices of ${results.length} item(s)`;
 
-        await updateItem({
-          storeId,
-          result,
-        });
-      }
+      await updateItems({
+        storeId,
+        results,
+      });
+
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode} | Finished!)`;
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

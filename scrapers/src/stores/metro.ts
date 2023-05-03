@@ -8,7 +8,7 @@ import {
   getCompanyId,
   getStoreId,
   msToTime,
-  updateItem,
+  updateItems,
 } from "../utils/scrapers.js";
 
 export async function getPricesMetro(
@@ -162,7 +162,7 @@ export async function getPricesMetro(
             ) as HTMLElement)!.innerText.slice(4);
             prices.splice(i + 1, 1);
           }
-          
+
           results.push({
             name: name[i],
             price: parseFloat(price),
@@ -173,20 +173,28 @@ export async function getPricesMetro(
         return results;
       });
 
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${postalCode} | Inserting prices of ${
+        results.length
+      } item(s)`;
 
-        await updateItem({
-          result,
-          storeId,
-        });
-      }
+      await updateItems({
+        results,
+        storeId,
+      });
+
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${postalCode} | Finished!`;
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

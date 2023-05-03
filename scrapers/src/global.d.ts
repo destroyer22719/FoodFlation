@@ -84,13 +84,13 @@ declare global {
     state?: string;
     name: string;
   };
-  type UpdateItemParams = {
+  type UpdateItemsParams = {
     storeId: string;
-    result: {
+    results: {
       name: string;
       price: number;
       imgUrl: string;
-    };
+    }[];
   };
 }
 

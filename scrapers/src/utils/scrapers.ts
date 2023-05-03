@@ -115,30 +115,40 @@ export const getStoreId = async ({
   return store.id;
 };
 
-export const updateItem = async ({ result, storeId }: UpdateItemParams) => {
-  let itemObj = await prisma.items.findFirst({
-    where: { name: result.name, storeId },
+export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
+  const resultNames = results.map((result) => result.name);
+
+  let itemObjs = await prisma.items.findMany({
+    where: { storeId, name: { in: resultNames } },
   });
 
-  if (!itemObj) {
-    itemObj = await prisma.items.create({
-      data: {
-        name: result.name,
-        storeId,
-        imgUrl: result.imgUrl,
-      },
-    });
-  } else if (itemObj.category !== item2category[result.name]) {
-    await prisma.items.update({
-      where: { id: itemObj.id },
-      data: { category: item2category[result.name] },
-    });
+  if (itemObjs.length !== results.length) {
+    const foundItems = itemObjs.map((itemObj) => itemObj.name);
+    const itemsNotFound = resultNames.filter(
+      (name) => foundItems.indexOf(name) === -1
+    );
+
+    const newItems = await Promise.all(
+      itemsNotFound.map(async (name) => {
+        const item = await prisma.items.create({
+          data: {
+            name,
+            storeId,
+            imgUrl: results.find((result) => result.name === name)!.imgUrl,
+            category: item2category[name],
+          },
+        });
+        return item;
+      })
+    );
+
+    itemObjs = [...itemObjs, ...newItems];
   }
 
-  await prisma.prices.create({
-    data: {
+  await prisma.prices.createMany({
+    data: results.map((result) => ({
       price: result.price,
-      itemId: itemObj.id,
-    },
+      itemId: itemObjs.find((itemObj) => itemObj.name === result.name)!.id,
+    })),
   });
 };

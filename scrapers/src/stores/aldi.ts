@@ -8,7 +8,7 @@ import {
   getCompanyId,
   getStoreId,
   msToTime,
-  updateItem,
+  updateItems,
 } from "../utils/scrapers.js";
 
 export async function getPricesAldi(
@@ -134,7 +134,7 @@ export async function getPricesAldi(
         const img = document.querySelectorAll("li img[srcset]");
 
         //finds a maximum of 3 of each item
-        const totalIters = name.length > 3 ? 3 : name.length;
+        const totalIters = Math.min(name.length, 5);
         for (let i = 0; i < totalIters; i++) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
@@ -152,17 +152,23 @@ export async function getPricesAldi(
         return results;
       });
 
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode} | Inserting prices of ${results.length} item(s)`;
 
-        await updateItem({ result, storeId });
-      }
+      await updateItems({ results, storeId });
+
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${zipCode} | Finished!`;
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

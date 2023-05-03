@@ -8,7 +8,7 @@ import {
   getCompanyId,
   getStoreId,
   msToTime,
-  updateItem,
+  updateItems,
 } from "../utils/scrapers.js";
 
 export async function getPricesNoFrills(
@@ -176,23 +176,33 @@ export async function getPricesNoFrills(
         return results;
       });
 
-      for (const result of results) {
-        loader.text = `${items.indexOf(item)}/${items.length} - ${stores
-          .map((store) => store.postalCode)
-          .indexOf(postalCode)}/${stores.length}| (${
-          storeIndexes.itemIndex
-        } / ${storeIndexes.storeIndex}) ${item} at ${postalCode} |(${
-          result.name
-        } for ${result.price})`;
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${postalCode} | Inserting prices of ${
+        results.length
+      } item(s)`;
 
-        await updateItem({
-          storeId,
-          result,
-        });
-      }
+      await updateItems({
+        storeId,
+        results,
+      });
+
+      loader.text = `${defaultItems.indexOf(item)}/${
+        defaultItems.length
+      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
+        stores.length
+      }| (${storeIndexes.itemIndex} / ${
+        storeIndexes.storeIndex
+      }) ${item} at ${postalCode} | Finished!`;
+
       itemBar.increment(1);
       storeIndexes.itemIndex++;
     }
+    
     items = items;
     storeBar.increment(1);
     storeIndexes.storeIndex++;
