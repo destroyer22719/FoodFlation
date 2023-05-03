@@ -58,18 +58,13 @@ const item2category = JSON.parse(
 );
 
 export const getCompanyId = async (name: string) => {
-  let company = await prisma.companies.findFirst({
+  const company = await prisma.companies.upsert({
     where: { name },
+    update: {},
+    create: {
+      name,
+    },
   });
-
-  if (!company) {
-    company = await prisma.companies.create({
-      data: {
-        name,
-      },
-    });
-    console.log(`Created ${name}`);
-  }
 
   return company.id;
 };
