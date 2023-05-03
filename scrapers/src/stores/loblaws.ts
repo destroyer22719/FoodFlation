@@ -95,6 +95,7 @@ export async function getPricesLoblaws(
       country: "canada",
       province,
       postalCode,
+      name: "Loblaws",
     });
 
     loader.color = "green";
@@ -163,7 +164,7 @@ export async function getPricesLoblaws(
         while (i < totalIters) {
           results.push({
             name: (<HTMLElement>name[i]).innerText,
-            price: parseFloat(((<HTMLElement>price[i]).innerText).slice(1)),
+            price: parseFloat((<HTMLElement>price[i]).innerText.slice(1)),
             imgUrl: (<HTMLImageElement>img[i]).src,
           });
           i++;

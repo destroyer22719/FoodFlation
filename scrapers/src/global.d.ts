@@ -82,6 +82,7 @@ declare global {
     postalCode?: string;
     zipCode?: string;
     state?: string;
+    name: string;
   };
   type UpdateItemParams = {
     storeId: string;

@@ -92,6 +92,7 @@ export async function getPricesWholeFoodsMarket(
       zipCode,
       country: "us",
       companyId,
+      name: "Target",
     });
 
     loader.color = "green";

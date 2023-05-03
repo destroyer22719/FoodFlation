@@ -97,6 +97,7 @@ export async function getPricesAldi(
       state,
       country: "us",
       street,
+      name: "Aldi",
     });
 
     await page.goto(

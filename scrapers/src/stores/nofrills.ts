@@ -104,6 +104,7 @@ export async function getPricesNoFrills(
       country: "canada",
       street,
       city,
+      name: "No Frills",
     });
 
     if (!popupDeleted) {

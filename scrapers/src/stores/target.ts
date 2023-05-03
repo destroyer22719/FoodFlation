@@ -3,7 +3,6 @@ import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
 
-
 import {
   getCompanyId,
   getStoreId,
@@ -96,6 +95,7 @@ export async function getPricesTarget(
       state,
       country: "us",
       street,
+      name: "Target",
     });
 
     loader.color = "green";

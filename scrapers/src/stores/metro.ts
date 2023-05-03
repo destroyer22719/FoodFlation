@@ -101,6 +101,7 @@ export async function getPricesMetro(
       country: "canada",
       postalCode,
       companyId,
+      name: "Metro",
     });
 
     loader.color = "green";

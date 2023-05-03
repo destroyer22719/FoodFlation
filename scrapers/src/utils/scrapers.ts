@@ -78,6 +78,7 @@ export const getStoreId = async ({
   city,
   street,
   country,
+  name,
 }: GetStoreIdParams) => {
   const isCanada = country === "canada";
   let store = await prisma.stores.findFirst({
@@ -90,7 +91,7 @@ export const getStoreId = async ({
   if (!store) {
     store = await prisma.stores.create({
       data: {
-        name: "Loblaws",
+        name,
         street,
         city,
         country,
