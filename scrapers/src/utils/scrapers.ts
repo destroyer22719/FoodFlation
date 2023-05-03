@@ -58,12 +58,12 @@ const item2category = JSON.parse(
 );
 
 export const getCompanyId = async (name: string) => {
-  let company = await ctx.prisma.companies.findFirst({
+  let company = await prisma.companies.findFirst({
     where: { name },
   });
 
   if (!company) {
-    company = await ctx.prisma.companies.create({
+    company = await prisma.companies.create({
       data: {
         name,
       },
@@ -85,7 +85,7 @@ export const getStoreId = async ({
   country,
 }: GetStoreIdParams) => {
   const isCanada = country === "canada";
-  let store = await ctx.prisma.stores.findFirst({
+  let store = await prisma.stores.findFirst({
     where: {
       ...(isCanada ? { postalCode } : { zipCode }),
       companyId: companyId,
@@ -93,7 +93,7 @@ export const getStoreId = async ({
   });
 
   if (!store) {
-    store = await ctx.prisma.stores.create({
+    store = await prisma.stores.create({
       data: {
         name: "Loblaws",
         street,
@@ -120,12 +120,12 @@ export const getStoreId = async ({
 };
 
 export const updateItem = async ({ result, storeId }: UpdateItemParams) => {
-  let itemObj = await ctx.prisma.items.findFirst({
+  let itemObj = await prisma.items.findFirst({
     where: { name: result.name, storeId },
   });
 
   if (!itemObj) {
-    itemObj = await ctx.prisma.items.create({
+    itemObj = await prisma.items.create({
       data: {
         name: result.name,
         storeId,
@@ -133,13 +133,13 @@ export const updateItem = async ({ result, storeId }: UpdateItemParams) => {
       },
     });
   } else if (itemObj.category !== item2category[result.name]) {
-    await ctx.prisma.items.update({
+    await prisma.items.update({
       where: { id: itemObj.id },
       data: { category: item2category[result.name] },
     });
   }
 
-  await ctx.prisma.prices.create({
+  await prisma.prices.create({
     data: {
       price: result.price,
       itemId: itemObj.id,
