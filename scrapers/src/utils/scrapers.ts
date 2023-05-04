@@ -148,7 +148,9 @@ export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
   await prisma.prices.createMany({
     data: results.map((result) => ({
       price: result.price,
-      itemId: itemObjs.find((itemObj) => itemObj.name === result.name)!.id,
+      itemId: itemObjs.find(
+        (itemObj) => itemObj.name.toLowerCase() === result.name.toLowerCase()
+      )!.id,
     })),
   });
 };
