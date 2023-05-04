@@ -8,12 +8,10 @@ type Props = {
   resultsPerPage?: number;
 };
 
-const PaginationLoaderComponent = ({ resultsPerPage = 10 }: Props) => {
+const PaginationLoaderComponent = ({}: Props) => {
   const resultsFound = Number(useSearchParams().get("resultsFound")) || 0;
 
-  return (
-    <PaginationComponent resultsFound={resultsFound} />
-  );
+  return <PaginationComponent resultsFound={resultsFound} />;
 };
 
 export default PaginationLoaderComponent;
