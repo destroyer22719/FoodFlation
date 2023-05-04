@@ -13,16 +13,18 @@ type Props = {
     companyId?: string;
     postalCode?: string;
     zipCode?: string;
+    page?: number;
   };
 };
 
 const StorePages = async ({ searchParams }: Props) => {
-  const { city, companyId, postalCode, zipCode } = searchParams;
+  const { city, companyId, postalCode, zipCode, page } = searchParams;
   const { stores, total } = await searchStores({
     city,
     companyId,
     postalCode,
     zipCode,
+    page: page !== undefined ? +page : 1,
   });
 
   return (

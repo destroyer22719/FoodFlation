@@ -1,4 +1,5 @@
 service: foodflation-api-v2
+frameworkVersion: '3'
 
 provider:
   name: aws

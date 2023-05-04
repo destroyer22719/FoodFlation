@@ -68,7 +68,6 @@ export const searchStores = async ({
   });
 
   const res = await req.json();
-
   return res.data.storesSearch as QuerySearchStoreResult;
 };
 
