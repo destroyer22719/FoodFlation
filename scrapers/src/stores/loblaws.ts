@@ -9,6 +9,7 @@ import {
   msToTime,
   updateItems,
   getStoreId,
+  loaderDisplay,
 } from "../utils/scrapers.js";
 
 export async function getPricesLoblaws(
@@ -80,6 +81,8 @@ export async function getPricesLoblaws(
 
   const companyId = await getCompanyId("Loblaws");
 
+  const postalCodes = stores.map((store) => store.postalCode);
+
   for (const store of stores) {
     //searches up store postal code directly and set the store location
     let { city, postalCode, province, country, street } = store;
@@ -130,13 +133,19 @@ export async function getPricesLoblaws(
 
     for (const item of items) {
       loader.color = "green";
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${postalCode}`;
+
+      const loaderData: LoaderDisplayParams = {
+        itemIndex: defaultItems.indexOf(item),
+        totalItems: defaultItems.length,
+        storeIndex: postalCodes.indexOf(postalCode),
+        totalStores: stores.length,
+        storeScrapedIndex: storeIndexes.storeIndex,
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${postalCode}`,
+      });
 
       await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
       await page.waitForSelector(".product-tile__thumbnail__image", {
@@ -173,28 +182,20 @@ export async function getPricesLoblaws(
         return results;
       });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${postalCode} | Inserting prices of ${
-        results.length
-      } item(s)`;
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the prices of ${results.length} item(s)`,
+      });
 
       await updateItems({
         storeId,
         results,
       });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${postalCode} | Finished!`;
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices!`,
+      });
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

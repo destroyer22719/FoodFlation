@@ -115,6 +115,17 @@ export const getStoreId = async ({
   return store.id;
 };
 
+export const loaderDisplay = ({
+  itemIndex,
+  totalItems,
+  storeIndex,
+  totalStores,
+  storeScrapedIndex,
+  message = "",
+}: LoaderDisplayParams) => {
+  return `${itemIndex}/${totalItems} items | ${storeIndex}/${totalStores} stores | ${storeScrapedIndex} stores scraped | ${message}`;
+};
+
 export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
   const resultNames = results.map((result) => result.name);
 

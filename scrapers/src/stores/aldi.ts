@@ -7,6 +7,7 @@ import {
   defaultItems,
   getCompanyId,
   getStoreId,
+  loaderDisplay,
   msToTime,
   updateItems,
 } from "../utils/scrapers.js";
@@ -79,6 +80,8 @@ export async function getPricesAldi(
 
   const companyId = await getCompanyId("Aldi");
 
+  const zipCodes = stores.map((store) => store.zipCode);
+
   for (const store of stores) {
     //searches up store postal code directly and set the store location
     let { city, zipCode, state, country, street } = store;
@@ -107,13 +110,19 @@ export async function getPricesAldi(
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode}`;
+      
+      const loaderData: LoaderDisplayParams = {
+        itemIndex: defaultItems.indexOf(item),
+        totalItems: defaultItems.length,
+        storeIndex: zipCodes.indexOf(zipCode),
+        totalStores: stores.length,
+        storeScrapedIndex: storeIndexes.storeIndex,
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${zipCode}`,
+      });
 
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
@@ -152,23 +161,17 @@ export async function getPricesAldi(
         return results;
       });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode} | Inserting prices of ${results.length} item(s)`;
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the price of ${results.length} item(s)`,
+      });
 
       await updateItems({ results, storeId });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode} | Finished!`;
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices`,
+      });
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

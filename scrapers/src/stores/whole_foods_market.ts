@@ -7,6 +7,7 @@ import {
   defaultItems,
   getCompanyId,
   getStoreId,
+  loaderDisplay,
   msToTime,
   updateItems,
 } from "../utils/scrapers.js";
@@ -78,6 +79,8 @@ export async function getPricesWholeFoodsMarket(
 
   const companyId = await getCompanyId("Whole Foods Market");
 
+  const zipCodes = stores.map((store) => store.zipCode);
+
   for (const store of stores) {
     let { city, zipCode, state, country, street } = store;
 
@@ -128,13 +131,19 @@ export async function getPricesWholeFoodsMarket(
 
     for (const item of items) {
       loader.color = "green";
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode}`;
+
+      const loaderData: LoaderDisplayParams = {
+        itemIndex: defaultItems.indexOf(item),
+        totalItems: defaultItems.length,
+        storeIndex: zipCodes.indexOf(zipCode),
+        totalStores: stores.length,
+        storeScrapedIndex: storeIndexes.storeIndex,
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${zipCode}`,
+      });
 
       await page.goto(`https://www.wholefoodsmarket.com/search?text=${item}`, {
         waitUntil: "domcontentloaded",
@@ -157,18 +166,15 @@ export async function getPricesWholeFoodsMarket(
       const results = await page.evaluate(() => {
         const prices = Array.from(
           document.querySelectorAll(".regular_price > b")
-        )
-          .map((e) => parseFloat((e as HTMLElement).innerText.slice(1)))
+        ).map((e) => parseFloat((e as HTMLElement).innerText.slice(1)));
 
         const names = Array.from(
           document.querySelectorAll(`h2[data-testid="product-tile-name"]`)
-        )
-          .map((e) => (e as HTMLElement).innerText)
+        ).map((e) => (e as HTMLElement).innerText);
 
         const images = Array.from(
           document.querySelectorAll(`img[data-testid="product-tile-image"]`)
-        )
-          .map((e) => (e as HTMLImageElement).src)
+        ).map((e) => (e as HTMLImageElement).src);
 
         const resultData = [];
         const resultLength = Math.min(names.length, 5);
@@ -184,26 +190,20 @@ export async function getPricesWholeFoodsMarket(
         return resultData;
       });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode} | Inserting prices of ${results.length} item(s)`;
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the price of ${results.length} item(s)`,
+      });
 
       await updateItems({
         storeId,
         results,
       });
 
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode} | Finished!)`;
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices`,
+      });
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

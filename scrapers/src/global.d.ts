@@ -92,6 +92,14 @@ declare global {
       imgUrl: string;
     }[];
   };
+  type LoaderDisplayParams = {
+    itemIndex: number;
+    totalItems: number;
+    storeIndex: number;
+    totalStores: number;
+    storeScrapedIndex: number;
+    message?: string;
+  };
 }
 
 export {};
