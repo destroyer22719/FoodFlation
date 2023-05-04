@@ -1,5 +1,13 @@
 @import "assets/vars";
 
 .store-page {
-  
+  &__list {
+    margin: auto;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+    align-items: center;
+    justify-content: center;
+  }
 }

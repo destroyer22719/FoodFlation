@@ -30,7 +30,7 @@ const StoreIdPage = async ({
     <div>
       <div>{resultsFound} Results Found</div>
       <PaginationComponent resultsFound={resultsFound}/>
-      <div>
+      <div className={styles["store-page__list"]}>
         {items.map((item) => (
           <ItemCard item={item} key={item.id} />
         ))}
