@@ -6,7 +6,7 @@ import styles from "@/styles/StoreList.module.scss";
 import StoreItemSkeleton from "./Components/StoreItem/StoreItemSkeleton";
 import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
 
-const loading = () => {
+const Loading = () => {
   const searchParams = useSearchParams();
   const searchQueryExists = !!searchParams.toString();
 
@@ -24,4 +24,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;

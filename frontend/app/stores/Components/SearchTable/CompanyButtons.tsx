@@ -10,14 +10,14 @@ type Props = {
 const CompanyButtons = ({ companies }: Props) => {
   return (
     <div className={styles["search-table__companies"]}>
-      {companies.map((company) => (
-        <Link href={`/stores?companyId=${company.id}`}>
+      {companies.map(({ name, id }) => (
+        <Link href={`/stores?companyId=${id}`} key={id}>
           <div className={styles["search-table__company"]}>
             <Image
               width={60}
               height={60}
-              alt={company.name}
-              src={`/store-logos/${company.name
+              alt={name}
+              src={`/store-logos/${name
                 .toLocaleLowerCase()
                 .replaceAll(" ", "_")}-logo.png`}
             />

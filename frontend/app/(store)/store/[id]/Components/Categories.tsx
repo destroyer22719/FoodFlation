@@ -25,7 +25,7 @@ const Categories = ({ categoriesData }: Props) => {
       )}
       <div>
         {categoriesData.map(({ count, category }) => (
-          <Link href={`${pathName}?category=${category}`}>
+          <Link href={`${pathName}?category=${category}`} key={category}>
             <div>
               {count} - {category}
             </div>

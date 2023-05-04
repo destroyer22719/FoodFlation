@@ -37,7 +37,7 @@ const StoreInfo = ({ store }: Props) => {
         <div>
           <div>{street}</div>
           <div>
-            {city}, {province || state!}, {country}
+            {city}, {province || state}, {country}
           </div>
           <div>{zipCode || postalCode}</div>
         </div>
