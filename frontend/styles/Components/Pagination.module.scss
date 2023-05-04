@@ -24,6 +24,8 @@
     font-size: 20px;
     font-weight: bold;
 
+    cursor: pointer;
+
     @include mui-dark($blue-dark);
     display: grid;
     place-items: center;

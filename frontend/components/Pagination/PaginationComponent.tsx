@@ -19,10 +19,12 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
   let url = pathname;
 
   const navigatePages = (page: number) => {
-    const regex = /(?<=\?|\&)page=\d*/;
-    url += `?${searchParams.toString()}`;
+    if (page < 1 || page > maxPages) return;
 
-    if (url.match(regex)) {
+    url += `/?${searchParams.toString()}`;
+
+    if (searchParams.get("page")) {
+      const regex = /(?<=\?|\&)page=\d*/;
       url = url.replace(regex, `page=${page}`);
     } else {
       url += `&page=${page}`;
@@ -31,8 +33,7 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
     if (!searchParams.get("resultsFound")) {
       url += `&resultsFound=${resultsFound}`;
     }
-
-    if (page < 1 || page > maxPages) return;
+    
     router.push(url);
   };
 
