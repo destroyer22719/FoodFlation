@@ -1,22 +1,30 @@
+import { gql } from "@apollo/client";
+import {
+  GetItemAndStoreCountsQuery,
+  GetItemAndStoreCountsQueryVariables,
+  QueryStoresSearchArgs,
+  SearchStoreQuery,
+  SearchStoreQueryVariables,
+} from "__generated__/graphql";
+import { getClient } from "@/graphql/apolloClient";
+
 export const getCounts = async () => {
-  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query {
-          itemCount
-          storeCount
-        }
-      `,
-    }),
+  const query = gql`
+    query getItemAndStoreCounts {
+      itemCount
+      storeCount
+    }
+  `;
+
+  const client = getClient();
+  const { data } = await client.query<
+    GetItemAndStoreCountsQuery,
+    GetItemAndStoreCountsQueryVariables
+  >({
+    query,
   });
 
-  const res = await req.json();
-  return res.data as QueryCountResult;
+  return data;
 };
 
 export const searchStores = async ({
@@ -25,50 +33,52 @@ export const searchStores = async ({
   postalCode,
   companyId,
   page,
-}: QuerySearchStoreParams) => {
-  if (!city && !zipCode && !postalCode && !companyId) {
-    return {
-      stores: [],
-      total: 0,
-    };
-  } else if (zipCode && postalCode) {
-    throw new Error("Only one of zipCode or postalCode must be provided");
-  }
-
-  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query ($city: String, $postalCode: String, $zipCode: String, $companyId: ID, $page: Int){
-          storesSearch(city: $city, postalCode: $postalCode, zipCode: $zipCode, companyId: $companyId, page: $page) {
-            stores {
-              id
-              name
-              street
-              city
-              postalCode
-              zipCode
-            }
-            total
-          }
+}: QueryStoresSearchArgs) => {
+  const query = gql`
+    query searchStore(
+      $city: String
+      $postalCode: String
+      $zipCode: String
+      $companyId: ID
+      $page: Int
+    ) {
+      storesSearch(
+        city: $city
+        postalCode: $postalCode
+        zipCode: $zipCode
+        companyId: $companyId
+        page: $page
+      ) {
+        stores {
+          id
+          name
+          street
+          city
+          postalCode
+          zipCode
         }
-      `,
-      variables: {
-        city,
-        postalCode,
-        zipCode,
-        companyId,
-        page: page || 1,
-      },
-    }),
+        total
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<
+    SearchStoreQuery,
+    SearchStoreQueryVariables
+  >({
+    query,
+    variables: {
+      city,
+      zipCode,
+      postalCode,
+      companyId,
+      page,
+    },
   });
 
-  const res = await req.json();
-  return res.data.storesSearch as QuerySearchStoreResult;
+  return data;
 };
 
 export const getLocationsAndCompanies = async () => {

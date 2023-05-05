@@ -1,5 +1,5 @@
 import style from "@/styles/Index.module.scss";
-import { getCounts } from "../queries";
+import { getCounts } from "../graphql/queries";
 
 const HomePage = async () => {
   const { itemCount, storeCount } = await getCounts();
