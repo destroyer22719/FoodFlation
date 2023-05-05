@@ -83,7 +83,20 @@ export async function getPricesMetro(
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
 
-  const loader = ora("Scraping Metro...").start();
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
+
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Loblaws Scraper`,
+    })
+  ).start();
 
   const companyId = await getCompanyId("Metro");
 
@@ -108,7 +121,12 @@ export async function getPricesMetro(
     });
 
     loader.color = "green";
-    loader.text = `Scraping ${postalCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: postalCodes.indexOf(postalCode),
+      message: `Scraping ${postalCode}...`,
+    });
+
     await page.goto("https://www.metro.ca/en/find-a-grocery");
 
     await page.waitForSelector("#postalCode");
@@ -130,11 +148,9 @@ export async function getPricesMetro(
       loader.color = "green";
 
       const loaderData: LoaderDisplayParams = {
-        itemIndex: defaultItems.indexOf(item),
-        totalItems: defaultItems.length,
+        ...starterLoaderDisplay,
         storeIndex: postalCodes.indexOf(postalCode),
-        totalStores: stores.length,
-        storeScrapedIndex: storeIndexes.storeIndex,
+        itemIndex: items.indexOf(item),
       };
 
       loader.text = loaderDisplay({

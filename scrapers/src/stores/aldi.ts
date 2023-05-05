@@ -76,7 +76,20 @@ export async function getPricesAldi(
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
 
-  const loader = ora("Scraping Aldi...").start();
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
+
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Aldi Scraper`,
+    })
+  ).start();
 
   const companyId = await getCompanyId("Aldi");
 
@@ -91,7 +104,11 @@ export async function getPricesAldi(
     country = country as Country;
 
     loader.color = "green";
-    loader.text = `Scraping ${zipCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: zipCodes.indexOf(zipCode),
+      message: `Searching for ${zipCode}`,
+    });
 
     const storeId = await getStoreId({
       companyId,
@@ -110,13 +127,11 @@ export async function getPricesAldi(
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      
+
       const loaderData: LoaderDisplayParams = {
+        ...starterLoaderDisplay,
         itemIndex: defaultItems.indexOf(item),
-        totalItems: defaultItems.length,
         storeIndex: zipCodes.indexOf(zipCode),
-        totalStores: stores.length,
-        storeScrapedIndex: storeIndexes.storeIndex,
       };
 
       loader.text = loaderDisplay({

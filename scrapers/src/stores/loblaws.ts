@@ -74,8 +74,20 @@ export async function getPricesLoblaws(
 
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
 
-  const loader = ora("Scraping Loblaws...").start();
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Loblaws Scraper`,
+    })
+  ).start();
 
   let popupDeleted = false;
 
@@ -102,7 +114,12 @@ export async function getPricesLoblaws(
     });
 
     loader.color = "green";
-    loader.text = `Scraping ${postalCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: postalCodes.indexOf(postalCode),
+      message: `Scraping ${postalCode}...`,
+    });
+
     await page.goto(
       `https://www.loblaws.ca/store-locator?searchQuery=${postalCode}`,
       {
@@ -135,11 +152,9 @@ export async function getPricesLoblaws(
       loader.color = "green";
 
       const loaderData: LoaderDisplayParams = {
-        itemIndex: defaultItems.indexOf(item),
-        totalItems: defaultItems.length,
+        ...starterLoaderDisplay,
         storeIndex: postalCodes.indexOf(postalCode),
-        totalStores: stores.length,
-        storeScrapedIndex: storeIndexes.storeIndex,
+        itemIndex: items.indexOf(item),
       };
 
       loader.text = loaderDisplay({
