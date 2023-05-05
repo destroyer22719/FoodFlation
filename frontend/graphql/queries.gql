@@ -1,0 +1,95 @@
+query getItemAndStoreCounts {
+  itemCount
+  storeCount
+}
+
+query searchStore(
+  $city: String
+  $postalCode: String
+  $zipCode: String
+  $companyId: ID
+  $page: Int
+) {
+  storesSearch(
+    city: $city
+    postalCode: $postalCode
+    zipCode: $zipCode
+    companyId: $companyId
+    page: $page
+  ) {
+    stores {
+      id
+      name
+      street
+      city
+      postalCode
+      zipCode
+    }
+    total
+  }
+}
+
+query getLocationsAndCompanies {
+  companies {
+    id
+    name
+  }
+  locations {
+    _count
+    country
+    city
+    province
+    state
+  }
+}
+
+query getStoreData($id: ID!) {
+  store(id: $id) {
+    country
+    id
+    name
+    street
+    city
+    postalCode
+    zipCode
+    state
+    province
+    companies {
+      id
+    }
+  }
+  itemsFromStore(storeId: $id) {
+    total
+    categories {
+      count
+      category
+    }
+  }
+}
+
+query getItemsFromStore(
+  $id: ID!
+  $search: String
+  $category: String
+  $page: Int
+) {
+  itemsFromStore(
+    storeId: $id
+    search: $search
+    category: $category
+    page: $page
+  ) {
+    items {
+      id
+      name
+      imgUrl
+      category
+      prices {
+        price
+        createdAt
+      }
+    }
+    resultsFound
+  }
+}
+
