@@ -1,4 +1,4 @@
-import { getStoreData } from "@/queries/index";
+import { getStoreData } from "@/graphql/queries";
 import StoreInfo from "./Components/StoreInfo";
 import Categories from "./Components/Categories";
 import { notFound } from "next/navigation";
@@ -20,7 +20,7 @@ const Layout = async ({ params, children }: Props) => {
 
   return (
     <div>
-      <StoreInfo store={store} />
+      <StoreInfo store={store as StoreWithCompany} />
       <Categories categoriesData={itemsFromStore.categories} />
       <div>{children}</div>
     </div>

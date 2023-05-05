@@ -7,6 +7,11 @@ import {
   SearchStoreQueryVariables,
 } from "__generated__/graphql";
 import { getClient } from "@/graphql/apolloClient";
+import { GetLocationsAndCompaniesQuery } from "__generated__/graphql";
+import { GetStoreDataQuery } from "__generated__/graphql";
+import { GetStoreDataQueryVariables } from "__generated__/graphql";
+import { GetItemsFromStoreQueryVariables } from "__generated__/graphql";
+import { GetItemsFromStoreQuery } from "__generated__/graphql";
 
 export const getCounts = async () => {
   const query = gql`
@@ -78,128 +83,125 @@ export const searchStores = async ({
     },
   });
 
-  return data;
+  return data.storesSearch;
 };
 
 export const getLocationsAndCompanies = async () => {
-  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query {
-          companies {
-            id
-            name
-          }
-          locations {
-            _count
-            country
-            city
-            province
-            state
-          }
-        }
-      `,
-    }),
+  const query = gql`
+    query getLocationsAndCompanies {
+      companies {
+        id
+        name
+      }
+      locations {
+        _count
+        country
+        city
+        province
+        state
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<GetLocationsAndCompaniesQuery>({
+    query,
   });
 
-  const res = await req.json();
-  return res.data as QueryLocationAndCompaniesResult;
+  return data;
 };
 
 export const getStoreData = async (id: string) => {
-  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query ($id: ID!) {
-          store(id: $id) {
-            country
-            id
-            name
-            street
-            city
-            postalCode
-            zipCode
-            state
-            province
-            companies {
-              id
-            }
-          }
-          itemsFromStore(storeId: $id) {
-            total
-            categories {
-              count
-              category
-            }
-          }
+  const query = gql`
+    query getStoreData($id: ID!) {
+      store(id: $id) {
+        country
+        id
+        name
+        street
+        city
+        postalCode
+        zipCode
+        state
+        province
+        companies {
+          id
         }
-      `,
-      variables: {
-        id,
-      },
-    }),
+      }
+      itemsFromStore(storeId: $id) {
+        total
+        categories {
+          count
+          category
+        }
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<
+    GetStoreDataQuery,
+    GetStoreDataQueryVariables
+  >({
+    query,
+    variables: {
+      id,
+    },
   });
 
-  const res = await req.json();
-  return res.data as QueryStoreResult;
+  return data;
 };
 
-export const getItemsFromStore = async (
-  id: string,
-  {
-    search,
-    category,
-    page,
-  }: {
-    search?: string;
-    category?: string;
-    page?: number;
-  }
-) => {
-  const req = await fetch(process.env.NEXT_PUBLIC_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query ($id: ID!, $search: String, $category: String, $page: Int) {
-          itemsFromStore(storeId: $id, search: $search, category: $category, page: $page) {
-            items {
-              id
-              name
-              imgUrl
-              category
-              prices {
-                price
-                createdAt
-              }
-            }
-            resultsFound
+export const getItemsFromStore = async ({
+  id,
+  search,
+  category,
+  page,
+}: GetItemsFromStoreQueryVariables) => {
+  const query = gql`
+    query getItemsFromStore(
+      $id: ID!
+      $search: String
+      $category: String
+      $page: Int
+    ) {
+      itemsFromStore(
+        storeId: $id
+        search: $search
+        category: $category
+        page: $page
+      ) {
+        items {
+          id
+          name
+          imgUrl
+          category
+          prices {
+            price
+            createdAt
           }
         }
-      `,
-      variables: {
-        id,
-        search,
-        category,
-        page,
-      },
-    }),
+        resultsFound
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<
+    GetItemsFromStoreQuery,
+    GetItemsFromStoreQueryVariables
+  >({
+    query,
+    variables: {
+      id,
+      search,
+      category,
+      page,
+    },
   });
 
-  const res = await req.json();
-
-  return res.data.itemsFromStore as QueryItemsFromStoreResult;
+  return data.itemsFromStore;
 };

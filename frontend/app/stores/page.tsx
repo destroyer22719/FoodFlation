@@ -1,8 +1,7 @@
-import { searchStores } from "@/queries/index";
+import { searchStores } from "@/graphql/queries";
 import styles from "@/styles/StoreList.module.scss";
 import StoreItem from "./Components/StoreItem/StoreItem";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
-import StoreItemSkeleton from "./Components/StoreItem/StoreItemSkeleton";
 // import StoreItem from "@/components/StoreItem/StoreItem";
 // import PaginationComponent from "./Components/PaginationComponent";
 // import { searchStores } from "queries";
@@ -32,7 +31,7 @@ const StorePages = async ({ searchParams }: Props) => {
       <div>{total > 0 && <PaginationComponent resultsFound={total} />}</div>
       <div className={styles["store-list__stores"]} id="list">
         {stores.map((store) => (
-          <StoreItem store={store} key={store.id} />
+          <StoreItem store={store as Store} key={store.id} />
         ))}
       </div>
     </div>

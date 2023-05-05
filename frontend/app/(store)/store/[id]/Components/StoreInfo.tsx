@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
-  store: Store & { companies: { id: string } };
+  store: StoreWithCompany;
 }
 
 const StoreInfo = ({ store }: Props) => {

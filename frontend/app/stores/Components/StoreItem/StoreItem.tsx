@@ -3,7 +3,7 @@ import Link from "next/link";
 import style from "@/styles/Components/StoreItem.module.scss";
 
 type Props = {
-  store: Store;
+  store: Omit<Store, "country">;
 };
 
 const StoreItem: React.FC<Props> = ({ store }) => {
