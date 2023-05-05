@@ -39,6 +39,13 @@ export const searchStores = async ({
   companyId,
   page,
 }: QueryStoresSearchArgs) => {
+  if (!city && !zipCode && !postalCode && !companyId) {
+    return {
+      stores: [],
+      total: 0,
+    };
+  }
+
   const query = gql`
     query searchStore(
       $city: String
