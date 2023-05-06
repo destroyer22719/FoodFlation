@@ -5,13 +5,13 @@ import {
   QueryStoresSearchArgs,
   SearchStoreQuery,
   SearchStoreQueryVariables,
+  GetLocationsAndCompaniesQuery,
+  GetStoreDataQuery,
+  GetStoreDataQueryVariables,
+  GetItemsFromStoreQueryVariables,
+  GetItemsFromStoreQuery,
 } from "__generated__/graphql";
 import { getClient } from "@/graphql/apolloClient";
-import { GetLocationsAndCompaniesQuery } from "__generated__/graphql";
-import { GetStoreDataQuery } from "__generated__/graphql";
-import { GetStoreDataQueryVariables } from "__generated__/graphql";
-import { GetItemsFromStoreQueryVariables } from "__generated__/graphql";
-import { GetItemsFromStoreQuery } from "__generated__/graphql";
 
 export const getCounts = async () => {
   const query = gql`
