@@ -17,6 +17,8 @@ export const graphqlHandler = startServerAndCreateLambdaHandler(
   server,
   handlers.createAPIGatewayProxyEventV2RequestHandler(),
   {
-    context,
+    context: async (handler) => {
+      return context(handler.event.requestContext.http.sourceIp);
+    },
   }
 );
