@@ -156,6 +156,7 @@ export const getStoreData = async (id: string) => {
     variables: {
       id,
     },
+    fetchPolicy: "no-cache",
   });
 
   return data;
@@ -208,6 +209,7 @@ export const getItemsFromStore = async ({
       category,
       page,
     },
+    fetchPolicy: "no-cache",
   });
 
   return data.itemsFromStore;
