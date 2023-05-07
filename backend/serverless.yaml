@@ -1,5 +1,5 @@
 service: foodflation-api-v2
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -10,6 +10,10 @@ plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-plugin-warmup
+
+custom:
+  warmup:
+    enabled: true
 
 functions:
   app:
