@@ -25,7 +25,7 @@ export async function getPricesAldi(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
-    headless: !process.argv.includes("--debug"),
+    headless: process.argv.includes("--debug") ? false : "new",
     // headless: false,
     ignoreHTTPSErrors: true,
   });

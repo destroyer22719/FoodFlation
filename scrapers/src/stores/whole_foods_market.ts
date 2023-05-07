@@ -25,7 +25,7 @@ export async function getPricesWholeFoodsMarket(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
-    headless: !process.argv.includes("--debug"),
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
   });
 
@@ -117,7 +117,7 @@ export async function getPricesWholeFoodsMarket(
       storeIndex: zipCodes.indexOf(zipCode),
       message: `Searching for ${zipCode}`,
     });
-    
+
     await page.goto("https://www.wholefoodsmarket.com/stores", {
       waitUntil: "domcontentloaded",
     });

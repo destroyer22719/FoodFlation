@@ -25,7 +25,7 @@ export async function getPricesMetro(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
-    headless: !process.argv.includes("--debug"),
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
   });
 
