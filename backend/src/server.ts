@@ -6,19 +6,23 @@ import {
 import Keyv from "keyv";
 import { KeyvAdapter } from "@apollo/utils.keyvadapter";
 import dotenv from "dotenv";
-import responseCachePlugin from '@apollo/server-plugin-response-cache';
-
-dotenv.config();
+import responseCachePlugin from "@apollo/server-plugin-response-cache";
+import KeyvRedis from "@keyv/redis";
 
 import { schema } from "./model/schema.js";
 import { context } from "./db/context.js";
+import redisClient from "./db/redis.js";
 
-const keyV = new Keyv(process.env.REDIS_URL as string);
+dotenv.config();
+
+const keyV = new Keyv({
+  store: new KeyvRedis(redisClient),
+});
 
 const server = new ApolloServer({
   schema,
   cache: new KeyvAdapter(keyV),
-  plugins:[responseCachePlugin()],
+  plugins: [responseCachePlugin()],
 });
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(
