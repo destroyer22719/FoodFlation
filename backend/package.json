@@ -20,8 +20,9 @@
     "@graphql-tools/schema": "^9.0.19",
     "@prisma/client": "^4.13.0",
     "graphql": "^16.6.0",
-    "graphql-rate-limit": "^3.3.0",
-    "ioredis": "^5.3.2"
+    "graphql-rate-limit-directive": "^2.0.3",
+    "ioredis": "^5.3.2",
+    "rate-limiter-flexible": "^2.4.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.3.1",

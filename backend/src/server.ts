@@ -4,13 +4,11 @@ import {
   handlers,
 } from "@as-integrations/aws-lambda";
 
-import { resolvers } from "./resolvers/index.js";
-import { typeDefs } from "./model/schema.js";
+import { schema } from "./model/schema.js";
 import { context } from "./db/context.js";
 
 const server = new ApolloServer({
-  typeDefs: typeDefs,
-  resolvers: resolvers,
+  schema,
 });
 
 export const graphqlHandler = startServerAndCreateLambdaHandler(

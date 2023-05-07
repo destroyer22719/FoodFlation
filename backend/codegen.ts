@@ -74,7 +74,7 @@ type ItemSearchResult {
   resultsFound: Int!
 }
 
-type Query {
+type Query @rateLimit(limit: 250, duration: 900) {
   companies: [Company!]!
   company(id: ID!): Company
   storesSearch(city: String, postalCode: String, zipCode: String, page: Int, companyId: ID): StoresSearchResult!
