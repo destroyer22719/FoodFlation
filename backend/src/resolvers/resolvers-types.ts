@@ -14,6 +14,11 @@ export type Scalars = {
   Float: number;
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type CategoryData = {
   __typename?: 'CategoryData';
   category: Scalars['String'];
@@ -34,7 +39,7 @@ export type Item = {
   category: Scalars['String'];
   createdAt: Scalars['String'];
   id: Scalars['ID'];
-  imgUrl?: Maybe<Scalars['String']>;
+  imgUrl: Scalars['String'];
   name: Scalars['String'];
   prices: Array<Price>;
   store: Store;
@@ -220,6 +225,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CacheControlScope: CacheControlScope;
   CategoryData: ResolverTypeWrapper<CategoryData>;
   Company: ResolverTypeWrapper<Company>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
@@ -253,6 +259,14 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
 }>;
 
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']>;
+  maxAge?: Maybe<Scalars['Int']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type CategoryDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategoryData'] = ResolversParentTypes['CategoryData']> = ResolversObject<{
   category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -272,7 +286,7 @@ export type ItemResolvers<ContextType = any, ParentType extends ResolversParentT
   category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  imgUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   prices?: Resolver<Array<ResolversTypes['Price']>, ParentType, ContextType>;
   store?: Resolver<ResolversTypes['Store'], ParentType, ContextType>;
@@ -357,3 +371,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   StoresSearchResult?: StoresSearchResultResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = any> = ResolversObject<{
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+}>;

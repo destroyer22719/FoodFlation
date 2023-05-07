@@ -1,9 +1,18 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 export const schema = `
-#graphql
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
 
-type Company {
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+type Company @cacheControl(maxAge: 604800) {
   id: ID!
   name: String!
   createdAt: String!
@@ -75,16 +84,16 @@ type ItemSearchResult {
 }
 
 type Query @rateLimit(limit: 250, duration: 900) {
-  companies: [Company!]!
-  company(id: ID!): Company
+  companies: [Company!]! @cacheControl(maxAge: 604800)
+  company(id: ID!): Company @cacheControl(maxAge: 604800)
   storesSearch(city: String, postalCode: String, zipCode: String, page: Int, companyId: ID): StoresSearchResult!
   store(id: ID!): Store
-  storeCount: Int!
   itemsFromStore(storeId: ID!, page: Int, search: String, category: String): ItemSearchResult!
   itemsFromCity(city: String!, page: Int): [Item!]!
   item(id: ID!, offset: Int, limit: Int): Item
-  itemCount: Int!
-  locations: [Location!]!
+  storeCount: Int! @cacheControl(maxAge: 604800)
+  itemCount: Int! @cacheControl(maxAge: 604800)
+  locations: [Location!]! @cacheControl(maxAge: 604800)
 }
 `;
 

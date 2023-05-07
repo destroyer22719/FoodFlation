@@ -16,14 +16,18 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.7.0",
+    "@apollo/server-plugin-response-cache": "^4.1.2",
+    "@apollo/utils.keyvadapter": "^3.0.0",
     "@as-integrations/aws-lambda": "^2.0.1",
     "@graphql-tools/schema": "^9.0.19",
+    "@keyv/redis": "^2.5.7",
     "@prisma/client": "^4.13.0",
     "@upstash/redis": "^1.20.6",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
     "graphql-rate-limit-directive": "^2.0.3",
     "ioredis": "^5.3.2",
+    "keyv": "^4.5.2",
     "rate-limiter-flexible": "^2.4.1"
   },
   "devDependencies": {
