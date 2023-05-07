@@ -11,13 +11,12 @@ plugins:
   - serverless-offline
   - serverless-plugin-warmup
 
-custom:
-  warmup:
-    enabled: true
-
 functions:
   app:
     handler: src/server.graphqlHandler
+    warmup:
+      default:
+        enabled: prod
     events:
       - httpApi:
           path: /
@@ -32,3 +31,9 @@ package:
     - "node_modules/.prisma/client/libquery_engine-rhel-*"
     - "!node_modules/prisma/libquery_engine-*"
     - "!node_modules/@prisma/engines/**"
+
+custom:
+  warmup:
+    default:
+      enabled: true
+      prewarm: true
