@@ -19,6 +19,8 @@
     "@as-integrations/aws-lambda": "^2.0.1",
     "@graphql-tools/schema": "^9.0.19",
     "@prisma/client": "^4.13.0",
+    "@upstash/redis": "^1.20.6",
+    "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
     "graphql-rate-limit-directive": "^2.0.3",
     "ioredis": "^5.3.2",

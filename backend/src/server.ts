@@ -3,6 +3,9 @@ import {
   startServerAndCreateLambdaHandler,
   handlers,
 } from "@as-integrations/aws-lambda";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 import { schema } from "./model/schema.js";
 import { context } from "./db/context.js";

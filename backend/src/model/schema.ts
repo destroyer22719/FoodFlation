@@ -1,15 +1,16 @@
 import { rateLimitDirective } from "graphql-rate-limit-directive";
-import { schema as typeDefs } from "../../codegen.js";
 import {
   IRateLimiterRedisOptions,
   RateLimiterRedis,
 } from "rate-limiter-flexible";
-import { Redis } from "ioredis";
-import { Context } from "../db/context.js";
+import { GraphQLError } from "graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+
+import { schema as typeDefs } from "../../codegen.js";
+import { Context } from "../db/context.js";
 import { resolvers } from "../resolvers/index.js";
 import { RateLimitKeyGenerator } from "graphql-rate-limit-directive";
-import { GraphQLError } from "graphql";
+import redisClient from "../db/redis.js";
 
 const keyGenerator: RateLimitKeyGenerator<Context> = (
   _directiveArgs,
@@ -18,12 +19,6 @@ const keyGenerator: RateLimitKeyGenerator<Context> = (
   context,
   _info
 ) => `${context.ip}`;
-
-const redisClient = new Redis(process.env.REDIS_URL as string);
-
-redisClient.on("connect", () => {
-  console.log("Redis client connected");
-});
 
 const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
   rateLimitDirective<Context, IRateLimiterRedisOptions>({
