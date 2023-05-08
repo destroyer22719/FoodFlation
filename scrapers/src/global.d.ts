@@ -90,6 +90,7 @@ declare global {
       name: string;
       price: number;
       imgUrl: string;
+      unit?: string;
     }[];
   };
   type LoaderDisplayParams = {

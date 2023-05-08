@@ -134,19 +134,20 @@ export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
   });
 
   if (itemObjs.length !== results.length) {
-    const foundItems = itemObjs.map((itemObj) => itemObj.name);
-    const itemsNotFound = resultNames.filter(
-      (name) => foundItems.indexOf(name) === -1
+    const itemsNotFound = results.filter(
+      //this checks for any items that are not in the database by checking if the name is in the resultNames array
+      (result) => itemObjs.map((item) => item.name).indexOf(result.name) === -1
     );
 
     const newItems = await Promise.all(
-      itemsNotFound.map(async (name) => {
+      itemsNotFound.map(async ({ name, imgUrl, unit }) => {
         const item = await prisma.items.create({
           data: {
             name,
             storeId,
-            imgUrl: results.find((result) => result.name === name)!.imgUrl,
+            imgUrl,
             category: item2category[name],
+            unit,
           },
         });
         return item;

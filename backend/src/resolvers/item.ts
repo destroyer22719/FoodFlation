@@ -43,9 +43,9 @@ export const itemStoreResolver = async (
   }
 
   const searchQuery = {
-    ...(storeId && { storeId }),
+    storeId: storeId as string | undefined,
+    category: category as string | undefined,
     ...(search && { name: { contains: search } }),
-    ...(category && { category }),
   };
 
   const [items, count, categoryData, resultsFound] = await Promise.all([

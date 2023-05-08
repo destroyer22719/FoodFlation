@@ -53,8 +53,8 @@ export const storeSearchResolver = async (
   ctx: Context
 ) => {
   const searchCondition = {
-    ...(city && { city }),
-    ...(companyId && { companyId }),
+    city: city as string | undefined,
+    companyId: companyId as string | undefined,
     ...(postalCode || zipCode
       ? {
           OR: [

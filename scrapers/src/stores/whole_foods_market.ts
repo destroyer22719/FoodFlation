@@ -180,26 +180,62 @@ export async function getPricesWholeFoodsMarket(
       });
 
       const results = await page.evaluate(() => {
-        const prices = Array.from(
-          document.querySelectorAll(".regular_price > b")
-        ).map((e) => parseFloat((e as HTMLElement).innerText.slice(1)));
+        const itemCards = Array.from(
+          document.querySelectorAll(".w-pie--product-tile")
+        ) as HTMLElement[];
 
-        const names = Array.from(
-          document.querySelectorAll(`h2[data-testid="product-tile-name"]`)
-        ).map((e) => (e as HTMLElement).innerText);
-
-        const images = Array.from(
-          document.querySelectorAll(`img[data-testid="product-tile-image"]`)
-        ).map((e) => (e as HTMLImageElement).src);
+        const iterations = Math.min(itemCards.length);
 
         const resultData = [];
-        const resultLength = Math.min(names.length, 5);
 
-        for (let i = 0; i < resultLength; i++) {
+        for (let i = 0; i < iterations; i++) {
+          const itemCard = itemCards[i];
+          const name = (
+            itemCard.querySelector(
+              `h2[data-testid="product-tile-name"]`
+            ) as HTMLElement
+          )?.innerText;
+
+          const imgUrl = (
+            itemCard.querySelector(
+              ".w-pie--product-tile__image img"
+            ) as HTMLImageElement
+          ).getAttribute("src")!;
+
+          const salesPriceElem = itemCard.querySelector(
+            ".sale_price"
+          ) as HTMLElement | null;
+
+          let price = null;
+          let unitOfMeasurement = "unit";
+
+          if (salesPriceElem && !salesPriceElem.innerText.includes("for")) {
+            price = parseFloat(
+              salesPriceElem.innerText.match(/(?<=\$)\d+\.\d{2}/gm)![0]
+            );
+          } else {
+            const regularPrice = (
+              itemCard.querySelector(".regular_price") as HTMLElement
+            ).innerText;
+            if (regularPrice.includes("/")) {
+              unitOfMeasurement = regularPrice.split("/")[1].trim();
+              if (unitOfMeasurement === "lb") {
+                unitOfMeasurement = "pound";
+              } else if (unitOfMeasurement === "oz") {
+                unitOfMeasurement = "ounce";
+              } else if (unitOfMeasurement === "gal") {
+                unitOfMeasurement = "gallon";
+              }
+            }
+
+            price = parseFloat(regularPrice.split("/")[0].slice(1));
+          }
+
           resultData.push({
-            name: names[i],
-            price: prices[i],
-            imgUrl: images[i],
+            name,
+            price,
+            imgUrl,
+            unit: unitOfMeasurement,
           });
         }
 
