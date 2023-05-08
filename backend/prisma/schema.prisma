@@ -1,7 +1,7 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol"]
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -28,7 +28,7 @@ model Items {
   category  String   @default("Miscellaneous") @db.VarChar(255)
   stores    Stores   @relation(fields: [storeId], references: [id], onDelete: Cascade, map: "items_ibfk_1")
   prices    Prices[]
-  unit String @default("unit") @db.VarChar(255)
+  unit      String   @default("unit") @db.VarChar(255)
 
   @@index([storeId], map: "storeId")
 }
