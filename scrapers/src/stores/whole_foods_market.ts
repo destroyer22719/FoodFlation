@@ -184,7 +184,7 @@ export async function getPricesWholeFoodsMarket(
           document.querySelectorAll(".w-pie--product-tile")
         ) as HTMLElement[];
 
-        const iterations = Math.min(itemCards.length);
+        const iterations = Math.min(itemCards.length, 5);
 
         const resultData = [];
 
@@ -211,7 +211,7 @@ export async function getPricesWholeFoodsMarket(
 
           if (salesPriceElem && !salesPriceElem.innerText.includes("for")) {
             price = parseFloat(
-              salesPriceElem.innerText.match(/(?<=\$)\d+\.\d{2}/gm)![0]
+              salesPriceElem.innerText.match(/(?<=\$)\d+(\.\d{2})?/gm)![0]
             );
           } else {
             const regularPrice = (
