@@ -196,11 +196,12 @@ export async function getPricesWholeFoodsMarket(
             ) as HTMLElement
           )?.innerText;
 
-          const imgUrl = (
-            itemCard.querySelector(
-              ".w-pie--product-tile__image img"
-            ) as HTMLImageElement
-          ).getAttribute("src")!;
+          const imgUrl =
+            (
+              itemCard.querySelector(
+                ".w-pie--product-tile__image img"
+              ) as HTMLImageElement | null
+            )?.getAttribute("src") || "";
 
           const salesPriceElem = itemCard.querySelector(
             ".sale_price"
