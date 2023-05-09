@@ -30,11 +30,14 @@ const Categories = ({ categoriesData }: Props) => {
       )}
       <>
         {categoriesData.map(({ count, category }) => (
-          <Link href={`${pathName}?category=${category}`} key={category}>
+          <Link
+            href={`${pathName}?category=${category.replace("&", "%26")}`}
+            key={category}
+          >
             <div
-              className={
-                `${categoryStyles[`category__${getCategoryClassName(category)}`]} ${categoryListStyles["category-list__item"]} `
-              }
+              className={`${
+                categoryStyles[`category__${getCategoryClassName(category)}`]
+              } ${categoryListStyles["category-list__item"]} `}
             >
               {count} - {category}
             </div>

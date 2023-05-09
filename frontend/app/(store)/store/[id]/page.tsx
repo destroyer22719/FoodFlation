@@ -15,11 +15,9 @@ type Props = {
 };
 
 const StoreIdPage = async ({
-  params,
+  params: { id },
   searchParams: { page = "1", category, search },
 }: Props) => {
-  const { id } = params;
-
   const { items, resultsFound } = await getItemsFromStore({
     id,
     page: +page || 1,
@@ -30,7 +28,9 @@ const StoreIdPage = async ({
   return (
     <div>
       <div className={styles["store-page__results-found--center"]}>
-        <div className={styles["store-page__results-found"]}>{resultsFound} Results Found</div>
+        <div className={styles["store-page__results-found"]}>
+          {resultsFound} Results Found
+        </div>
       </div>
       <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__list"]}>
