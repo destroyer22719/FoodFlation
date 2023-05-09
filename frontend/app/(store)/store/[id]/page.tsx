@@ -16,7 +16,7 @@ type Props = {
 
 const StoreIdPage = async ({
   params,
-  searchParams: { page="1", category, search },
+  searchParams: { page = "1", category, search },
 }: Props) => {
   const { id } = params;
 
@@ -29,7 +29,9 @@ const StoreIdPage = async ({
 
   return (
     <div>
-      <div>{resultsFound} Results Found</div>
+      <div className={styles["store-page__results-found--center"]}>
+        <div className={styles["store-page__results-found"]}>{resultsFound} Results Found</div>
+      </div>
       <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__list"]}>
         {items.map((item) => (

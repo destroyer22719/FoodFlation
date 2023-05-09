@@ -2,6 +2,7 @@ import { getStoreData } from "@/graphql/queries";
 import CategoriesList from "./Components/CategoriesList";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
+import styles from "@/styles/Store.module.scss";
 
 type Props = {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ const Layout = async ({ params, children }: Props) => {
   }
 
   return (
-    <div>
+    <div className={styles["store-page"]}>
       <StoreItem store={store as Store} />
       <CategoriesList categoriesData={itemsFromStore.categories} />
       <div>{children}</div>

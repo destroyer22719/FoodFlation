@@ -1,6 +1,14 @@
 @import "assets/vars";
+@import "assets/mui";
 
 .store-page {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
   &__list {
     margin: auto;
     width: 100%;
@@ -9,5 +17,24 @@
     margin: 0 -10px;
     align-items: center;
     justify-content: center;
+  }
+
+  &__results-found {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: $purple-light;
+    padding: 15px 20px;
+    width: 200px;
+    border-radius: 5px;
+
+    @include mui-light($purple-light);
+
+    &--center {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
   }
 }
