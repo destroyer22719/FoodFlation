@@ -13,12 +13,8 @@
     border-radius: 5px;
     background-color: $purple-dark;
     padding: 10px;
-    width: 50px;
+    width: 250px;
     margin: 10px;
-
-    @media screen and (max-width: 1700px) {
-      width: 250px;
-    }
 
     @include mui-dark($purple-dark);
 

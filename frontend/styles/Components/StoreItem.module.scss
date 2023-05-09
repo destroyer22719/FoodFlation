@@ -2,15 +2,16 @@
 @import "../assets/mui.scss";
 
 .store-item {
-  width: 285px;
-  height: 150px;
+  width: 250px;
+  padding: 10px;
+  height: 110px;
   margin-bottom: 20px;
   border-radius: 10px;
   background: $purple-light;
 
   display: flex;
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
 
   @include mui-light($purple-light);
@@ -19,13 +20,10 @@
     margin-left: 10px;
     margin-right: 10px;
     width: 350px;
+    height: 150px;
   }
 
   &__image {
-    width: 80px;
-    height: 80px;
-    position: relative;
-
     &--skeleton {
       width: 80px;
       height: 80px;
@@ -35,7 +33,7 @@
   &__address {
     display: flex;
     flex-direction: column;
-    margin-left: 25px;
+    // margin-left: 25px;
     align-items: center;
     justify-content: center;
     height: 80px;
