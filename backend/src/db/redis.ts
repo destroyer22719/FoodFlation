@@ -5,6 +5,10 @@ dotenv.config();
 
 const redisClient = new Redis(process.env.REDIS_URL as string);
 
+redisClient.on("connecting", () => {
+  console.log("Initialized Redis connection");
+})
+
 redisClient.on("connect", () => {
   console.log("Redis connected");
 });

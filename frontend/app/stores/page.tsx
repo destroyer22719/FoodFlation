@@ -1,6 +1,6 @@
 import { searchStores } from "@/graphql/queries";
 import styles from "@/styles/StoreList.module.scss";
-import StoreItem from "./Components/StoreItem/StoreItem";
+import StoreItem from "@/components/StoreItem/StoreItem";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
 
 type Props = {

@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 
 import styles from "@/styles/StoreList.module.scss";
-import StoreItemSkeleton from "./Components/StoreItem/StoreItemSkeleton";
+import StoreItemSkeleton from "../../components/StoreItem/StoreItemSkeleton";
 import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
 
 const Loading = () => {
