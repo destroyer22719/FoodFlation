@@ -16,7 +16,7 @@ type Props = {
 
 const StoreIdPage = async ({
   params,
-  searchParams: { page = "", category = "", search = "" },
+  searchParams: { page="1", category, search },
 }: Props) => {
   const { id } = params;
 
