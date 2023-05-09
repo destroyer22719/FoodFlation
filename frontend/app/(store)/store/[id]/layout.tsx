@@ -1,5 +1,5 @@
 import { getStoreData } from "@/graphql/queries";
-import Categories from "./Components/Categories";
+import CategoriesList from "./Components/CategoriesList";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
 
@@ -21,7 +21,7 @@ const Layout = async ({ params, children }: Props) => {
   return (
     <div>
       <StoreItem store={store as Store} />
-      <Categories categoriesData={itemsFromStore.categories} />
+      <CategoriesList categoriesData={itemsFromStore.categories} />
       <div>{children}</div>
     </div>
   );
