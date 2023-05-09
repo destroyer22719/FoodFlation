@@ -2,29 +2,18 @@ import { GiSteak, GiFruitBowl, GiMilkCarton } from "react-icons/gi";
 import { BiBowlHot } from "react-icons/bi";
 
 import styles from "@/styles/Components/Category.module.scss";
+import { getCategoryClassName } from "util/getCategoryClassName";
 
 type Category = {
   category: string;
 };
 
 const CategoryIcon: React.FC<Category> = ({ category }) => {
-  const categories = [
-    "Meat",
-    "Fruits & Vegetables",
-    "Starches & Grains",
-    "Dairy",
-    "Miscellaneous",
-  ];
-  let categoryClassName = category
-    .toLowerCase()
-    .replace(/\s/g, "-")
-    .replace("&", "and");
-
-  if (!categories.includes(category)) {
-    categoryClassName = "miscellaneous";
-  }
   return (
-    <div className={styles[`category__${categoryClassName}`]} title={category}>
+    <div
+      className={styles[`category__${getCategoryClassName(category)}`]}
+      title={category}
+    >
       {(() => {
         switch (category) {
           case "Meat":
