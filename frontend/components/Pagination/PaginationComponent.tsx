@@ -45,7 +45,9 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
       </Link>
       <Link href="#">
         <div className={styles["pagination__button"]}>
-          {page} / {maxPages}
+          <div>
+            {page} / {maxPages}
+          </div>
         </div>
       </Link>
       <Link href={navigatePages(page + 1)}>
