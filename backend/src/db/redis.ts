@@ -7,7 +7,7 @@ const redisClient = new Redis(process.env.REDIS_URL as string);
 
 redisClient.on("connecting", () => {
   console.log("Initialized Redis connection");
-})
+});
 
 redisClient.on("connect", () => {
   console.log("Redis connected");
@@ -21,8 +21,12 @@ redisClient.on("error", (err) => {
   console.log("Redis error: ", err);
 });
 
+redisClient.on("reconnecting", () => {
+  console.log("Redis reconnecting");
+});
+
 redisClient.on("close", () => {
   console.log("Redis closed");
 });
 
-export default redisClient;
+export default redisClient as Redis;
