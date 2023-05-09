@@ -3,7 +3,7 @@
 
 .pagination {
   display: flex;
-  width: min(500px, 80%);
+  width: min(600px, 80%);
   margin: 10px auto;
 
   align-items: center;
@@ -17,7 +17,7 @@
   &__button {
     height: 75px;
     margin: 10px;
-    width: 150px;
+    width: 100px;
     background: $blue-dark;
     padding: 20px;
     border-radius: 10px;
@@ -27,7 +27,7 @@
     cursor: pointer;
 
     @include mui-dark($blue-dark);
-    display: grid;
-    place-items: center;
+
+    border: 5px solid red;
   }
 }

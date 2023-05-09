@@ -16,7 +16,7 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
   const pathname = usePathname();
-  
+
   const navigatePages = (page: number) => {
     let url = pathname;
     url += `?${searchParams.toString()}`;
@@ -43,9 +43,11 @@ const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
           {page > 1 && <BiChevronLeft />}
         </div>
       </Link>
-      <div className={styles["pagination__button"]}>
-        {page} / {maxPages}
-      </div>
+      <Link href="#">
+        <div className={styles["pagination__button"]}>
+          {page} / {maxPages}
+        </div>
+      </Link>
       <Link href={navigatePages(page + 1)}>
         <div className={styles["pagination__button"]}>
           {page < maxPages && <BiChevronRight />}
