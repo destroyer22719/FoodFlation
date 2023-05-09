@@ -24,11 +24,15 @@ const Categories = ({ categoriesData }: Props) => {
   return (
     <div className={categoryListStyles["category-list"]}>
       {categorySelected && (
-        <div>
-          <RxCross2 />
-        </div>
+        <Link href={pathName}>
+          <div className={categoryListStyles["category-list__clear--center"]}>
+            <div className={categoryListStyles["category-list__clear"]}>
+              <RxCross2 />
+            </div>
+          </div>
+        </Link>
       )}
-      <>
+      <div className={categoryListStyles["category-list__items"]}>
         {categoriesData.map(({ count, category }) => (
           <Link
             href={`${pathName}?category=${category.replace("&", "%26")}`}
@@ -43,7 +47,7 @@ const Categories = ({ categoriesData }: Props) => {
             </div>
           </Link>
         ))}
-      </>
+      </div>
     </div>
   );
 };
