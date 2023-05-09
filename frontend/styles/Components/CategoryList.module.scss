@@ -1,0 +1,12 @@
+.category-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &__item {
+    width: 250px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+}

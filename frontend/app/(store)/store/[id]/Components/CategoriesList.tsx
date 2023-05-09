@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 
-import categoryStyles from "@/styles/Components/Category.module.scss";
 import { getCategoryClassName } from "util/getCategoryClassName";
+
+import categoryListStyles from "@/styles/Components/CategoryList.module.scss";
+import categoryStyles from "@/styles/Components/Category.module.scss";
 
 type Props = {
   categoriesData: {
@@ -20,25 +22,25 @@ const Categories = ({ categoriesData }: Props) => {
   const pathName = usePathname();
 
   return (
-    <div>
+    <div className={categoryListStyles["category-list"]}>
       {categorySelected && (
         <div>
           <RxCross2 />
         </div>
       )}
-      <div>
+      <>
         {categoriesData.map(({ count, category }) => (
           <Link href={`${pathName}?category=${category}`} key={category}>
             <div
               className={
-                categoryStyles[`category__${getCategoryClassName(category)}`]
+                `${categoryStyles[`category__${getCategoryClassName(category)}`]} ${categoryListStyles["category-list__item"]} `
               }
             >
               {count} - {category}
             </div>
           </Link>
         ))}
-      </div>
+      </>
     </div>
   );
 };
