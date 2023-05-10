@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import styles from "@/styles/Components/SearchTable.module.scss";
+import styles from "@/styles/components/SearchTable.module.scss";
 import Link from "next/link";
 
 type Props = {

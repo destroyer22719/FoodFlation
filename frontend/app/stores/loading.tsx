@@ -2,8 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 
-import styles from "@/styles/StoreList.module.scss";
-import StoreItemSkeleton from "../../components/StoreItem/StoreItemSkeleton";
+import styles from "@/styles/pages/StoreList.module.scss";
+import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
 import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
 
 const Loading = () => {

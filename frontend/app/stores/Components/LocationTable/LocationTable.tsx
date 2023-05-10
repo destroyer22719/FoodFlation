@@ -1,4 +1,4 @@
-import styles from "@/styles/Components/LocationTable.module.scss";
+import styles from "@/styles/components/LocationTable.module.scss";
 
 import CountryItem from "./CountryItem";
 

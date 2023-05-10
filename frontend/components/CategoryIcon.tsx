@@ -1,7 +1,7 @@
 import { GiSteak, GiFruitBowl, GiMilkCarton } from "react-icons/gi";
 import { BiBowlHot } from "react-icons/bi";
 
-import styles from "@/styles/Components/Category.module.scss";
+import styles from "@/styles/components/Category.module.scss";
 import { getCategoryClassName } from "util/getCategoryClassName";
 
 type Category = {

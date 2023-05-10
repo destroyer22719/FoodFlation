@@ -1,5 +1,5 @@
 import { getItemsFromStore } from "@/graphql/queries";
-import styles from "@/styles/Store.module.scss";
+import styles from "@/styles/pages/Store.module.scss";
 import ItemCard from "./Components/ItemCard/ItemCard";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MdOutlineLocationSearching } from "react-icons/md";
 
-import styles from "@/styles/Components/SearchStore.module.scss";
+import styles from "@/styles/components/SearchStore.module.scss";
 import { useRouter } from "next/navigation";
 
 const SearchStore = () => {

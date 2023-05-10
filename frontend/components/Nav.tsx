@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import styles from "@/styles/Nav.module.scss";
+import styles from "@/styles/components/Nav.module.scss";
 import { MdSearch } from "react-icons/md";
 
 const Nav = () => {

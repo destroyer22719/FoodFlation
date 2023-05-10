@@ -1,6 +1,6 @@
 "use client";
 
-import style from "@/styles/Components/StoreItem.module.scss";
+import style from "@/styles/components/StoreItem.module.scss";
 
 const StoreItemSkeleton = () => {
   return (

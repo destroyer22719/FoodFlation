@@ -1,4 +1,4 @@
-import styles from "@/styles/StoreList.module.scss";
+import styles from "@/styles/pages/StoreList.module.scss";
 import SearchTable from "./Components/SearchTable/SearchTable";
 import { getLocationsAndCompanies } from "@/graphql/queries";
 

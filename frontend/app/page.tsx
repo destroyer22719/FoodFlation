@@ -1,4 +1,4 @@
-import style from "@/styles/Index.module.scss";
+import style from "@/styles/pages/Index.module.scss";
 import { getCounts } from "../graphql/queries";
 
 const HomePage = async () => {

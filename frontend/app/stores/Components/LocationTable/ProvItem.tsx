@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import styles from "@/styles/Components/LocationTable.module.scss";
+import styles from "@/styles/components/LocationTable.module.scss";
 
 type Props = {
   province: string;

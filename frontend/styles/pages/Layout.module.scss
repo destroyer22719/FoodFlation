@@ -1,0 +1,19 @@
+@import "../assets/vars";
+
+.layout {
+  margin: 0;
+  background-color: $black;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__main {
+    width: 90%;
+    margin: auto;
+    flex: 1;
+
+    @media only screen and (min-width: 500px) {
+      width: 80%;
+    }
+  }
+}

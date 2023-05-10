@@ -3,7 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
-import styles from "@/styles/Components/Pagination.module.scss";
+import styles from "@/styles/components/Pagination.module.scss";
 import Link from "next/link";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { searchStores } from "@/graphql/queries";
-import styles from "@/styles/StoreList.module.scss";
+import styles from "@/styles/pages/StoreList.module.scss";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
 
@@ -24,9 +24,9 @@ const StorePages = async ({ searchParams }: Props) => {
   });
 
   return (
-    <div className={styles["store-list"]}>
+    <div className={styles["store-list"]} id="list">
       <div>{total > 0 && <PaginationComponent resultsFound={total} />}</div>
-      <div className={styles["store-list__stores"]} id="list">
+      <div className={styles["store-list__stores"]}>
         {stores.map((store) => (
           <StoreItem store={store as Store} key={store.id} />
         ))}

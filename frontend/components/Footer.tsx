@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "../styles/Footer.module.scss";
+import styles from "@/styles/components/Footer.module.scss";
 import Link from "next/link";
 import { MdEmail } from "react-icons/md";
 import { BsGithub } from "react-icons/bs";

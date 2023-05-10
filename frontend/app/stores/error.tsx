@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/StoreList.module.scss";
+import styles from "@/styles/pages/StoreList.module.scss";
 
 const StoreError = () => {
   return (

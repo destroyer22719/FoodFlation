@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import ProvItem from "./ProvItem";
-import styles from "@/styles/Components/LocationTable.module.scss";
+import styles from "@/styles/components/LocationTable.module.scss";
 
 type Props = {
   country: string;

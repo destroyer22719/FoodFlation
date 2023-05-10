@@ -2,8 +2,8 @@ import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
 
 import Nav from "@/components/Nav";
-import style from "@/styles/Layout.module.scss";
-import "../styles/global.scss";
+import style from "@/styles/pages/Layout.module.scss";
+import "@/styles/global.scss";
 
 type Props = {
   title: string;

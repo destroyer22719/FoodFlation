@@ -6,8 +6,8 @@ import { RxCross2 } from "react-icons/rx";
 
 import { getCategoryClassName } from "util/getCategoryClassName";
 
-import categoryListStyles from "@/styles/Components/CategoryList.module.scss";
-import categoryStyles from "@/styles/Components/Category.module.scss";
+import categoryListStyles from "@/styles/components/CategoryList.module.scss";
+import categoryStyles from "@/styles/components/Category.module.scss";
 
 type Props = {
   categoriesData: {

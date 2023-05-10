@@ -2,7 +2,7 @@ import CategoryIcon from "@/components/CategoryIcon";
 import Image from "next/image";
 import Link from "next/link";
 
-import styles from "@/styles/Components/ItemCard.module.scss";
+import styles from "@/styles/components/ItemCard.module.scss";
 
 type Props = {
   item: Omit<Item, "createdAt" | "updatedAt" | "storeId">;
