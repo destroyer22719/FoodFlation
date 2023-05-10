@@ -9,7 +9,7 @@ const HomePage = async () => {
       <div className={style["home"]}>
         <h1>FoodFlation</h1>
         <p>
-          Tracking the prices of {itemCount} from {storeCount} different stores
+          Tracking the prices of {itemCount} items from {storeCount} different stores
           across Canada and the US!
         </p>
       </div>
