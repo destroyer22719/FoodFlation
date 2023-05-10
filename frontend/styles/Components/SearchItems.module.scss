@@ -1,0 +1,35 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.search-items {
+  display: flex;
+  align-items: center;
+
+  &__button {
+    background-color: $purple;
+    padding: 12px;
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+    border-radius: 5px;
+    @include mui-dark($purple);
+
+    display: grid;
+    place-items: center;
+  }
+
+  &__icon {
+    font-size: 30px;
+    fill: $black;
+  }
+
+  &__input {
+    padding: 12px;
+    height: 50px;
+    border-radius: 5px;
+    outline: none;
+    background-color: $black;
+    border: 5px solid $purple;
+    font-size: 20px;
+  }
+}
