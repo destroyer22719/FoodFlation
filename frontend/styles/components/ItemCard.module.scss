@@ -1,6 +1,7 @@
 @import "../assets/mui.scss";
 @import "../assets/vars";
 
+//https://uxdesign.cc/using-css-design-a-simple-skeleton-loader-57d884cd3547
 .item-card {
   width: 300px;
   height: 550px;
@@ -11,6 +12,8 @@
   margin: 25px;
   padding: 25px;
   border-radius: 5px;
+  flex: 1;
+
   @include mui-dark($blue-dark);
 
   h3 {
@@ -20,6 +23,11 @@
   &__image {
     margin-top: 0;
     border-radius: 5px;
+
+    &--skeleton {
+      width: 250px;
+      height: 250px;
+    }
   }
 
   &__info {
@@ -39,5 +47,30 @@
     height: 40px;
     text-align: center;
     padding: 7.5px;
+
+    &--skeleton {
+      width: 100px;
+      height: 50px;
+      flex-grow: 1;
+    }
+  }
+
+  &__category--skeleton {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+
+  &__date {
+    margin-top: auto;
+  }
+
+  &__image--skeleton,
+  &__price--skeleton,
+  &__category--skeleton {
+    background-color: $purple-light;
+    border-radius: 5px;
+
+    @include mui-light($purple-light);
   }
 }

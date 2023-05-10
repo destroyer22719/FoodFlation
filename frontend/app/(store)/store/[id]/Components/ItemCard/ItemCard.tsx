@@ -28,7 +28,7 @@ const ItemCard = ({ item }: Props) => {
           <div className={styles["item-card__price"]}>$ {price}</div>
         </div>
         <h3>{name}</h3>
-        <div>{lastUpdated}</div>
+        <div className={styles["item-card__date"]}>{lastUpdated}</div>
       </div>
     </Link>
   );
