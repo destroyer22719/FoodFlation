@@ -92,7 +92,7 @@ type Query @rateLimit(limit: 250, duration: 900) {
   itemsFromCity(city: String!, page: Int): [Item!]!
   item(id: ID!, offset: Int, limit: Int): Item
   storeCount: Int! @cacheControl(maxAge: 604800)
-  itemCount: Int! @cacheControl(maxAge: 604800)
+  itemCount: Int! @cacheControl(maxAge: 43200)
   locations: [Location!]! @cacheControl(maxAge: 604800)
 }
 `;
