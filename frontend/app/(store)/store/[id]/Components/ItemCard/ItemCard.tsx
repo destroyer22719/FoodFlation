@@ -25,7 +25,9 @@ const ItemCard = ({ item }: Props) => {
         />
         <div className={styles["item-card__info"]}>
           <CategoryIcon category={category} />
-          <div className={styles["item-card__price"]}>$ {price}</div>
+          <div className={styles["item-card__price"]}>
+            <div>$ {price}</div>
+          </div>
         </div>
         <h3>{name}</h3>
         <div className={styles["item-card__date"]}>{lastUpdated}</div>

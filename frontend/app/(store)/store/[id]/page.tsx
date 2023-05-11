@@ -2,7 +2,6 @@ import { getItemsFromStore } from "@/graphql/queries";
 import styles from "@/styles/pages/Store.module.scss";
 import ItemCard from "./Components/ItemCard/ItemCard";
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
-import ItemCardSkeleton from "./Components/ItemCard/ItemCardSkeleton";
 
 type Props = {
   params: {
@@ -35,10 +34,11 @@ const StoreIdPage = async ({
       </div>
       <PaginationComponent resultsFound={resultsFound} />
       <div className={styles["store-page__list"]}>
-        {items.map((item) => (
-          // <ItemCardSkeleton key={item.id} />
-          <ItemCard item={item} key={item.id} />
-        ))}
+        <>
+          {items.map((item) => (
+            <ItemCard item={item} key={item.id} />
+          ))}
+        </>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ type Category = {
 const CategoryIcon: React.FC<Category> = ({ category }) => {
   return (
     <div
-      className={styles[`category__${getCategoryClassName(category)}`]}
+      className={`${styles[`category__${getCategoryClassName(category)}`]} ${styles[`category__icon--format`]}`}
       title={category}
     >
       {(() => {

@@ -1,6 +1,16 @@
 @import "../assets/mui.scss";
 
 .category {
+  &__icon--format {
+    width: 50px;
+    height: 50px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 25px;
+  }
+
   &__meat {
     background: #ff1744;
     @include mui-light(#ff1744);
