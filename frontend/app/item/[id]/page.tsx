@@ -9,6 +9,7 @@ import { getItemsAndItsStoreData } from "@/graphql/queries";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import CriticalValuesComponents from "./components/CriticalValuesComponents";
+import Header from "./components/Header";
 
 type Props = {
   params: { id: string };
@@ -86,9 +87,11 @@ const ItemPage = async ({ params }: Props) => {
   return (
     <>
       <div className={styles["item__info"]}>
-        <div>
-          <h1>{item.name}</h1>
-        </div>
+        <Header
+          category={item.category}
+          name={item.name}
+          storeId={item.stores.id}
+        />
         <div>
           {greaterThanTwoWeeks && (
             <h3>
@@ -98,15 +101,12 @@ const ItemPage = async ({ params }: Props) => {
           )}
         </div>
         <div className={styles["item__imgs--format"]}>
-          <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
+          <Image width={150} height={150} src={item.imgUrl} alt={item.name} />
           <StoreItem store={item.stores as Store} />
         </div>
         <div>
           <CriticalValuesComponents {...criticalValuesProps} />
         </div>
-      </div>
-      <div>
-        <div>{/* <CategoryButton category={item.category} /> */}</div>
       </div>
       <div>
         <ChartComponent pricesData={parsedPrices} />

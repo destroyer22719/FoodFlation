@@ -225,6 +225,7 @@ export const getItemsAndItsStoreData = async (id: string) => {
         category
         imgUrl
         stores {
+          id
           street
           city
           postalCode
