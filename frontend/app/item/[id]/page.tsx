@@ -88,7 +88,6 @@ const ItemPage = async ({ params }: Props) => {
           </div>
         </div>
       </div>
-
       <div>
         <div>
           <div>

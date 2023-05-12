@@ -40,8 +40,6 @@ const ChartComponent = ({ pricesData }: { pricesData: DataSet[] }) => {
       },
     ],
   };
-
-  console.log(pricesData);
   
   return (
     <div>
