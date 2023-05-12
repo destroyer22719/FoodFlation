@@ -9,11 +9,13 @@
 
   &__imgs--format {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
+    align-items: center;
+    justify-content: center;
 
     img {
-      margin-right: 25px;
+      margin: 25px;
     }
   }
 }

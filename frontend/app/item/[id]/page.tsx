@@ -8,6 +8,7 @@ import timeAgo from "util/timeAgo";
 import { getItemsAndItsStoreData } from "@/graphql/queries";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
+import CriticalValuesComponents from "./components/CriticalValuesComponents";
 
 type Props = {
   params: { id: string };
@@ -67,6 +68,21 @@ const ItemPage = async ({ params }: Props) => {
   const lastUpdated = new Date(parsedPrices[parsedPrices.length - 1].x);
   const greaterThanTwoWeeks = Date.now() - lastUpdated.getTime() > 12096e5;
 
+  const criticalValuesProps = {
+    highest: {
+      price: highest.y,
+      date: highest.x,
+    },
+    lowest: {
+      price: lowest.y,
+      date: lowest.x,
+    },
+    latest: {
+      price: parsedPrices[parsedPrices.length - 1].y,
+      date: parsedPrices[parsedPrices.length - 1].x,
+    },
+  };
+
   return (
     <>
       <div className={styles["item__info"]}>
@@ -86,31 +102,11 @@ const ItemPage = async ({ params }: Props) => {
           <StoreItem store={item.stores as Store} />
         </div>
         <div>
-            <div>
-              Latest: {"$"}
-              {parsedPrices[parsedPrices.length - 1].y} on
-              {parsedPrices[parsedPrices.length - 1].x} {"("}
-              {timeAgo(lastUpdated)}
-              {")"}
-            </div>
-            <div>
-              Highest: {"$"}
-              {highest.y} on {highest.x} {"("}
-              {timeAgo(new Date(highest.x))}
-              {")"}
-            </div>
-            <div>
-              Lowest: {"$"}
-              {lowest.y} on {lowest.x} {"("}
-              {timeAgo(new Date(lowest.x))}
-              {")"}
-            </div>
-          </div>
+          <CriticalValuesComponents {...criticalValuesProps} />
+        </div>
       </div>
       <div>
-        <div>
-          {/* <CategoryButton category={item.category} /> */}
-        </div>
+        <div>{/* <CategoryButton category={item.category} /> */}</div>
       </div>
       <div>
         <ChartComponent pricesData={parsedPrices} />
