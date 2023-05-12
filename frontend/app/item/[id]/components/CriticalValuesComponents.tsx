@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { BiTime, BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
 
 import styles from "@/styles/components/CriticalValues.module.scss";
-import timeAgo from "util/timeAgo";
+import timeAgo from "@/utils/timeAgo";
 
 type CriticalValueTypes = "latest" | "highest" | "lowest";
 

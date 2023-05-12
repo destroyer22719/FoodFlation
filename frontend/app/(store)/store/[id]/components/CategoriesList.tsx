@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 
-import { getCategoryClassName } from "util/getCategoryClassName";
+import { getCategoryClassName } from "@/utils/getCategoryClassName";
 
 import categoryListStyles from "@/styles/components/CategoryList.module.scss";
 import categoryStyles from "@/styles/components/Category.module.scss";

@@ -2,7 +2,7 @@ import { GiSteak, GiFruitBowl, GiMilkCarton } from "react-icons/gi";
 import { BiBowlHot } from "react-icons/bi";
 
 import styles from "@/styles/components/Category.module.scss";
-import { getCategoryClassName } from "util/getCategoryClassName";
+import { getCategoryClassName } from "@/utils/getCategoryClassName";
 
 type Category = {
   category: string;
@@ -11,7 +11,9 @@ type Category = {
 const CategoryIcon: React.FC<Category> = ({ category }) => {
   return (
     <div
-      className={`${styles[`category__${getCategoryClassName(category)}`]} ${styles[`category__icon--format`]}`}
+      className={`${styles[`category__${getCategoryClassName(category)}`]} ${
+        styles[`category__icon--format`]
+      }`}
       title={category}
     >
       {(() => {

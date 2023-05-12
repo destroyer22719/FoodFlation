@@ -26,7 +26,8 @@
       "@/styles/*": ["styles/*"],
       "@/config/*": ["config/*"],
       "@/providers/*": ["providers/*"],
-      "@/graphql/*": ["graphql/*"]
+      "@/graphql/*": ["graphql/*"],
+      "@/utils/*": ["utils/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

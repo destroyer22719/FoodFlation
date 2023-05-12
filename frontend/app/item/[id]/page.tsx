@@ -4,7 +4,7 @@ import { DataSet } from "./util";
 import ChartComponent from "./components/ChartComponent";
 
 import styles from "@/styles/pages/Item.module.scss";
-import timeAgo from "util/timeAgo";
+import timeAgo from "@/utils/timeAgo";
 import { getItemsAndItsStoreData } from "@/graphql/queries";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
