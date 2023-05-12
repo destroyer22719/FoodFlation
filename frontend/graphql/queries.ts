@@ -10,6 +10,7 @@ import {
   GetStoreDataQueryVariables,
   GetItemsFromStoreQueryVariables,
   GetItemsFromStoreQuery,
+  GetItemAndItsStoreDataQueryVariables,
 } from "__generated__/graphql";
 import { getClient } from "@/graphql/apolloClient";
 
@@ -213,4 +214,38 @@ export const getItemsFromStore = async ({
   });
 
   return data.itemsFromStore;
+};
+
+export const getItemsAndItsStoreData = async (id: string) => {
+  const query = gql`
+    query getItemAndItsStoreData($itemId: ID!) {
+      item(id: $itemId) {
+        category
+        imgUrl
+        stores {
+          street
+          city
+          postalCode
+          zipCode
+          state
+          province
+          country
+        }
+        prices {
+          createdAt
+          price
+        }
+      }
+    }
+  `;
+
+  const client = getClient();
+  const { data } = await client.query<GetItemAndStoreCountsQuery, GetItemAndItsStoreDataQueryVariables>({
+    query,
+    variables: {
+      itemId: id
+    }
+  });
+
+  return data;
 };

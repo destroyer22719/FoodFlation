@@ -93,3 +93,22 @@ query getItemsFromStore(
   }
 }
 
+query getItemAndItsStoreData($itemId: ID!) {
+  item(id: $itemId) {
+    category
+    imgUrl
+    stores {
+      street
+      city
+      postalCode
+      zipCode
+      state
+      province
+      country
+    }
+    prices {
+      createdAt
+      price
+    }
+  }
+}
