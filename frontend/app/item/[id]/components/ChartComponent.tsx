@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { DataSet } from "../util";
+import { DataSet } from "../page";
 
 ChartJS.register(
   CategoryScale,
@@ -40,7 +40,7 @@ const ChartComponent = ({ pricesData }: { pricesData: DataSet[] }) => {
       },
     ],
   };
-  
+
   return (
     <div>
       <Line

@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { DataSet } from "./util";
 import ChartComponent from "./components/ChartComponent";
 
 import styles from "@/styles/pages/Item.module.scss";
@@ -13,6 +12,11 @@ import Header from "./components/Header";
 
 type Props = {
   params: { id: string };
+};
+
+export type DataSet = {
+  x: string;
+  y: number;
 };
 
 const ItemPage = async ({ params }: Props) => {
