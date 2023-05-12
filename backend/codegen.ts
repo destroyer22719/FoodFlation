@@ -45,7 +45,7 @@ type Item {
   createdAt: String!
   updatedAt: String!
   category: String!
-  store: Store!
+  stores: Store!
   prices: [Price!]!
 }
 

@@ -1,3 +1,4 @@
+import { FieldNode, GraphQLResolveInfo } from "graphql";
 import { Context } from "../db/context.js";
 import {
   Location,
@@ -9,14 +10,19 @@ import {
 export const storeResolver = async (
   _: {},
   { id }: QueryStoreArgs,
-  ctx: Context
+  ctx: Context,
+  info: GraphQLResolveInfo
 ) => {
+  const selectedFields = info?.fieldNodes[0]?.selectionSet?.selections.map(
+    (selection) => (selection as FieldNode).name.value
+  );
+
   const store = await ctx.prisma.stores.findUnique({
     where: {
       id,
     },
     include: {
-      companies: true,
+      companies: selectedFields?.includes("companies"),
     },
   });
 

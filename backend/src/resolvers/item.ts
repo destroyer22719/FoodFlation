@@ -1,4 +1,4 @@
-import { GraphQLError } from "graphql";
+import { FieldNode, GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { Context } from "../db/context.js";
 import {
@@ -11,16 +11,23 @@ import {
 export const itemResolver = async (
   _: {},
   { id, limit, offset }: QueryItemArgs,
-  ctx: Context
+  ctx: Context,
+  info: GraphQLResolveInfo
 ) => {
-  let item;
+  const selectedFields = info?.fieldNodes[0]?.selectionSet?.selections.map(
+    (selection) => (selection as FieldNode).name.value
+  );
 
-  item = await ctx.prisma.items.findUnique({
+  let item = await ctx.prisma.items.findUnique({
     where: {
       id,
     },
     include: {
-      prices: { ...(limit ? { take: limit } : {}), skip: offset || 0 },
+      stores: selectedFields?.includes("stores"),
+      prices: selectedFields?.includes("prices") && {
+        ...(limit ? { take: limit } : {}),
+        skip: offset || 0,
+      },
     },
   });
 
@@ -30,7 +37,8 @@ export const itemResolver = async (
 export const itemStoreResolver = async (
   _: {},
   { storeId, page, search, category }: QueryItemsFromStoreArgs,
-  ctx: Context
+  ctx: Context,
+  info: GraphQLResolveInfo
 ) => {
   page = page || 1;
 
@@ -48,13 +56,17 @@ export const itemStoreResolver = async (
     ...(search && { name: { contains: search } }),
   };
 
+  const selectedFields = info?.fieldNodes[0]?.selectionSet?.selections.map(
+    (selection) => (selection as FieldNode).name.value
+  );
+
   const [items, count, categoryData, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
       where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
       include: {
-        prices: {
+        prices: selectedFields?.includes("prices") && {
           take: 1,
           orderBy: {
             createdAt: "desc",

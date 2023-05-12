@@ -42,8 +42,8 @@ export type Item = {
   imgUrl: Scalars['String'];
   name: Scalars['String'];
   prices: Array<Price>;
-  store: Store;
   storeId: Scalars['String'];
+  stores: Store;
   updatedAt: Scalars['String'];
 };
 
@@ -289,8 +289,8 @@ export type ItemResolvers<ContextType = any, ParentType extends ResolversParentT
   imgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   prices?: Resolver<Array<ResolversTypes['Price']>, ParentType, ContextType>;
-  store?: Resolver<ResolversTypes['Store'], ParentType, ContextType>;
   storeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stores?: Resolver<ResolversTypes['Store'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
