@@ -1,5 +1,5 @@
 import styles from "@/styles/pages/StoreList.module.scss";
-import SearchTable from "./Components/SearchTable/SearchTable";
+import SearchTable from "./components/SearchTable/SearchTable";
 import { getLocationsAndCompanies } from "@/graphql/queries";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {

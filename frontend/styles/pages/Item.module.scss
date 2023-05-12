@@ -1,0 +1,19 @@
+.item {
+  
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  &__imgs--format {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    img {
+      margin-right: 25px;
+    }
+  }
+}

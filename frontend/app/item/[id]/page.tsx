@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { DataSet } from "./util";
-import ChartComponent from "./ClientComponents/ChartComponent";
+import ChartComponent from "./components/ChartComponent";
 
 import styles from "@/styles/pages/Item.module.scss";
 import timeAgo from "util/timeAgo";
@@ -69,28 +69,23 @@ const ItemPage = async ({ params }: Props) => {
 
   return (
     <>
-      <div>
+      <div className={styles["item__info"]}>
         <div>
-          <div>
-            <h1>{item.name}</h1>
-          </div>
-          <div>
-            {greaterThanTwoWeeks && (
-              <h3>
-                Warning: Price may be outdated as it is from{" "}
-                {timeAgo(lastUpdated)}
-              </h3>
-            )}
-          </div>
-          <div>
-            <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
-            <StoreItem store={item.stores as Store} />
-          </div>
+          <h1>{item.name}</h1>
         </div>
-      </div>
-      <div>
         <div>
-          <div>
+          {greaterThanTwoWeeks && (
+            <h3>
+              Warning: Price may be outdated as it is from{" "}
+              {timeAgo(lastUpdated)}
+            </h3>
+          )}
+        </div>
+        <div className={styles["item__imgs--format"]}>
+          <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
+          <StoreItem store={item.stores as Store} />
+        </div>
+        <div>
             <div>
               Latest: {"$"}
               {parsedPrices[parsedPrices.length - 1].y} on
@@ -111,6 +106,9 @@ const ItemPage = async ({ params }: Props) => {
               {")"}
             </div>
           </div>
+      </div>
+      <div>
+        <div>
           {/* <CategoryButton category={item.category} /> */}
         </div>
       </div>

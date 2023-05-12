@@ -1,6 +1,6 @@
 import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
 import styles from "@/styles/pages/Store.module.scss";
-import ItemCardSkeleton from "./Components/ItemCard/ItemCardSkeleton";
+import ItemCardSkeleton from "./components/ItemCard/ItemCardSkeleton";
 
 const Loading = () => {
   return (

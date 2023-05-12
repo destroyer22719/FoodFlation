@@ -1,9 +1,9 @@
 import { getStoreData } from "@/graphql/queries";
-import CategoriesList from "./Components/CategoriesList";
+import CategoriesList from "./components/CategoriesList";
 import { notFound } from "next/navigation";
 import StoreItem from "@/components/StoreItem/StoreItem";
 import styles from "@/styles/pages/Store.module.scss";
-import SearchItems from "./Components/SearchItems";
+import SearchItems from "./components/SearchItems";
 
 type Props = {
   children: React.ReactNode;
