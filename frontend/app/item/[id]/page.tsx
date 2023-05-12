@@ -1,14 +1,15 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 import ChartComponent from "./components/ChartComponent";
-
-import styles from "@/styles/pages/Item.module.scss";
-import timeAgo from "@/utils/timeAgo";
-import { getItemsAndItsStoreData } from "@/graphql/queries";
-import { notFound } from "next/navigation";
-import StoreItem from "@/components/StoreItem/StoreItem";
 import CriticalValuesComponents from "./components/CriticalValuesComponents";
 import Header from "./components/Header";
+
+import timeAgo from "@/utils/timeAgo";
+import { getItemsAndItsStoreData } from "@/graphql/queries";
+import StoreItem from "@/components/StoreItem/StoreItem";
+
+import styles from "@/styles/pages/Item.module.scss";
 
 type Props = {
   params: { id: string };
