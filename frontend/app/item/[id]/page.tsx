@@ -31,7 +31,7 @@ const ItemPage = async ({ params }: Props) => {
   const lowest: DataSet = { x: "", y: Infinity };
 
   prices.forEach(({ createdAt, price }) => {
-    let date = new Date(+createdAt).toISOString().split("T")[0];
+    const date = new Date(+createdAt).toISOString().split("T")[0];
 
     //check if the dataset already has this date and price
     const dupeIndex = xDataset.indexOf(date);
