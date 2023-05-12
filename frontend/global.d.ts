@@ -1,46 +1,4 @@
 declare global {
-  // type QueryCountResult = {
-  //   itemCount: number;
-  //   storeCount: number;
-  // };
-
-  // type QuerySearchStoreParams = {
-  //   city?: string;
-  //   postalCode?: string;
-  //   zipCode?: string;
-  //   companyId?: string;
-  //   page?: number;
-  // };
-
-  // type QuerySearchStoreResult = {
-  //   stores: Store[];
-  //   total: number;
-  // };
-
-  // type QueryStoreResult = {
-  //   store: Store & { companies: { id: string } };
-  //   itemsFromStore: {
-  //     total: number;
-  //     categories: Category[];
-  //   };
-  // };
-
-  // type QueryLocationAndCompaniesResult = {
-  //   companies: Company[];
-  //   locations: {
-  //     _count: number;
-  //     country: string;
-  //     city: string;
-  //     province?: string;
-  //     state?: string;
-  //   }[];
-  // };
-
-  // type QueryItemsFromStoreResult = {
-  //   items: Omit<Item, "createdAt" | "updatedAt" | "storeId">[];
-  //   resultsFound: number;
-  // };
-
   interface Item {
     id: string;
     name: string;
