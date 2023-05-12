@@ -56,17 +56,26 @@ export const itemStoreResolver = async (
     ...(search && { name: { contains: search } }),
   };
 
-  const selectedFields = info?.fieldNodes[0]?.selectionSet?.selections.map(
-    (selection) => (selection as FieldNode).name.value
+  const itemField = info?.fieldNodes[0]?.selectionSet?.selections.find(
+    (selection) => (selection as FieldNode).name.value === "items"
   );
 
+
+  let itemFieldsSelected: string[] | undefined;
+
+  if (itemField) {
+    itemFieldsSelected = (itemField as FieldNode).selectionSet?.selections.map(
+      (selection) => (selection as FieldNode).name.value
+    );
+  }
+ 
   const [items, count, categoryData, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
       where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
       include: {
-        prices: selectedFields?.includes("prices") && {
+        prices: itemFieldsSelected?.includes("prices") && {
           take: 1,
           orderBy: {
             createdAt: "desc",
