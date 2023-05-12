@@ -93,6 +93,43 @@ query getItemsFromStore(
   }
 }
 
+query getItemsFromCity(
+  $city: String!
+  $search: String!
+  $category: String
+  $page: Int
+) {
+  itemsFromCity(
+    city: $city
+    search: $search
+    category: $category
+    page: $page
+  ) {
+    items {
+      id
+      name
+      imgUrl
+      category
+      prices {
+        price
+        createdAt
+      }
+      store {
+        id
+        name
+        street
+        city
+        postalCode
+        zipCode
+        state
+        province
+        country
+      }
+    }
+    resultsFound
+  }
+}
+
 query getItemAndItsStoreData($itemId: ID!) {
   item(id: $itemId) {
     name
