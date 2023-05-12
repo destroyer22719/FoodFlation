@@ -1,5 +1,5 @@
 import { FieldNode, GraphQLError, GraphQLResolveInfo } from "graphql";
-
+import {} from "@prisma/client";
 import { Context } from "../db/context.js";
 import {
   Item,
@@ -60,7 +60,6 @@ export const itemStoreResolver = async (
     (selection) => (selection as FieldNode).name.value === "items"
   );
 
-
   let itemFieldsSelected: string[] | undefined;
 
   if (itemField) {
@@ -68,7 +67,7 @@ export const itemStoreResolver = async (
       (selection) => (selection as FieldNode).name.value
     );
   }
- 
+
   const [items, count, categoryData, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
       where: searchQuery,
@@ -109,22 +108,39 @@ export const itemStoreResolver = async (
 
 export const itemCityResolver = async (
   _: {},
-  { city, page }: QueryItemsFromCityArgs,
+  { city, page, search }: QueryItemsFromCityArgs,
   ctx: Context
 ) => {
-  let item;
-
-  item = await ctx.prisma.items.findFirst({
-    where: {
-      stores: {
-        city,
-      },
+  const searchQuery = {
+    name: {
+      contains: search,
     },
-    take: 10,
-    skip: ((page || 1) - 1) * 10,
-  });
+    stores: {
+      city,
+    },
+  };
 
-  return item as unknown as Item[];
+  const [items, resultsFound] = await Promise.all([
+    ctx.prisma.items.findMany({
+      where: searchQuery,
+      take: 10,
+      skip: ((page || 1) - 1) * 10,
+      include: {
+        prices: {
+          take: 1,
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        stores: true,
+      },
+    }),
+    ctx.prisma.items.count({
+      where: searchQuery,
+    }),
+  ]);
+
+  return { items: items as unknown as Item[], resultsFound };
 };
 
 export const itemCountResolver = async (_: {}, __: {}, ctx: Context) => {

@@ -96,13 +96,11 @@ query getItemsFromStore(
 query getItemsFromCity(
   $city: String!
   $search: String!
-  $category: String
   $page: Int
 ) {
   itemsFromCity(
     city: $city
     search: $search
-    category: $category
     page: $page
   ) {
     items {
@@ -114,7 +112,7 @@ query getItemsFromCity(
         price
         createdAt
       }
-      store {
+      stores {
         id
         name
         street
@@ -150,5 +148,15 @@ query getItemAndItsStoreData($itemId: ID!) {
       createdAt
       price
     }
+  }
+}
+
+query getLocations {
+  locations {
+    _count
+    country
+    city
+    province
+    state
   }
 }
