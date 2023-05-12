@@ -99,6 +99,8 @@ query getItemAndItsStoreData($itemId: ID!) {
     category
     imgUrl
     stores {
+      id
+      name
       street
       city
       postalCode

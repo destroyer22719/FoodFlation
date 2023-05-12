@@ -232,6 +232,7 @@ export const getItemsAndItsStoreData = async (id: string) => {
           state
           province
           country
+          name
         }
         prices {
           createdAt

@@ -7,6 +7,7 @@ import styles from "@/styles/pages/Item.module.scss";
 import timeAgo from "util/timeAgo";
 import { getItemsAndItsStoreData } from "@/graphql/queries";
 import { notFound } from "next/navigation";
+import StoreItem from "@/components/StoreItem/StoreItem";
 
 type Props = {
   params: { id: string };
@@ -19,7 +20,7 @@ const ItemPage = async ({ params }: Props) => {
   if (!item) {
     return notFound();
   }
-  
+
   const { prices } = item;
   //dates
   const xDataset: string[] = [];
@@ -30,7 +31,7 @@ const ItemPage = async ({ params }: Props) => {
   const lowest: DataSet = { x: "", y: Infinity };
 
   prices.forEach(({ createdAt, price }) => {
-    let date = new Date(+createdAt).toISOString().split("T")[0];;
+    let date = new Date(+createdAt).toISOString().split("T")[0];
 
     //check if the dataset already has this date and price
     const dupeIndex = xDataset.indexOf(date);
@@ -68,49 +69,44 @@ const ItemPage = async ({ params }: Props) => {
 
   return (
     <>
-      <div className={styles["item-page__header"]}>
-        {/* <BackButton /> */}
-        <div className={styles["item-page__header-metada"]}>
+      <div>
+        <div>
           <div>
             <h1>{item.name}</h1>
           </div>
-          {greaterThanTwoWeeks && (
-            <h3>
-              Warning: Price may be outdated as it is from{" "}
-              {timeAgo(lastUpdated)}
-            </h3>
-          )}
           <div>
-            <div>
-              {item.stores.street}, {item.stores.city} {item.stores?.postalCode || item.stores?.zipCode}
-            </div>
-            <div>
-              {item.stores.province || item.stores.state}, {item.stores.country}
-            </div>
+            {greaterThanTwoWeeks && (
+              <h3>
+                Warning: Price may be outdated as it is from{" "}
+                {timeAgo(lastUpdated)}
+              </h3>
+            )}
+          </div>
+          <div>
+            <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
+            <StoreItem store={item.stores as Store} />
           </div>
         </div>
       </div>
 
-      <div className={styles["item-page__item-section"]}>
-        <Image width={200} height={200} src={item.imgUrl} alt={item.name} />
+      <div>
         <div>
-          <div className={styles["item-page__price-info"]}>
-            <div></div>
+          <div>
             <div>
-              Latest Price: {"$"}
+              Latest: {"$"}
               {parsedPrices[parsedPrices.length - 1].y} on
               {parsedPrices[parsedPrices.length - 1].x} {"("}
               {timeAgo(lastUpdated)}
               {")"}
             </div>
             <div>
-              Highest Price: {"$"}
+              Highest: {"$"}
               {highest.y} on {highest.x} {"("}
               {timeAgo(new Date(highest.x))}
               {")"}
             </div>
             <div>
-              Lowest Price: {"$"}
+              Lowest: {"$"}
               {lowest.y} on {lowest.x} {"("}
               {timeAgo(new Date(lowest.x))}
               {")"}
