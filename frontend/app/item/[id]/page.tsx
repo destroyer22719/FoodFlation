@@ -101,7 +101,9 @@ const ItemPage = async ({ params }: Props) => {
           )}
         </div>
         <div className={styles["item__imgs--format"]}>
-          <Image width={150} height={150} src={item.imgUrl} alt={item.name} />
+          <div className={styles["item__img"]}>
+            <Image fill={true} src={item.imgUrl} alt={item.name} />
+          </div>
           <StoreItem store={item.stores as Store} />
         </div>
         <div>

@@ -17,17 +17,38 @@ type Props = {
 const Header: FC<Props> = ({ category, name, storeId }) => {
   const router = useRouter();
   return (
-    <div className={styles["item__header"]}>
-      <div onClick={() => router.back()} className={styles["item__header-back"]}>
-        <IoChevronBack />
+    <>
+      <div className={styles["item__header-desktop"]}>
+        <div
+          onClick={() => router.back()}
+          className={styles["item__header-desktop-back"]}
+        >
+          <IoChevronBack />
+        </div>
+        <div className={styles["item__header-desktop-name"]}>
+          <h1>{name}</h1>
+        </div>
+        <Link href={`/store/${storeId}?category=${category}`}>
+          <CategoryIcon category={category} />
+        </Link>
       </div>
-      <div className={styles["item__header-name"]}>
-        <h1>{name}</h1>
+      <div className={styles["item__header-mobile"]}>
+        <div className={styles["item__header-mobile-name"]}>
+          <h1>{name}</h1>
+        </div>
+        <div className={styles["item__header-mobile-buttons"]}>
+          <div
+            onClick={() => router.back()}
+            className={styles["item__header-mobile-back"]}
+          >
+            <IoChevronBack />
+          </div>
+          <Link href={`/store/${storeId}?category=${category}`}>
+            <CategoryIcon category={category} format={false} className={styles["item__header-mobile-category"]} />
+          </Link>
+        </div>
       </div>
-      <Link href={`/store/${storeId}?category=${category}`}>
-        <CategoryIcon category={category} />
-      </Link>
-    </div>
+    </>
   );
 };
 
