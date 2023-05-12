@@ -5,6 +5,8 @@ import ChartComponent from "./ClientComponents/ChartComponent";
 
 import styles from "@/styles/pages/Item.module.scss";
 import timeAgo from "util/timeAgo";
+import { getItemsAndItsStoreData } from "@/graphql/queries";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: { id: string };
@@ -13,9 +15,11 @@ type Props = {
 const ItemPage = async ({ params }: Props) => {
   const { id } = params;
 
-  const req = await fetch(`${process.env.API_URL}/items/${id}`);
-  const item: Item = await req.json();
-
+  const item = await getItemsAndItsStoreData(id);
+  if (!item) {
+    return notFound();
+  }
+  
   const { prices } = item;
   //dates
   const xDataset: string[] = [];
@@ -26,17 +30,12 @@ const ItemPage = async ({ params }: Props) => {
   const lowest: DataSet = { x: "", y: Infinity };
 
   prices.forEach(({ createdAt, price }) => {
-    const date = new Date(createdAt).toISOString().split("T")[0];
+    let date = new Date(+createdAt).toISOString().split("T")[0];;
 
-    
     //check if the dataset already has this date and price
     const dupeIndex = xDataset.indexOf(date);
-    if (
-      dupeIndex !== -1 &&
-      yDataset[dupeIndex] === price 
-    )
-      return;
-      //remove the previous dataset with the same date, so this the graph gets the latest price of that day
+    if (dupeIndex !== -1 && yDataset[dupeIndex] === price) return;
+    //remove the previous dataset with the same date, so this the graph gets the latest price of that day
     if (dupeIndex !== -1 && xDataset[dupeIndex] === date) {
       yDataset.splice(dupeIndex, 1);
       xDataset.splice(dupeIndex, 1);
@@ -82,9 +81,12 @@ const ItemPage = async ({ params }: Props) => {
             </h3>
           )}
           <div>
-            <p>
-              {/* {item.store.street}, {item.store.city} {item.store.postalCode} */}
-            </p>
+            <div>
+              {item.stores.street}, {item.stores.city} {item.stores?.postalCode || item.stores?.zipCode}
+            </div>
+            <div>
+              {item.stores.province || item.stores.state}, {item.stores.country}
+            </div>
           </div>
         </div>
       </div>

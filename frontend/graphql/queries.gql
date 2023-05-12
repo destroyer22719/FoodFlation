@@ -95,6 +95,7 @@ query getItemsFromStore(
 
 query getItemAndItsStoreData($itemId: ID!) {
   item(id: $itemId) {
+    name
     category
     imgUrl
     stores {
