@@ -8,14 +8,18 @@ type SearchParams = {
   search?: string;
 };
 
-const Page = ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+const Page = ({ searchParams }: { searchParams: SearchParams }) => {
   // const [locations, items] = await Promise.all([])
+  const { country, province, state, city, search } = searchParams;
+  
+  if (city && search) {
 
-  return <div></div>;
+  }
+  return (
+    <div>
+      <h1>Search Page</h1>
+    </div>
+  );
 };
 
 export default Page;

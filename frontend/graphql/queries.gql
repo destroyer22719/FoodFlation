@@ -116,12 +116,8 @@ query getItemsFromCity(
         id
         name
         street
-        city
         postalCode
         zipCode
-        state
-        province
-        country
       }
     }
     resultsFound

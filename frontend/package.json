@@ -11,7 +11,8 @@
     "generate": "graphql-codegen"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.14",
+    "@apollo/client": "^3.8.0-alpha.13",
+    "@apollo/experimental-nextjs-app-support": "^0.1.0",
     "@vercel/analytics": "^1.0.1",
     "chart.js": "^4.3.0",
     "graphql": "^16.6.0",
