@@ -14,6 +14,7 @@ import {
   GetItemAndItsStoreDataQueryVariables,
   GetItemsFromCityQuery,
   GetItemsFromCityQueryVariables,
+  GetLocationsQuery,
 } from "__generated__/graphql";
 import { getClient } from "@/graphql/apolloClient";
 
@@ -268,7 +269,6 @@ export const getItemsFromCity = async ({
   search?: string;
   page?: number;
 }) => {
-
   if (!city && !search) {
     return {
       items: [],
@@ -317,4 +317,25 @@ export const getItemsFromCity = async ({
   });
 
   return data.itemsFromCity;
+};
+
+export const getLocations = async () => {
+  const query = gql`
+    query getLocations {
+      locations {
+        country
+        city
+        province
+        state
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<GetLocationsQuery>({
+    query,
+  });
+
+  return data.locations;
 };

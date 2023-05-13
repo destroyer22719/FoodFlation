@@ -1,4 +1,4 @@
-import { getLocationsAndCompanies } from "@/graphql/queries";
+import { getLocations } from "@/graphql/queries";
 import Form from "./components/Form";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const layout = async (props: Props) => {
-  const { locations } = await getLocationsAndCompanies();
+  const locations = await getLocations();
 
   const locationsMap = locations.reduce(
     (acc, { country, city, province, state }) => {
@@ -26,8 +26,6 @@ const layout = async (props: Props) => {
     },
     {} as LocationMap
   );
-
-  console.log(locationsMap);
 
   return (
     <div>

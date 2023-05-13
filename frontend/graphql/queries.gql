@@ -149,7 +149,6 @@ query getItemAndItsStoreData($itemId: ID!) {
 
 query getLocations {
   locations {
-    _count
     country
     city
     province
