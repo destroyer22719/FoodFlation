@@ -1,5 +1,6 @@
 import { getLocations } from "@/graphql/queries";
 import Form from "./components/Form/Form";
+import FormRoot from "./components/Form/FormRoot.tsx";
 
 type Props = {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ const SearchLayout = async ({ children }: Props) => {
 
   return (
     <div>
-      <Form locations={locationsMap} />
+      <FormRoot locations={locationsMap} />
       <div>{children}</div>
     </div>
   );

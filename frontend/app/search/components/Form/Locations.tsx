@@ -1,26 +1,65 @@
-type Props = {
-  locations: LocationMap;
-  country: string;
-  cities: string[];
-  setCountry: (country: "Canada" | "United States") => void;
-  setProvince: (province: string) => void;
-  setState: (state: string) => void;
-  setCity: (city: string) => void;
-  setCities: (cities: string[]) => void;
-};
+import { useContext } from "react";
+import { useSearchParams } from "next/navigation.js";
 
-const Locations = ({
-  locations,
-  country,
-  cities,
-  setCountry,
-  setCities,
-  setCity,
-  setProvince,
-  setState,
-}: Props) => {
+import { FormContext } from "./FormRoot.tsx";
+
+const Locations = () => {
+  const {
+    locations,
+    cities,
+    setCities,
+    country,
+    setCountry,
+    province,
+    setProvince,
+    state,
+    setState,
+    setCity,
+  } = useContext(FormContext);
+
   const provinceList = locations["Canada"].provinces;
   const stateList = locations["United States"].states;
+
+  const searchParams = useSearchParams();
+
+  const countryParam = searchParams.get("country");
+  const provinceParam = searchParams.get("province");
+  const stateParam = searchParams.get("state");
+  const cityParam = searchParams.get("city");
+
+  if (countryParam === "Canada" || countryParam === "United States") {
+    setCountry(countryParam);
+  }
+
+  if (
+    provinceParam &&
+    country === "Canada" &&
+    provinceList.includes(provinceParam)
+  ) {
+    setProvince(provinceParam);
+  }
+
+  if (
+    stateParam &&
+    country === "United States" &&
+    stateList.includes(stateParam)
+  ) {
+    setState(stateParam);
+  }
+
+  const containsCity = () => {
+    if (!cityParam) return false;
+    if (country === "Canada" && province) {
+      return locations["Canada"][province].includes(cityParam);
+    } else if (country === "United States" && state) {
+      return locations["United States"][state].includes(cityParam);
+    }
+    return false;
+  };
+
+  if (containsCity()) {
+    setCity(cityParam!);
+  }
 
   return (
     <div>
