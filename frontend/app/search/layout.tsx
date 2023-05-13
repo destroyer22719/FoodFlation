@@ -1,5 +1,5 @@
 import { getLocations } from "@/graphql/queries";
-import Form from "./components/Form";
+import Form from "./components/Form/Form";
 
 type Props = {
   children: React.ReactNode;
