@@ -26,7 +26,7 @@ const SearchLayout = async ({ children }: Props) => {
   return (
     <div>
       <Form locations={locationsMap} />
-      <div>{}</div>
+      <div>{children}</div>
     </div>
   );
 };
