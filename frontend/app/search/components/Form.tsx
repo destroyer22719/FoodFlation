@@ -1,27 +1,24 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
-  country?: string;
-  province?: string;
-  state?: string;
-  city?: string;
-  search?: string;
   locations: LocationMap;
 };
 
-const Form: React.FC<Props> = ({
-  country: countryProp,
-  province: provinceProp,
-  state: stateProp,
-  city: cityProp,
-  search: searchProp,
-  locations,
-}) => {
+const Form: React.FC<Props> = ({ locations }) => {
+  const searchParams = useSearchParams();
+
+  const countryParam = searchParams.get("country");
+  const provinceParam = searchParams.get("province");
+  const stateParam = searchParams.get("state");
+  const cityParam = searchParams.get("city");
+  const searchQueryParam = searchParams.get("search");
+  
   const [country, setCountry] = useState<"" | "Canada" | "United States">(
-    countryProp === "Canada" || countryProp === "United States"
-      ? countryProp
+    countryParam === "Canada" || countryParam === "United States"
+      ? countryParam
       : ""
   );
 
@@ -29,35 +26,66 @@ const Form: React.FC<Props> = ({
   const stateList = locations["United States"].states;
 
   const containsProv =
-    provinceProp && country === "Canada" && provinceList.includes(provinceProp);
+    provinceParam && country === "Canada" && provinceList.includes(provinceParam);
 
   const containsState =
-    stateProp && country === "United States" && stateList.includes(stateProp);
+    stateParam && country === "United States" && stateList.includes(stateParam);
 
-  const [province, setProvince] = useState(containsProv ? provinceProp : "");
-  const [state, setState] = useState(containsState ? stateProp : "");
+  const [province, setProvince] = useState(containsProv ? provinceParam : "");
+  const [state, setState] = useState(containsState ? stateParam : "");
 
   const containsCity = () => {
-    if (!cityProp) return false;
+    if (!cityParam) return false;
     if (country === "Canada" && province) {
-      return locations["Canada"][province].includes(cityProp);
+      return locations["Canada"][province].includes(cityParam);
     } else if (country === "United States" && state) {
-      return locations["United States"][state].includes(cityProp);
+      return locations["United States"][state].includes(cityParam);
     }
     return false;
   };
 
   const [cities, setCities] = useState([] as string[]);
-  const [city, setCity] = useState(containsCity() ? cityProp : "");
-  const [search, setSearch] = useState(searchProp || "");
+  const [city, setCity] = useState(containsCity() ? cityParam : "");
+  const [search, setSearch] = useState("");
+  const [notSearch, setNotSearch] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState(
+    searchQueryParam?.split(",") || []
+  );
+
+  const addSearch = (search: string, type: "search" | "notSearch") => {
+    console.log(search, notSearch);
+    if (search === "") return;
+    if (type === "search") {
+      setSearchQuery([...searchQuery, `+"${search}"`]);
+      setSearch("");
+    } else if (type === "notSearch") {
+      setSearchQuery([...searchQuery, `-"${search}"`]);
+      setNotSearch("");
+    }
+  };
 
   return (
     <div>
       <div>
         <h3>Country</h3>
         <div>
-          <div onClick={() => setCountry("Canada")}>Canada</div>
-          <div onClick={() => setCountry("United States")}>United States</div>
+          <div
+            onClick={() => {
+              setCountry("Canada");
+              setCities([]);
+            }}
+          >
+            Canada
+          </div>
+          <div
+            onClick={() => {
+              setCountry("United States");
+              setCities([]);
+            }}
+          >
+            United States
+          </div>
         </div>
       </div>
       <div>
@@ -67,32 +95,40 @@ const Form: React.FC<Props> = ({
               <div>
                 <h3>Provinces</h3>
                 <div>
-                  {provinceList.map((prov) => (
-                    <div
-                      onClick={() => {
-                        setProvince(prov);
-                        setCities(locations[country][prov]);
-                      }}
-                    >
-                      {prov}
-                    </div>
-                  ))}
+                  {provinceList.map(
+                    (prov) =>
+                      prov !== "provinces" && (
+                        <div
+                          key={prov}
+                          onClick={() => {
+                            setProvince(prov);
+                            setCities(locations[country][prov]);
+                          }}
+                        >
+                          {prov}
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
             ) : (
               <div>
                 <h3>States</h3>
                 <div>
-                  {stateList.map((st) => (
-                    <div
-                      onClick={() => {
-                        setState(st);
-                        setCities(locations[country][st]);
-                      }}
-                    >
-                      {st}
-                    </div>
-                  ))}
+                  {stateList.map(
+                    (st) =>
+                      st !== "states" && (
+                        <div
+                          key={st}
+                          onClick={() => {
+                            setState(st);
+                            setCities(locations[country][st]);
+                          }}
+                        >
+                          {st}
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
             )}
@@ -100,13 +136,63 @@ const Form: React.FC<Props> = ({
         )}
       </div>
       <div>
-        {(province || state) && (
+        {!!cities.length && (
           <div>
             <h3>Cities</h3>
             <div>
               {cities.map((cty) => (
-                <div onClick={() => setCity(cty)}>{cty}</div>
+                <div key={cty} onClick={() => setCity(cty)}>
+                  {cty}
+                </div>
               ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <div>
+        {city && (
+          <div>
+            <h3>Search Item</h3>
+            <div>
+              <label htmlFor="search">Words To Search For</label>
+              <div onClick={() => addSearch(search, "search")}>+</div>
+              <input
+                id="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="e.g Milk"
+              />
+              <div>
+                {searchQuery.map(
+                  (query) =>
+                    query.startsWith("+") && (
+                      <div key={query}>{query.slice(2, query.length - 1)}</div>
+                    )
+                )}
+              </div>
+            </div>
+            <div>
+              <label htmlFor="notSearch">Words To Exclude</label>
+              <div onClick={() => addSearch(notSearch, "notSearch")}>+</div>
+              <input
+                id="notSearch"
+                value={notSearch}
+                onChange={(e) => setNotSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    addSearch(notSearch, "notSearch");
+                  }
+                }}
+                placeholder="e.g Chocolate, to look for milk, but not chocolate milk"
+              />
+              <div>
+                {searchQuery.map(
+                  (query) =>
+                    query.startsWith("-") && (
+                      <div key={query}>{query.slice(2, query.length - 1)}</div>
+                    )
+                )}
+              </div>
             </div>
           </div>
         )}

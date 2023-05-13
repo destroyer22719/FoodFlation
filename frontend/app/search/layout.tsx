@@ -2,14 +2,10 @@ import { getLocations } from "@/graphql/queries";
 import Form from "./components/Form";
 
 type Props = {
-  country?: string;
-  province?: string;
-  state?: string;
-  city?: string;
-  search?: string;
+  children: React.ReactNode;
 };
 
-const layout = async (props: Props) => {
+const SearchLayout = async ({ children }: Props) => {
   const locations = await getLocations();
 
   const locationsMap = locations.reduce(
@@ -29,10 +25,10 @@ const layout = async (props: Props) => {
 
   return (
     <div>
-      <Form {...props} locations={locationsMap} />
+      <Form locations={locationsMap} />
       <div>{}</div>
     </div>
   );
 };
 
-export default layout;
+export default SearchLayout;
