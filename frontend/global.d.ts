@@ -51,6 +51,12 @@ declare global {
       };
     };
   };
+
+  type LocationMap = {
+    [country: string]: {
+      [stOrProv: string]: string[];
+    };
+  };
 }
 
 export {};

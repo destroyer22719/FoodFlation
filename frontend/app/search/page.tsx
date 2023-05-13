@@ -1,20 +1,18 @@
-import { getLocation } from "graphql";
+import { getItemsFromCity } from "@/graphql/queries";
 
 type SearchParams = {
-  country?: string;
-  province?: string;
-  state?: string;
   city?: string;
   search?: string;
 };
 
-const Page = ({ searchParams }: { searchParams: SearchParams }) => {
-  // const [locations, items] = await Promise.all([])
-  const { country, province, state, city, search } = searchParams;
-  
-  if (city && search) {
+const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const { city, search } = searchParams;
 
-  }
+  const items = await getItemsFromCity({
+    city,
+    search,
+  });
+
   return (
     <div>
       <h1>Search Page</h1>

@@ -11,7 +11,9 @@ import {
   GetItemsFromStoreQueryVariables,
   GetItemsFromStoreQuery,
   GetItemAndItsStoreDataQuery,
-  GetItemAndItsStoreDataQueryVariables
+  GetItemAndItsStoreDataQueryVariables,
+  GetItemsFromCityQuery,
+  GetItemsFromCityQueryVariables,
 } from "__generated__/graphql";
 import { getClient } from "@/graphql/apolloClient";
 
@@ -244,13 +246,75 @@ export const getItemsAndItsStoreData = async (id: string) => {
   `;
 
   const client = getClient();
-  const { data } = await client.query<GetItemAndItsStoreDataQuery, GetItemAndItsStoreDataQueryVariables>({
+  const { data } = await client.query<
+    GetItemAndItsStoreDataQuery,
+    GetItemAndItsStoreDataQueryVariables
+  >({
     query,
     variables: {
-      itemId: id
-    }
+      itemId: id,
+    },
   });
 
   return data.item;
 };
 
+export const getItemsFromCity = async ({
+  city,
+  search,
+  page,
+}: {
+  city?: string;
+  search?: string;
+  page?: number;
+}) => {
+
+  if (!city && !search) {
+    return {
+      items: [],
+      resultsFound: 0,
+    };
+  }
+
+  const query = gql`
+    query getItemsFromCity($city: String!, $search: String!, $page: Int) {
+      itemsFromCity(city: $city, search: $search, page: $page) {
+        items {
+          id
+          name
+          imgUrl
+          category
+          prices {
+            price
+            createdAt
+          }
+          stores {
+            id
+            name
+            street
+            postalCode
+            zipCode
+          }
+        }
+        resultsFound
+      }
+    }
+  `;
+
+  const client = getClient();
+
+  const { data } = await client.query<
+    GetItemsFromCityQuery,
+    GetItemsFromCityQueryVariables
+  >({
+    query,
+    variables: {
+      city: city!,
+      search: search!,
+      page,
+    },
+    fetchPolicy: "no-cache",
+  });
+
+  return data.itemsFromCity;
+};
