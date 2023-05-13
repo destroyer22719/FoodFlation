@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex"]
   binaryTargets   = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -30,6 +30,7 @@ model Items {
   prices    Prices[]
   unit      String   @default("unit") @db.VarChar(255)
 
+  @@fulltext([name])
   @@index([storeId], map: "storeId")
 }
 

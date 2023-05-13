@@ -113,7 +113,7 @@ export const itemCityResolver = async (
 ) => {
   const searchQuery = {
     name: {
-      contains: search,
+      search,
     },
     stores: {
       city,
@@ -122,7 +122,14 @@ export const itemCityResolver = async (
 
   const [items, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
-      where: searchQuery,
+      where: {
+        name: {
+          search
+        },
+        stores: {
+          city,
+        },
+      },
       take: 10,
       skip: ((page || 1) - 1) * 10,
       include: {
