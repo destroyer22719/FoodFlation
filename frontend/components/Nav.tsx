@@ -17,7 +17,7 @@ const Nav = () => {
           <MdSearch />
           <div>Search Stores</div>
         </Link>
-        <Link href={"#"} className={styles["nav__item"]}>
+        <Link href={"/search"} className={styles["nav__item"]}>
           <MdSearch />
           <div>Search Items</div>
         </Link>
