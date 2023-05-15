@@ -3,6 +3,8 @@ import { useSearchParams } from "next/navigation.js";
 
 import { FormContext } from "./FormRoot.tsx";
 
+import styles from "@/styles/components/ItemSearchForm.module.scss";
+
 const Locations = () => {
   const {
     locations,
@@ -15,6 +17,7 @@ const Locations = () => {
     state,
     setState,
     setCity,
+    city,
   } = useContext(FormContext);
 
   const provinceList = locations["Canada"].provinces;
@@ -63,11 +66,13 @@ const Locations = () => {
 
   return (
     <div>
-      {" "}
       <div>
         <h3>Country</h3>
-        <div>
+        <div className={styles["search-form__countries-list"]}>
           <div
+            className={`${styles["search-form__country"]} ${
+              country === "Canada" && styles["search-form__selected"]
+            }`}
             onClick={() => {
               setCountry("Canada");
               setCities([]);
@@ -76,6 +81,11 @@ const Locations = () => {
             Canada
           </div>
           <div
+            className={`
+              ${styles["search-form__country"]} 
+              ${
+                country === "United States" && styles["search-form__selected"]
+              }`}
             onClick={() => {
               setCountry("United States");
               setCities([]);
@@ -91,11 +101,15 @@ const Locations = () => {
             {country === "Canada" ? (
               <div>
                 <h3>Provinces</h3>
-                <div>
+                <div className={styles["search-form__province-list"]}>
                   {provinceList.map(
                     (prov) =>
                       prov !== "provinces" && (
                         <div
+                          className={`
+                            ${styles["search-form__province"]} ${
+                            province === prov && styles["search-form__selected"]
+                          }`}
                           key={prov}
                           onClick={() => {
                             setProvince(prov);
@@ -111,11 +125,15 @@ const Locations = () => {
             ) : (
               <div>
                 <h3>States</h3>
-                <div>
+                <div className={styles["search-form__state-list"]}>
                   {stateList.map(
                     (st) =>
                       st !== "states" && (
                         <div
+                          className={`
+                            ${styles["search-form__state"]} 
+                            ${state === st && styles["search-form__selected"]}
+                          `}
                           key={st}
                           onClick={() => {
                             setState(st);
@@ -136,9 +154,15 @@ const Locations = () => {
         {!!cities.length && (
           <div>
             <h3>Cities</h3>
-            <div>
+            <div className={styles["search-form__city-list"]}>
               {cities.map((cty) => (
-                <div key={cty} onClick={() => setCity(cty)}>
+                <div
+                  className={`${styles["search-form__city"]} ${
+                    city === cty && styles["search-form__selected"]
+                  }`}
+                  key={cty}
+                  onClick={() => setCity(cty)}
+                >
                   {cty}
                 </div>
               ))}
