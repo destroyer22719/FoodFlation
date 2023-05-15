@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useSearchParams } from "next/navigation.js";
 
 import { FormContext } from "./FormRoot.tsx";
@@ -30,39 +30,39 @@ const Locations = () => {
   const stateParam = searchParams.get("state");
   const cityParam = searchParams.get("city");
 
-  if (countryParam === "Canada" || countryParam === "United States") {
-    setCountry(countryParam);
-  }
-
-  if (
-    provinceParam &&
-    country === "Canada" &&
-    provinceList.includes(provinceParam)
-  ) {
-    setProvince(provinceParam);
-  }
-
-  if (
-    stateParam &&
-    country === "United States" &&
-    stateList.includes(stateParam)
-  ) {
-    setState(stateParam);
-  }
-
-  const containsCity = () => {
-    if (!cityParam) return false;
-    if (country === "Canada" && province) {
-      return locations["Canada"][province].includes(cityParam);
-    } else if (country === "United States" && state) {
-      return locations["United States"][state].includes(cityParam);
-    }
-    return false;
+  const containsCity = (country: string, stOrProv: string, city: string) => {
+    return locations[country][stOrProv].includes(city);
   };
 
-  if (containsCity()) {
-    setCity(cityParam!);
-  }
+  useEffect(() => {
+    if (countryParam === "Canada" || countryParam === "United States") {
+      setCountry(countryParam);
+
+      if (
+        provinceParam &&
+        countryParam === "Canada" &&
+        provinceList.includes(provinceParam)
+      ) {
+        setProvince(provinceParam);
+
+        if (cityParam && containsCity("Canada", provinceParam, cityParam)) {
+          setCities(locations[countryParam][provinceParam]);
+          setCity(cityParam);
+        }
+      } else if (
+        stateParam &&
+        countryParam === "United States" &&
+        stateList.includes(stateParam)
+      ) {
+        setState(stateParam);
+
+        if (cityParam && containsCity("United States", stateParam, cityParam)) {
+          setCities(locations[countryParam][stateParam]);
+          setCity(cityParam);
+        }
+      }
+    }
+  }, []);
 
   return (
     <div>
@@ -114,6 +114,7 @@ const Locations = () => {
                           onClick={() => {
                             setProvince(prov);
                             setCities(locations[country][prov]);
+                            if (prov !== province) setCity("");
                           }}
                         >
                           {prov}
@@ -138,6 +139,7 @@ const Locations = () => {
                           onClick={() => {
                             setState(st);
                             setCities(locations[country][st]);
+                            if (st !== state) setCity("");
                           }}
                         >
                           {st}

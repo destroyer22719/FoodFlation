@@ -4,6 +4,7 @@
 @mixin mui($color, $lightness, $additional) {
   background-position: center;
   transition: background 0.8s;
+  cursor: pointer;
 
   &:hover {
     background: color.scale($color: $color, $lightness: $lightness)

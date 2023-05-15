@@ -8,10 +8,10 @@ type SearchParams = {
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { city, search } = searchParams;
 
-  const items = await getItemsFromCity({
-    city,
-    search,
-  });
+  // const items = await getItemsFromCity({
+  //   city,
+  //   search,
+  // });
 
   return (
     <div>
