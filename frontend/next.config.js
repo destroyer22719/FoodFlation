@@ -28,6 +28,6 @@ const moduleExports = {
 if (process.env.NODE_ENV !== "production") {
   module.exports = withBundleAnalyzer(moduleExports);
 } else {
-  // module.exports = million.next(moduleExports);
-  module.exports = moduleExports;
+  module.exports = million.next(moduleExports);
+  // module.exports = moduleExports;
 }

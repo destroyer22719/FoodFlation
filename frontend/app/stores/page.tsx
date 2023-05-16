@@ -28,7 +28,7 @@ const StorePages = async ({ searchParams }: Props) => {
     <div className={styles["store-list"]} id="list">
       <div>
         {total > 0 && (
-          <Suspense fallback={<></>}>
+          <Suspense fallback={<div></div>}>
             <PaginationComponent resultsFound={total} />
           </Suspense>
         )}

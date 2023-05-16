@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "@/styles/components/Footer.module.scss";
 import Link from "next/link";
 import { MdEmail } from "react-icons/md";

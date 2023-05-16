@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { Suspense, createContext, useState } from "react";
 import Form from "./Form";
 
 type FormContextType = {
