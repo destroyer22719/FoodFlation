@@ -1,0 +1,5 @@
+type Props = {
+  item: Item;
+};
+
+
