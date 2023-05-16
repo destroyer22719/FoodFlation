@@ -1,25 +1,12 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-
-import styles from "@/styles/pages/StoreList.module.scss";
-import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
-import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
+import { Suspense } from "react";
+import LoadingComponent from "./components/LoadingComponent";
 
 const Loading = () => {
-  const searchParams = useSearchParams();
-  const searchQueryExists = !!searchParams.toString();
-
   return (
     <div>
-      {searchQueryExists && (
-        <div className={styles["store-list__stores"]} id="list">
-          <PaginationLoaderComponent />
-          {[1, 2, 3, 4].map((id) => (
-            <StoreItemSkeleton key={id} />
-          ))}
-        </div>
-      )}
+      <Suspense fallback={<div></div>}>
+        <LoadingComponent />
+      </Suspense>
     </div>
   );
 };
