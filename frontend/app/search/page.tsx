@@ -3,17 +3,21 @@ import { getItemsFromCity } from "@/graphql/queries";
 import { Suspense } from "react";
 import ItemCard from "./components/ItemCard";
 
+import styles from "@/styles/pages/Search.module.scss";
+
 type SearchParams = {
   city?: string;
   search?: string;
+  page?: string;
 };
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
-  const { city, search } = searchParams;
+  const { city, search, page } = searchParams;
 
   const { resultsFound, items } = await getItemsFromCity({
     city,
     search,
+    page: page !== undefined ? +page : 1,
   });
 
   return (
@@ -21,7 +25,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       <Suspense fallback={<div></div>}>
         <PaginationComponent resultsFound={resultsFound} />
       </Suspense>
-      <div>
+      <div className={styles["search__list"]}>
         {items.map((item) => (
           <ItemCard item={item} key={item.id} />
         ))}
