@@ -14,13 +14,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
 
   &__img {
     margin-top: 25px;
     position: relative;
     width: 200px;
     height: 200px;
+
     img {
       border-radius: 5px;
     }
@@ -41,5 +41,80 @@
     padding: 20px 0;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+  }
+
+  &__name--skeleton {
+    height: 25px;
+    margin: 10px;
+    width: 200px;
+  }
+
+  &__price--skeleton {
+    height: 16px;
+    width: 200px;
+  }
+
+  &__store--skeleton {
+    height: 90px;
+
+    .item-card__store-img--skeleton {
+      width: 50px;
+      height: 50px;
+    }
+    .item-card__store-text--skeleton {
+      width: 100px;
+      height: 20px;
+      margin-bottom: 5px;
+    }
+  }
+
+  &__name--skeleton,
+  &__img--skeleton,
+  &__price--skeleton,
+  &__store-img--skeleton,
+  &__store-text--skeleton {
+    border-radius: 5px;
+  }
+
+  &__name--skeleton,
+  &__img--skeleton,
+  &__price--skeleton {
+    background-color: $purple-light;
+
+    background: linear-gradient(
+        to right,
+        rgba(lighten($purple-light, 25%), 0),
+        rgba(lighten($purple-light, 25%), 0.5) 50%,
+        rgba(lighten($purple-light, 25%), 0) 80%
+      ),
+      $purple-light;
+
+    background-repeat: repeat-y;
+    background-size: 25px 500px;
+    background-position: 0 0;
+    animation: shine 1s infinite;
+  }
+
+  &__store-img--skeleton,
+  &__store-text--skeleton {
+    background-color: $blue-dark;
+    background: linear-gradient(
+        to right,
+        rgba(lighten($blue-dark, 25%), 0),
+        rgba(lighten($blue-dark, 25%), 0.5) 50%,
+        rgba(lighten($blue-dark, 25%), 0) 80%
+      ),
+      $blue-dark;
+
+    background-repeat: repeat-y;
+    background-size: 25px 500px;
+    background-position: 0 0;
+    animation: shine 1s infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 100% 0, /* move highlight to right */ 0 0;
+    }
   }
 }

@@ -8,9 +8,14 @@ const ItemCardSkeleton = () => {
       />
       <div className={styles["item-card__name--skeleton"]} />
       <div className={styles["item-card__price--skeleton"]} />
-      <div className={`${styles["item-card__store--skeleton"]}`}>
+      <div
+        className={`${styles["item-card__store"]} ${styles["item-card__store--skeleton"]}`}
+      >
         <div className={styles["item-card__store-img--skeleton"]} />
-        <div className={styles["item-card__store-text--skeleton"]} />
+        <div>
+          <div className={styles["item-card__store-text--skeleton"]} />
+          <div className={styles["item-card__store-text--skeleton"]} />
+        </div>
       </div>
     </div>
   );

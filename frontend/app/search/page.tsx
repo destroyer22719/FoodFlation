@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import ItemCard from "./components/ItemCard/ItemCard";
 
 import styles from "@/styles/pages/Search.module.scss";
+import ItemCardSkeleton from "./components/ItemCard/ItemCardSkeleton";
 
 type SearchParams = {
   city?: string;
