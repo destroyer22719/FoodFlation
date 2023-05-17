@@ -1,0 +1,45 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.item-card {
+  margin: 20px;
+  width: 250px;
+  height: 450px;
+  border-radius: 10px;
+  background-color: $blue-dark;
+  @include mui-dark($blue-dark);
+  font-weight: bold;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+
+  &__img {
+    margin-top: 25px;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    img {
+      border-radius: 5px;
+    }
+  }
+
+  &__name {
+    width: 90%;
+    margin: 10px 0;
+    font-size: 20px;
+  }
+
+  &__store {
+    background-color: $purple-light;
+    width: 100%;
+    display: flex;
+    margin-top: auto;
+    justify-content: space-around;
+    padding: 20px 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
