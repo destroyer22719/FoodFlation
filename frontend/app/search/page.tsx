@@ -1,7 +1,7 @@
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
 import { getItemsFromCity } from "@/graphql/queries";
 import { Suspense } from "react";
-import ItemCard from "./components/ItemCard";
+import ItemCard from "./components/ItemCard/ItemCard";
 
 import styles from "@/styles/pages/Search.module.scss";
 
