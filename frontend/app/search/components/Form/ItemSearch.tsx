@@ -256,17 +256,19 @@ const ItemSearch = () => {
                   </div>
                 )}
               </div>
+              <div
+                onClick={() => searchItems()}
+                className={
+                  styles[
+                    `search-form__search-button${
+                      searchAllowed ? "" : "--disabled"
+                    }`
+                  ]
+                }
+              >
+                <AiOutlineSearch />
+              </div>
             </div>
-          </div>
-          <div
-            onClick={() => searchItems()}
-            className={
-              styles[
-                `search-form__search-button${searchAllowed ? "" : "--disabled"}`
-              ]
-            }
-          >
-            <AiOutlineSearch />
           </div>
         </>
       )}

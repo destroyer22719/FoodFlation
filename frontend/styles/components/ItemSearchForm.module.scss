@@ -143,7 +143,7 @@
   &__sort-by-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 40px);
+    grid-template-rows: repeat(3, 40px);
     grid-gap: 10px;
 
     width: 250px;
@@ -172,10 +172,6 @@
     grid-column: 2;
   }
 
-  &__sort-by {
-    width: 100px;
-  }
-
   &__asc-desc {
     grid-column: 1 / span 2;
     grid-row: 2;
@@ -189,10 +185,10 @@
 
   &__search-button,
   &__search-button--disabled {
-    margin: 10px auto;
-    padding: 10px;
-    width: 250px;
-    border-radius: 5px;
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    display: grid;
+    place-items: center;
   }
 
   &__search-button {
