@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== "production") {
     enabled: process.env.ANALYZE === "true",
   });
 }
-
+const { withSentryConfig } = require("@sentry/nextjs");
 const million = require("million/compiler");
 
 const moduleExports = {
@@ -28,6 +28,22 @@ const moduleExports = {
 if (process.env.NODE_ENV !== "production") {
   module.exports = withBundleAnalyzer(moduleExports);
 } else {
-  module.exports = million.next(moduleExports);
+  // module.exports = million.next(moduleExports);
   // module.exports = moduleExports;
+
+  module.exports = withSentryConfig(
+    million.next(moduleExports),
+    {
+      silent: true,
+      org: "food-flation",
+      project: "frontend",
+    },
+    {
+      widenClientFileUpload: true,
+      transpileClientSDK: true,
+      tunnelRoute: "/monitoring",
+      hideSourceMaps: true,
+      disableLogger: true,
+    }
+  );
 }
