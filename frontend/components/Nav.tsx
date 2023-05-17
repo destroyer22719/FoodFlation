@@ -21,10 +21,10 @@ const Nav = () => {
         </Link>
       </div>
       <div className={styles["nav__section"]}>
-        <Link href={"#"} className={styles["nav__item"]}>
+        <Link href={"/faq"} className={styles["nav__item"]}>
           FAQ
         </Link>
-        <Link href={"#"} className={styles["nav__item"]}>
+        <Link href={"/about"} className={styles["nav__item"]}>
           About
         </Link>
       </div>
