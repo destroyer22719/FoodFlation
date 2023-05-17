@@ -11,9 +11,7 @@ const StoreItem: React.FC<Props> = ({ store }) => {
     <Link href={`/store/${store.id}`}>
       <div className={style["store-item"]}>
         <Image
-          src={`/store-logos/${store.name
-            .toLocaleLowerCase()
-            .replaceAll(" ", "_")}-logo.png`}
+          src={storeNameToUrl(store.name)}
           alt={store.name}
           width={80}
           height={80}

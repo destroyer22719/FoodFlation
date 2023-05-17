@@ -1,6 +1,7 @@
 import PaginationComponent from "@/components/Pagination/PaginationComponent";
 import { getItemsFromCity } from "@/graphql/queries";
 import { Suspense } from "react";
+import ItemCard from "./components/ItemCard";
 
 type SearchParams = {
   city?: string;
@@ -20,6 +21,11 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       <Suspense fallback={<div></div>}>
         <PaginationComponent resultsFound={resultsFound} />
       </Suspense>
+      <div>
+        {items.map((item) => (
+          <ItemCard item={item} key={item.id} />
+        ))}
+      </div>
     </div>
   );
 };
