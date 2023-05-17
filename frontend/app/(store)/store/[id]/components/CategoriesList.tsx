@@ -17,14 +17,14 @@ type Props = {
 };
 
 const Categories = ({ categoriesData }: Props) => {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const categorySelected = searchParams.get("category");
-  const pathName = usePathname();
+  const pathName = usePathname()!;
 
   return (
     <div className={categoryListStyles["category-list"]}>
       {categorySelected && (
-        <Link href={pathName}>
+        <Link href={pathName!}>
           <div className={categoryListStyles["category-list__clear--center"]}>
             <div className={categoryListStyles["category-list__clear"]}>
               <RxCross2 />

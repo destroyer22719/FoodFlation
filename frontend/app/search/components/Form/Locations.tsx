@@ -23,7 +23,7 @@ const Locations = () => {
   const provinceList = locations["Canada"].provinces;
   const stateList = locations["United States"].states;
 
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
 
   const countryParam = searchParams.get("country");
   const provinceParam = searchParams.get("province");

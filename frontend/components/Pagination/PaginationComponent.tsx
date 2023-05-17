@@ -13,9 +13,9 @@ type Props = {
 
 const PaginationComponent = ({ resultsFound, resultsPerPage = 10 }: Props) => {
   const maxPages = Math.ceil(resultsFound / resultsPerPage);
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const page = Number(searchParams.get("page")) || 1;
-  const pathname = usePathname();
+  const pathname = usePathname()!;
 
   const navigatePages = (page: number) => {
     let url = pathname;

@@ -9,7 +9,7 @@ import styles from "@/styles/components/SearchItems.module.scss";
 const SearchItems = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const currentPath = usePathname();
+  const currentPath = usePathname()!;
   const searchItem = () => {
     if (search) {
       router.push(`${currentPath}?search=${search}`);

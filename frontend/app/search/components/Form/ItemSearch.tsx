@@ -29,7 +29,7 @@ const ItemSearch = () => {
     setSearchByPrice,
   } = useContext(FormContext);
 
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
 
   const addSearch = (search: string, type: "search" | "notSearch") => {
     if (

@@ -7,7 +7,7 @@ import StoreItemSkeleton from "@/components/StoreItem/StoreItemSkeleton";
 import PaginationLoaderComponent from "@/components/Pagination/PaginationLoaderComponent";
 
 const LoadingComponent = () => {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const searchQueryExists = !!searchParams.toString();
 
   return (

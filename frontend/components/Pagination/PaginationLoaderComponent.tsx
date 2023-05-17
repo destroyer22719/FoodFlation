@@ -9,7 +9,8 @@ type Props = {
 };
 
 const PaginationLoaderComponent = ({}: Props) => {
-  const resultsFound = Number(useSearchParams().get("resultsFound")) || 0;
+  const searchParams = useSearchParams()!;
+  const resultsFound = Number(searchParams.get("resultsFound")) || 0;
 
   return <PaginationComponent resultsFound={resultsFound} />;
 };
