@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import style from "@/styles/components/StoreItem.module.scss";
+import { storeNameToUrl } from "@/utils/storeNameToUrl";
 
 type Props = {
   store: Omit<Store, "country">;

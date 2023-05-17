@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { GetItemsFromCityQuery } from "__generated__/graphql";
+import { storeNameToUrl } from "@/utils/storeNameToUrl";
 
 interface Props {
   item: GetItemsFromCityQuery["itemsFromCity"]["items"][0];
@@ -11,14 +12,14 @@ const ItemCard: React.FC<Props> = ({ item }) => {
     <div>
       <Image src={imgUrl} alt={name} width={100} height={100} />
       <div>{name}</div>
-      <div>{prices[0].price}</div>
-      <div>{new Date(prices[0].createdAt).toISOString().split("T")[0]}</div>
+      <div>$ {prices[0].price}</div>
+      <div>{new Date(+prices[0].createdAt).toISOString().split("T")[0]}</div>
       <div>
         <Image
           src={storeNameToUrl(stores.name)}
           alt={stores.name}
-          width={60}
-          height={60}
+          width={50}
+          height={50}
         />
         <div>
           <div>{stores.street}</div>
