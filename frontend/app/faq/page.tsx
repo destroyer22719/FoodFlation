@@ -24,7 +24,7 @@ const FaqPage = () => {
         >
           Vercel Analytics
         </Link>
-        and <Link href={"https://sentry.io/privacy/"}>Sentry</Link>
+        {" "} and <Link href={"https://sentry.io/privacy/"}>Sentry</Link>
       </div>
       <h2>What tech stack does FoodFlation use</h2>
       <div>
