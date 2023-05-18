@@ -26,9 +26,11 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
 
   return (
     <div>
-      <Suspense fallback={<div></div>}>
-        <PaginationComponent resultsFound={resultsFound} />
-      </Suspense>
+      {resultsFound > 0 && (
+        <Suspense fallback={<div></div>}>
+          <PaginationComponent resultsFound={resultsFound} />
+        </Suspense>
+      )}
       <div className={styles["search__list"]}>
         {items.map((item) => (
           <ItemCard item={item} key={item.id} />

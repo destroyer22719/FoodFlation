@@ -66,7 +66,7 @@ const ItemSearch = () => {
 
     setAsc(ascParam);
     setSearchByPrice(searchByPriceParam);
-  });
+  }, []);
 
   const router = useRouter();
   const searchAllowed = city && searchQuery.length > 0;
