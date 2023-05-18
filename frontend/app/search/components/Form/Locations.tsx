@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useSearchParams } from "next/navigation.js";
 
-import { FormContext } from "./FormRoot.tsx";
+import { FormContext } from "./FormRoot";
 
 import styles from "@/styles/components/ItemSearchForm.module.scss";
 

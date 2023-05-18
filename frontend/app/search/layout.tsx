@@ -1,6 +1,5 @@
 import { getLocations } from "@/graphql/queries";
-import Form from "./components/Form/Form";
-import FormRoot from "./components/Form/FormRoot.tsx";
+import FormRoot from "./components/Form/FormRoot";
 import { Suspense } from "react";
 
 type Props = {

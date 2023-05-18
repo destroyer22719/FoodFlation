@@ -94,7 +94,7 @@ type Query @rateLimit(limit: 250, duration: 900) {
   storesSearch(city: String, postalCode: String, zipCode: String, page: Int, companyId: ID): StoresSearchResult!
   store(id: ID!): Store
   itemsFromStore(storeId: ID!, page: Int, search: String, category: String): ItemStoreSearchResult!
-  itemsFromCity(city: String!, page: Int, search: String!): ItemCitySearchResult!
+  itemsFromCity(city: String!, page: Int, search: String!, sortByPrice: Boolean, sortByAsc: Boolean): ItemCitySearchResult!
   item(id: ID!, offset: Int, limit: Int): Item
   storeCount: Int! @cacheControl(maxAge: 604800)
   itemCount: Int! @cacheControl(maxAge: 43200)

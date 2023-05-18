@@ -111,6 +111,8 @@ export type QueryItemsFromCityArgs = {
   city: Scalars['String'];
   page?: InputMaybe<Scalars['Int']>;
   search: Scalars['String'];
+  sortByAsc?: InputMaybe<Scalars['Boolean']>;
+  sortByPrice?: InputMaybe<Scalars['Boolean']>;
 };
 
 

@@ -7,7 +7,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { AiOutlineSearch } from "react-icons/ai";
 
-import { FormContext } from "./FormRoot.tsx";
+import { FormContext } from "./FormRoot";
 
 import styles from "@/styles/components/ItemSearchForm.module.scss";
 
@@ -47,8 +47,8 @@ const ItemSearch = () => {
   };
 
   const searchQueryParam = searchParams.get("search");
-  const searchByPriceParam = searchParams.get("searchByPrice") === "true";
-  const ascParam = searchParams.get("asc") === "true";
+  const searchByPriceParam = searchParams.get("sortByPrice") === "false" ? false : true;
+  const ascParam = searchParams.get("sortByAsc") === "true";
 
   useEffect(() => {
     if (searchQueryParam) {
@@ -88,7 +88,7 @@ const ItemSearch = () => {
   const searchItems = () => {
     if (!searchAllowed) return;
     router.push(
-      `/search?search=${generateQueryToString()}&city=${city}&asc=${asc}&searchByPrice=${searchByPrice}&country=${country}&${
+      `/search?search=${generateQueryToString()}&city=${city}&sortByAsc=${asc}&sortByPrice=${searchByPrice}&country=${country}&${
         country === "Canada" ? `province=${province}` : `state=${state}`
       }`
     );

@@ -66,6 +66,7 @@ const FormRoot: React.FC<FormProviderProps> = ({ locations }) => {
   const [searchByPrice, setSearchByPrice] = useState(true);
   const [asc, setAsc] = useState(true);
   const [searchQuery, setSearchQuery] = useState([] as string[]);
+  
   return (
     <FormContext.Provider
       value={{

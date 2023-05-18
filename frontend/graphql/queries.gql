@@ -96,12 +96,16 @@ query getItemsFromStore(
 query getItemsFromCity(
   $city: String!
   $search: String!
+  $sortByPrice: Boolean
+  $sortByAsc: Boolean
   $page: Int
 ) {
   itemsFromCity(
     city: $city
     search: $search
     page: $page
+    sortByPrice: $sortByPrice
+    sortByAsc: $sortByAsc
   ) {
     items {
       id

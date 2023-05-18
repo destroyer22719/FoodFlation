@@ -4,21 +4,24 @@ import { Suspense } from "react";
 import ItemCard from "./components/ItemCard/ItemCard";
 
 import styles from "@/styles/pages/Search.module.scss";
-import ItemCardSkeleton from "./components/ItemCard/ItemCardSkeleton";
 
 type SearchParams = {
   city?: string;
   search?: string;
   page?: string;
+  sortByPrice?: string;
+  sortByAsc?: string;
 };
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
-  const { city, search, page } = searchParams;
+  const { city, search, page, sortByAsc, sortByPrice } = searchParams;
 
   const { resultsFound, items } = await getItemsFromCity({
     city,
     search,
     page: page !== undefined ? +page : 1,
+    sortByAsc: sortByAsc === "true",
+    sortByPrice: sortByPrice === "true",
   });
 
   return (

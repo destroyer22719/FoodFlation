@@ -264,10 +264,14 @@ export const getItemsFromCity = async ({
   city,
   search,
   page,
+  sortByAsc,
+  sortByPrice,
 }: {
   city?: string;
   search?: string;
   page?: number;
+  sortByAsc?: boolean;
+  sortByPrice?: boolean;
 }) => {
   if (!city && !search) {
     return {
@@ -277,8 +281,20 @@ export const getItemsFromCity = async ({
   }
 
   const query = gql`
-    query getItemsFromCity($city: String!, $search: String!, $page: Int) {
-      itemsFromCity(city: $city, search: $search, page: $page) {
+    query getItemsFromCity(
+      $city: String!
+      $search: String!
+      $sortByPrice: Boolean
+      $sortByAsc: Boolean
+      $page: Int
+    ) {
+      itemsFromCity(
+        city: $city
+        search: $search
+        page: $page
+        sortByPrice: $sortByPrice
+        sortByAsc: $sortByAsc
+      ) {
         items {
           id
           name
@@ -312,6 +328,8 @@ export const getItemsFromCity = async ({
       city: city!,
       search: search!,
       page,
+      sortByAsc,
+      sortByPrice,
     },
     fetchPolicy: "no-cache",
   });

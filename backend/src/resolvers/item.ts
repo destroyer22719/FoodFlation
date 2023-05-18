@@ -1,5 +1,4 @@
 import { FieldNode, GraphQLError, GraphQLResolveInfo } from "graphql";
-import {} from "@prisma/client";
 import { Context } from "../db/context.js";
 import {
   Item,
@@ -108,7 +107,7 @@ export const itemStoreResolver = async (
 
 export const itemCityResolver = async (
   _: {},
-  { city, page, search }: QueryItemsFromCityArgs,
+  { city, page, search, sortByPrice, sortByAsc }: QueryItemsFromCityArgs,
   ctx: Context
 ) => {
   const searchQuery = {
@@ -120,18 +119,11 @@ export const itemCityResolver = async (
     },
   };
 
-  const [items, resultsFound] = await Promise.all([
+  let [items, resultsFound] = await Promise.all([
     ctx.prisma.items.findMany({
-      where: {
-        name: {
-          search
-        },
-        stores: {
-          city,
-        },
-      },
-      take: 10,
+      where: searchQuery,
       skip: ((page || 1) - 1) * 10,
+      take: 10,
       include: {
         prices: {
           take: 1,
@@ -146,6 +138,22 @@ export const itemCityResolver = async (
       where: searchQuery,
     }),
   ]);
+
+  items = items.sort((a, b) => {
+    if (sortByPrice) {
+      if (sortByAsc) {
+        return a.prices[0].price - b.prices[0].price;
+      } else {
+        return b.prices[0].price - a.prices[0].price;
+      }
+    } else {
+      if (sortByAsc) {
+        return new Date(a.prices[0].createdAt).getTime() - new Date(b.prices[0].createdAt).getTime();
+      } else {
+        return new Date(b.prices[0].createdAt).getTime() - new Date(a.prices[0].createdAt).getTime();
+      }
+    }
+  });
 
   return { items: items as unknown as Item[], resultsFound };
 };

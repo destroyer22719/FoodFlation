@@ -27,9 +27,16 @@
       "@/config/*": ["config/*"],
       "@/providers/*": ["providers/*"],
       "@/graphql/*": ["graphql/*"],
-      "@/utils/*": ["utils/*"],
+      "@/utils/*": ["utils/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/search/components/Form/FormRoot.tsx",
+    "app/search/components/Form/FormRoottsx"
+  ],
   "exclude": ["node_modules"]
 }
