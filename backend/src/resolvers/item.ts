@@ -27,7 +27,7 @@ export const itemResolver = async (
         ...(limit ? { take: limit } : {}),
         skip: offset || 0,
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         }
       },
     },
