@@ -9,7 +9,6 @@ type Props = {
 };
 
 const ItemCard = ({ item }: Props) => {
-  console.log(item);
   const { category, id, imgUrl, name, prices } = item;
 
   if (prices.length === 0) {
