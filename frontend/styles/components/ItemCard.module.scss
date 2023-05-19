@@ -1,0 +1,108 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+//https://uxdesign.cc/using-css-design-a-simple-skeleton-loader-57d884cd3547
+.item-card {
+  width: 300px;
+  height: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $blue-dark;
+  margin: 25px;
+  padding: 25px;
+  border-radius: 5px;
+  flex: 1;
+
+  @include mui-dark($blue-dark);
+
+  h3 {
+    text-align: center;
+  }
+
+  &__image {
+    margin-top: 0;
+    border-radius: 5px;
+
+    &--skeleton {
+      width: 250px;
+      height: 250px;
+    }
+  }
+
+  &__info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+
+  &__price,
+  &__price--skeleton {
+    height: 100%;
+    flex-grow: 1;
+  }
+
+  &__price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    text-align: center;
+    padding: 7.5px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    background-color: $purple-light;
+  }
+
+  &__name--skeleton {
+    width: 100%;
+    height: 20px;
+    margin-top: 20px;
+  }
+
+  &__category--skeleton {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+
+  &__date,
+  &__date--skeleton {
+    margin-top: auto;
+  }
+
+  &__date--skeleton {
+    width: 50%;
+    height: 20px;
+  }
+
+  &__image--skeleton,
+  &__price--skeleton,
+  &__category--skeleton,
+  &__date--skeleton,
+  &__name--skeleton {
+    background-color: $purple-light;
+    border-radius: 5px;
+
+    // @include mui-light($purple-light);
+
+    background: linear-gradient(
+        to right,
+        rgba(lighten($purple-light, 25%), 0),
+        rgba(lighten($purple-light, 25%), 0.5) 50%,
+        rgba(lighten($purple-light, 25%), 0) 80%
+      ),
+      $purple-light;
+    background-repeat: repeat-y;
+    background-size: 25px 500px;
+    background-position: 0 0;
+    animation: shine 1s infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 100% 0, /* move highlight to right */ 0 0;
+    }
+  }
+}

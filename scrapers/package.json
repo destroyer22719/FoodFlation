@@ -1,27 +1,24 @@
 {
   "scripts": {
     "scrape": "node ./dist/scrapers/src/index.js",
-    "scrape:prod": "NODE_ENV=production node ./dist/scrapers/src/index.js",
+    "scrape:prod": "NODE_ENV=production node ./dist/index.js",
     "build": "npx tsc",
     "debug": "tsc --sourcemap"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "ansi-colors": "^4.1.3",
-    "cli-progress": "^3.11.2",
-    "dotenv": "^16.0.1",
-    "mysql2": "^2.3.3",
-    "ora": "^6.1.2",
-    "puppeteer": "^19.8.2",
-    "sequelize": "^6.21.0",
-    "sequelize-typescript": "^2.1.3",
-    "typescript": "^5.0.3",
-    "uuid": "^8.3.2",
-    "yargs": "^17.5.1"
+    "cli-progress": "^3.12.0",
+    "ora": "^6.3.0",
+    "puppeteer": "^20.1.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
-    "@types/uuid": "^8.3.4",
-    "@types/yargs": "^17.0.10"
+    "@types/node": "^20.1.0",
+    "@types/yargs": "^17.0.24",
+    "prisma": "^4.13.0",
+    "typescript": "^5.0.4"
   },
   "type": "module"
 }

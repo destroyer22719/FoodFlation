@@ -1,0 +1,33 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.category-list {
+  &__items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__clear {
+    border-radius: 5px;
+    background-color: $purple-dark;
+    padding: 10px;
+    width: 250px;
+    margin: 10px;
+
+    @include mui-dark($purple-dark);
+
+    &--center {
+      width: 100%;
+      display: grid;
+      place-items: center;
+    }
+  }
+
+  &__item {
+    width: 250px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+}

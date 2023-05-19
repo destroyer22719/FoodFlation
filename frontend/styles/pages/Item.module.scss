@@ -1,0 +1,119 @@
+@import "../assets/vars";
+@import "../assets/mui";
+
+.item {
+  &__header {
+    &-mobile,
+    &-desktop {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+
+      &-back {
+        font-size: 25px;
+        background-color: $blue-dark;
+        border-radius: 5px;
+
+        @include mui-light($blue-dark);
+
+        display: grid;
+        place-items: center;
+      }
+
+      &-name {
+        background-color: $purple-light;
+        border-radius: 5px;
+
+        display: grid;
+        place-items: center;
+
+        h1 {
+          font-size: 25px;
+          margin: 0;
+        }
+      }
+    }
+
+    &-desktop {
+      @media only screen and (max-width: 1250px) {
+        display: none;
+      }
+
+      &-back {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+      }
+
+      &-name {
+        height: 50px;
+        padding: 0 25px;
+        margin-right: 10px;
+      }
+    }
+
+    &-mobile {
+      @media only screen and (min-width: 1250px) {
+        display: none;
+      }
+
+      flex-direction: column;
+
+      &-buttons {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin: 10px 0;
+
+        a {
+          display: block;
+          flex-grow: 1;
+        }
+      }
+
+      &-back {
+        margin-right: 10px;
+        flex-grow: 1;
+      }
+
+      &-name {
+        padding: 15px 20px;
+      }
+
+
+      &-category {
+        display: grid;
+        place-items: center;
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__imgs--format {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__img {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+
+    @media screen and (max-width: 670px) {
+      width: 250px;
+      height: 250px;
+    }
+
+    img {
+      border-radius: 5px;
+    }
+  }
+}

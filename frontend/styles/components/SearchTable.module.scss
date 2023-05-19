@@ -1,0 +1,43 @@
+@import "../assets/vars";
+@import "../assets/mui.scss";
+
+.search-table {
+  width: 80%;
+  max-width: 1000px;
+  margin: 25px auto;
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__button {
+    background-color: $purple;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    @include mui-dark($purple);
+
+    & > * {
+      font-size: 40px;
+      fill: $purple-light;
+    }
+  }
+
+  &__companies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__company {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: $purple-light;
+
+    @include mui-light($purple-light);
+  }
+}

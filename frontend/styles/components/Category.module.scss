@@ -1,0 +1,47 @@
+@import "../assets/mui.scss";
+
+.category {
+  &__icon--format {
+    width: 50px;
+    height: 50px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 25px;
+  }
+
+  &__meat {
+    background: #ff1744;
+    @include mui-light(#ff1744);
+  }
+
+  &__miscellaneous {
+    background: #3f51b5;
+    @include mui-light(#3f51b5);
+  }
+
+  &__fruits-and-vegetables {
+    background: #4caf50;
+    @include mui-light(#4caf50);
+  }
+
+  &__dairy {
+    background: #ff5722;
+    @include mui-light(#ff5722);
+  }
+
+  &__starches-and-grains {
+    background: #6d4c41;
+    @include mui-light(#6d4c41);
+  }
+
+  &__meat,
+  &__miscellaneous,
+  &__fruits-and-vegetables,
+  &__dairy,
+  &__starches-and-grains {
+    border-radius: 5px;
+    padding: 10px;
+  }
+}

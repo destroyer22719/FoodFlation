@@ -1,0 +1,34 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.critical-vals {
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 25px 0;
+  }
+
+  &__button {
+    background-color: $blue-dark;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > div {
+      margin-left: 5px;
+    }
+
+    @include mui-dark($blue-dark);
+  }
+
+  &__msg {
+    max-width: 600px;
+    height: 25px;
+    margin: 20px;
+    font-size: 16px;
+    text-align: center;
+  };
+}

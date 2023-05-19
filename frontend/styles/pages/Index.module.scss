@@ -1,0 +1,32 @@
+@import "../assets/vars";
+
+.home {
+  margin: 50px 0;
+  text-align: center;
+
+  h1 {
+    font-size: 50px;
+  }
+
+  font-size: 20px;
+
+  &__stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+
+  &__stat {
+    background-color: $purple-light;
+    font-weight: bold;
+    height: 60px;
+    width: 175px;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+    margin: 10px;
+    font-size: 25px;
+  }
+}

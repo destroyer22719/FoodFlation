@@ -1,12 +1,13 @@
 import yargs from "yargs/yargs";
-import {
-  AmericanStoresOptions,
-  CanadianStoresOptions,
-  Province,
-  State,
-  StoreIndexes,
-} from "./global.js";
-import { generateStoresToScrape, scrapeStores } from "./util.js";
+import { generateStoresToScrape, scrapeStores } from "./utils/cli.js";
+
+// console.log(`
+//   - include a new field, unit, to represent the unit of measurement for the price of the item
+//   - investigate issue with whole foods market and fix it and investigate if there are any other stores with the same issue with different child elements which corresponds to prices, item, and img not corresponding to each other
+//   - start with:$ npm run scrape:prod -- --usa --storeStart=7 --itemStart=9
+// `)
+
+// process.exit(1);
 
 const argv = yargs(process.argv.slice(2))
   .options({
@@ -26,6 +27,8 @@ const argv = yargs(process.argv.slice(2))
   })
   .parseSync();
 
+export const storeStartSet = argv.storeStart !== 0;
+
 const indexes: StoreIndexes = {
   storeIndex: 0,
   itemIndex: 0,
@@ -42,7 +45,7 @@ if (argv.all) {
   await scrapeStores(storesToScrape, indexes);
 } else if (argv.canada) {
   let canadianStoreOptions: CanadianStoresOptions | undefined;
-  
+
   if (argv.metro || argv.loblaws || argv.noFrills) {
     canadianStoreOptions = {
       metro: argv.metro,
