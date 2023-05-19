@@ -13,7 +13,7 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <html>
+    <html lang="en">
       <body>
         <div className={style["layout"]}>
           <Nav />
