@@ -1,6 +1,11 @@
 import { getLocations } from "@/graphql/queries";
 import FormRoot from "./components/Form/FormRoot";
 import { Suspense } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FoodFlation | Search Items",
+};
 
 type Props = {
   children: React.ReactNode;

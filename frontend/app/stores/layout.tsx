@@ -1,6 +1,11 @@
 import styles from "@/styles/pages/StoreList.module.scss";
 import SearchTable from "./components/SearchTable/SearchTable";
 import { getLocationsAndCompanies } from "@/graphql/queries";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FoodFlation | Search Stores",
+};
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   //we're getting locations here instead of the locations table so that it doesn't fetch every render

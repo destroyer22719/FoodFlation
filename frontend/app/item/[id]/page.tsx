@@ -10,6 +10,24 @@ import { getItemsAndItsStoreData } from "@/graphql/queries";
 import StoreItem from "@/components/StoreItem/StoreItem";
 
 import styles from "@/styles/pages/Item.module.scss";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { id } = params;
+  const item = await getItemsAndItsStoreData(id);
+
+  if (!item) {
+    notFound();
+  }
+
+  return {
+    title: `FoodFlation | ${item.name}`,
+  };
+}
 
 type Props = {
   params: { id: string };

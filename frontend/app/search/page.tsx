@@ -13,6 +13,8 @@ type SearchParams = {
   sortByAsc?: string;
 };
 
+
+
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { city, search, page, sortByAsc, sortByPrice } = searchParams;
 

@@ -1,4 +1,9 @@
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "FoodFlation | FAQ",
+};
 
 const FaqPage = () => {
   return (
@@ -16,22 +21,22 @@ const FaqPage = () => {
       </div>
       <h2>Does FoodFlation collect any personal information?</h2>
       <div>
-        FoodFlation doesn{"'"}t store user information and it absoloutely doesn{"'"}t
-        sell them to third parties. FoodFlation does use 2 third party tools to
-        help improve the site,{" "}
+        FoodFlation doesn{"'"}t store user information and it absoloutely doesn
+        {"'"}t sell them to third parties. FoodFlation does use 2 third party
+        tools to help improve the site,{" "}
         <Link
           href={"https://vercel.com/docs/concepts/analytics/privacy-policy"}
         >
           Vercel Analytics
-        </Link>
-        {" "} and <Link href={"https://sentry.io/privacy/"}>Sentry</Link>
+        </Link>{" "}
+        and <Link href={"https://sentry.io/privacy/"}>Sentry</Link>
       </div>
       <h2>What tech stack does FoodFlation use</h2>
       <div>
         Prior to v2, FoodFlation uses NextJS, Express, Sequelize, MySQL. In v2,
-        FoodFlation uses NextJS13{"'"}s new app directory, Prisma, Apollo GraphQL,
-        and MySQL. FoodFlation{"'"}s rewrite in tech stacks help create a
-        performance, maintainable, and modern code base.
+        FoodFlation uses NextJS13{"'"}s new app directory, Prisma, Apollo
+        GraphQL, and MySQL. FoodFlation{"'"}s rewrite in tech stacks help create
+        a performance, maintainable, and modern code base.
       </div>
     </div>
   );

@@ -2,6 +2,11 @@ import style from "@/styles/pages/Index.module.scss";
 import { getCounts } from "../graphql/queries";
 
 import styles from "@/styles/pages/Index.module.scss";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FoodFlation | Home",
+}
 
 const HomePage = async () => {
   const { itemCount, storeCount } = await getCounts();

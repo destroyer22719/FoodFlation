@@ -1,7 +1,9 @@
 const NotFound = () => {
   return (
-    <div>NotFound</div>
-  )
-}
+    <div>
+      <h2>Sorry, Item Not Found</h2>
+    </div>
+  );
+};
 
-export default NotFound
+export default NotFound;

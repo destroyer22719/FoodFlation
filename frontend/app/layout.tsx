@@ -5,11 +5,18 @@ import Nav from "@/components/Nav";
 import style from "@/styles/pages/Layout.module.scss";
 
 import "@/styles/global.scss";
+import { Metadata } from "next";
 
 type Props = {
   title: string;
   children: React.ReactNode;
 };
+
+export const metadata: Metadata = {
+  title: "FoodFlation",
+  description: "Helping consumers undersand and navigate food inflation",
+  keywords: "food, inflation, prices, groceries, grocery, canada, usa",
+}
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
