@@ -26,6 +26,9 @@ export const itemResolver = async (
       prices: selectedFields?.includes("prices") && {
         ...(limit ? { take: limit } : {}),
         skip: offset || 0,
+        orderBy: {
+          createdAt: "desc",
+        }
       },
     },
   });
