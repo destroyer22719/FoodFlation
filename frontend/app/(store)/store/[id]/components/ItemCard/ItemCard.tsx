@@ -9,7 +9,13 @@ type Props = {
 };
 
 const ItemCard = ({ item }: Props) => {
+  console.log(item);
   const { category, id, imgUrl, name, prices } = item;
+
+  if (prices.length === 0) {
+    return <></>;
+  }
+
   const price = prices[0].price;
   const lastUpdated = new Date(+prices[0].createdAt).toLocaleDateString();
 
