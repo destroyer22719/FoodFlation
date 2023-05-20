@@ -1,7 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol"]
-  // binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -10,55 +9,56 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Companies {
-  id        String   @id @default(uuid()) @db.VarChar(255)
-  name      String   @unique @db.VarChar(255)
+model companies {
+  id        String   @id @db.VarChar(255)
+  name      String   @unique(map: "Companies_name_key") @db.VarChar(255)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  stores    Stores[]
+  updatedAt DateTime
+  stores    stores[]
 }
 
-model Items {
-  id        String   @id @default(uuid()) @db.VarChar(255)
+model items {
+  id        String   @id @db.VarChar(255)
   name      String   @db.VarChar(255)
   storeId   String   @db.VarChar(255)
   imgUrl    String?  @db.VarChar(500)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime
   category  String   @default("Miscellaneous") @db.VarChar(255)
-  stores    Stores   @relation(fields: [storeId], references: [id], onDelete: Cascade, map: "items_ibfk_1")
-  prices    Prices[]
   unit      String   @default("unit") @db.VarChar(255)
+  stores    stores   @relation(fields: [storeId], references: [id], onDelete: Cascade, map: "items_ibfk_1")
+  prices    prices[]
 
+  @@index([name], map: "Items_name_idx")
   @@index([storeId], map: "storeId")
 }
 
-model Prices {
-  id        String   @id @default(uuid()) @db.VarChar(255)
+model prices {
+  id        String   @id @db.VarChar(255)
   price     Float    @db.Float
   itemId    String   @db.VarChar(255)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  items     Items    @relation(fields: [itemId], references: [id], onDelete: Cascade, map: "prices_ibfk_1")
+  updatedAt DateTime
+  items     items    @relation(fields: [itemId], references: [id], onDelete: Cascade, map: "prices_ibfk_1")
 
   @@index([itemId], map: "itemId")
 }
 
-model Stores {
-  id         String    @id @default(uuid()) @db.VarChar(255)
+model stores {
+  id         String    @id @db.VarChar(255)
   name       String    @db.VarChar(255)
   street     String    @db.VarChar(255)
   city       String    @db.VarChar(255)
   postalCode String?   @db.VarChar(255)
   companyId  String    @db.VarChar(255)
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime
   province   String?   @db.VarChar(255)
   state      String?   @db.VarChar(255)
   zipCode    String?   @db.VarChar(255)
   country    String    @db.VarChar(255)
-  items      Items[]
-  companies  Companies @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
+  items      items[]
+  companies  companies @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
 
   @@index([companyId], map: "companyId")
 }
