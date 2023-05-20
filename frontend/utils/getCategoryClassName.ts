@@ -17,3 +17,4 @@ export const getCategoryClassName = (category: string) => {
 
   return categoryClassName;
 };
+
