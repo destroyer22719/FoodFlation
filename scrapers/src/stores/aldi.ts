@@ -92,7 +92,6 @@ export async function getPricesAldi(
   ).start();
 
   const companyId = await getCompanyId("Aldi");
-
   const zipCodes = stores.map((store) => store.zipCode);
 
   for (const store of stores) {
@@ -142,14 +141,19 @@ export async function getPricesAldi(
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-      await page.waitForSelector('div[aria-label^="$"]', {
-        timeout: 60 * 60 * 1000,
-        visible: true,
-      });
-      await page.waitForSelector("a>div+div>div>span", {
-        timeout: 60 * 60 * 1000,
-        visible: true,
-      });
+
+      await page.waitForFunction(
+        () => {
+          const matches = Array.from(
+            document.querySelectorAll('div[aria-label^="$"]')
+          );
+          return matches.length >= 5 ? matches : null;
+        },
+        {
+          timeout: 60 * 60 * 1000,
+        }
+      );
+
       //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
@@ -157,7 +161,7 @@ export async function getPricesAldi(
         const items = Array.from(
           document.querySelectorAll('div[aria-label="Product"]')
         );
-        
+
         const totalIters = Math.min(items.length, 5);
         for (let i = 0; i < totalIters; i++) {
           const item = items[i];

@@ -189,7 +189,7 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-
+    currentItemList = items;
     counter.subtract(Math.min(allLoblawsStores.length, counter.count));
     const metroStores = allMetroStores.slice(counter.count);
 
@@ -199,7 +199,7 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-
+    currentItemList = items;
     counter.subtract(Math.min(allMetroStores.length, counter.count));
     const noFrillsStores = allNoFrillsStores.slice(counter.count);
 
@@ -209,7 +209,7 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-
+    currentItemList = items;
     storeStartSetOrNotFound = false;
   }
 
@@ -250,7 +250,7 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-
+    currentItemList = items;
     counter.subtract(Math.min(allAldiStores.length, counter.count));
     const wholeFoodsMarketStores = allWholeFoodsMarketStores.slice(
       counter.count
@@ -262,7 +262,7 @@ export async function scrapeStores(
       storeIndexes,
       counter.count
     );
-
+    currentItemList = items;
     storeStartSetOrNotFound = false;
   }
 }
