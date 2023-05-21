@@ -153,23 +153,35 @@ export async function getPricesAldi(
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = document.querySelectorAll("a>div+div>div>span");
-        const price = document.querySelectorAll('div[aria-label^="$"]');
-        const img = document.querySelectorAll("li img[srcset]");
 
-        //finds a maximum of 3 of each item
-        const totalIters = Math.min(name.length, 5);
+        const items = Array.from(
+          document.querySelectorAll('div[aria-label="Product"]')
+        );
+        
+        const totalIters = Math.min(items.length, 5);
         for (let i = 0; i < totalIters; i++) {
+          const item = items[i];
+          const price = +item
+            .querySelector('div[aria-label^="$"]')!
+            .getAttribute("aria-label")!
+            .match(/(?<=\$)(\d|\.)+/gm)![0];
+          const name = (item.querySelector("a>div+div>div>span") as HTMLElement)
+            .innerText;
+          const imgUrl = (
+            item.querySelector("img[srcset]") as HTMLImageElement
+          ).srcset.split(", ")[0];
+          let unit =
+            (item.querySelector("div[title]") as HTMLElement | null)
+              ?.innerText ?? "unit";
+          if (unit !== "unit" && unit.includes("/")) {
+            unit = "unit";
+          }
+
           results.push({
-            name: (<HTMLElement>name[i]).innerText,
-            price: parseFloat(
-              (<HTMLElement>price[i])
-                .getAttribute("aria-label")!
-                .match(/(?<=\$)(\d|\.)+/gm)![0]
-            ),
-            imgUrl: (<HTMLImageElement>img[i]).srcset
-              .split(", ")
-              .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
+            name,
+            price,
+            imgUrl,
+            unit,
           });
         }
 
