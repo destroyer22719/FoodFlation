@@ -150,7 +150,7 @@ export async function getPricesAldi(
         timeout: 60 * 60 * 1000,
         visible: true,
       });
-      //retrieves the value of the first 3 items
+      //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
 
