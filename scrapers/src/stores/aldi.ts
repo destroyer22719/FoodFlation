@@ -37,6 +37,17 @@ export async function getPricesAldi(
     ["geolocation"]
   );
 
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    if (
+      ["image", "stylesheet", "font", "other"].includes(request.resourceType())
+    ) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
+
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -107,6 +118,7 @@ export async function getPricesAldi(
       ...starterLoaderDisplay,
       storeIndex: zipCodes.indexOf(zipCode),
       message: `Searching for ${zipCode}`,
+      storeScrapedIndex: storeIndexes.storeIndex,
     });
 
     const storeId = await getStoreId({
@@ -153,7 +165,7 @@ export async function getPricesAldi(
           timeout: 60 * 60 * 1000,
         }
       );
-
+      await page.waitForTimeout(2000)
       //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];

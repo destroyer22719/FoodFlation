@@ -36,6 +36,17 @@ export async function getPricesWholeFoodsMarket(
     "geolocation",
   ]);
 
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    if (
+      ["image", "stylesheet", "font", "other"].includes(request.resourceType())
+    ) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
+
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -115,6 +126,7 @@ export async function getPricesWholeFoodsMarket(
     loader.text = loaderDisplay({
       ...starterLoaderDisplay,
       storeIndex: zipCodes.indexOf(zipCode),
+      storeScrapedIndex: storeIndexes.storeIndex,
       message: `Searching for ${zipCode}`,
     });
 
