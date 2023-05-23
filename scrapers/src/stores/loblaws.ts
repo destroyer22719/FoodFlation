@@ -25,7 +25,7 @@ export async function getPricesLoblaws(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
   });
 
@@ -162,12 +162,33 @@ export async function getPricesLoblaws(
         message: `${item} at ${postalCode}`,
       });
 
-      await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
-      await page.waitForSelector(".product-tile__thumbnail__image", {
-        timeout: 60 * 1000,
+      await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {
+        waitUntil: "domcontentloaded",
       });
 
-      //retrieves the value of the first 3 items
+      await page.waitForSelector(".product-tile-group__list__item", {
+        visible: true,
+        timeout: 60 * 1000,
+      });
+      await page.waitForSelector(".product-tile__thumbnail__image > img", {
+        visible: true,
+        timeout: 60 * 1000,
+      });
+      await page.waitForSelector(".island-block.island-block--ProductGrid", {
+        visible: true,
+        timeout: 60 * 1000,
+      });
+      await page.waitForSelector(
+        ".quantity-selector--add-to-cart.quantity-selector--add-to-list-button",
+        {
+          visible: true,
+          timeout: 60 * 1000,
+        }
+      );
+
+      await page.waitForTimeout(5000)
+
+      //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
 
