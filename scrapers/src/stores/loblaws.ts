@@ -170,10 +170,26 @@ export async function getPricesLoblaws(
         visible: true,
         timeout: 60 * 1000,
       });
-      await page.waitForSelector(".product-tile__thumbnail__image > img", {
-        visible: true,
-        timeout: 60 * 1000,
-      });
+      await page.waitForSelector(
+        ".product-tile__thumbnail__image > img.responsive-image",
+        {
+          visible: true,
+          timeout: 60 * 1000,
+        }
+      );
+      await page.waitForFunction(
+        () => {
+          const matches = Array.from(
+            document.querySelectorAll(
+              ".product-tile__thumbnail__image > img.responsive-image"
+            )
+          );
+          return matches.length >= 5 ? matches : null;
+        },
+        {
+          timeout: 60 * 60 * 1000,
+        }
+      );
       await page.waitForSelector(".island-block.island-block--ProductGrid", {
         visible: true,
         timeout: 60 * 1000,
@@ -185,8 +201,6 @@ export async function getPricesLoblaws(
           timeout: 60 * 1000,
         }
       );
-
-      await page.waitForTimeout(5000)
 
       //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
@@ -263,7 +277,7 @@ export async function getPricesLoblaws(
 
           const imgUrl = (
             items[i].querySelector(
-              ".product-tile__thumbnail__image > img"
+              ".product-tile__thumbnail__image > img.responsive-image"
             ) as HTMLImageElement
           ).src;
 
