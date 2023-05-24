@@ -62,7 +62,7 @@ const Locations = () => {
         }
       }
     }
-  });
+  }, []);
 
   return (
     <div>
