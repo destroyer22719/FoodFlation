@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+<<<<<<< HEAD
 // This file sets a custom webpack configuration to use your Next.js app
 // with Sentry.
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
@@ -13,6 +14,18 @@ const { withSentryConfig } = require("@sentry/nextjs");
 //     enabled: process.env.ANALYZE === "true",
 //   });
 // }
+=======
+
+let withBundleAnalyzer;
+if (process.env.NODE_ENV !== "production") {
+  withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true",
+  });
+}
+const { withSentryConfig } = require("@sentry/nextjs");
+const million = require("million/compiler");
+
+>>>>>>> master
 const moduleExports = {
   reactStrictMode: true,
   images: {
@@ -29,27 +42,25 @@ const moduleExports = {
   },
 };
 
-const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, org, project, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
+if (process.env.NODE_ENV !== "production") {
+  module.exports = withBundleAnalyzer(moduleExports);
+} else {
+  // module.exports = million.next(moduleExports);
+  // module.exports = moduleExports;
 
-  silent: true, // Suppresses all logs
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
-};
-
-// Make sure adding Sentry options is the last code to run before exporting, to
-// ensure that your source maps include changes from all other Webpack plugins
-// if (process.env.NODE_ENV !== "production") {
-//   module.exports = withPlugins(
-//     [[withBundleAnalyzer], [withSentryConfig, sentryWebpackPluginOptions]],
-//     moduleExports
-//   );
-// } else {
-// module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
-// }
-
-module.exports = moduleExports;
+  module.exports = withSentryConfig(
+    million.next(moduleExports),
+    {
+      silent: true,
+      org: "food-flation",
+      project: "frontend",
+    },
+    {
+      widenClientFileUpload: true,
+      transpileClientSDK: true,
+      tunnelRoute: "/monitoring",
+      hideSourceMaps: true,
+      disableLogger: true,
+    }
+  );
+}

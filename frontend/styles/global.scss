@@ -1,0 +1,32 @@
+@import "assets/vars";
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $black;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  font-weight: bold;
+}
+
+a:visited {
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: $lato;
+  box-sizing: border-box;
+  color: white;
+}
+
+h1,
+h2,
+h3 {
+  font-family: $montserrat;
+}

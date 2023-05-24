@@ -2,18 +2,15 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  loaderDisplay,
+  msToTime,
+  updateItems,
+} from "../utils/scrapers.js";
 
 export async function getPricesMetro(
   stores: Address[],
@@ -27,14 +24,11 @@ export async function getPricesMetro(
 
   const startTime = Date.now();
 
-  await sequelize.sync();
-
   const browser = await puppeteer.launch({
-    headless: !process.argv.includes("--debug"),
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
   });
 
-  
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
@@ -89,14 +83,24 @@ export async function getPricesMetro(
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
 
-  const loader = ora("Scraping Metro...").start();
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Loblaws Scraper`,
+    })
+  ).start();
+
+  const companyId = await getCompanyId("Metro");
+
+  const postalCodes = stores.map((store) => store.postalCode);
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -104,10 +108,25 @@ export async function getPricesMetro(
 
     postalCode = postalCode as string;
     province = province as string;
-    country = country as string;
+    country = country as Country;
+
+    const storeId = await getStoreId({
+      street,
+      city,
+      province,
+      country: "canada",
+      postalCode,
+      companyId,
+      name: "Metro",
+    });
 
     loader.color = "green";
-    loader.text = `Scraping ${postalCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: postalCodes.indexOf(postalCode),
+      message: `Scraping ${postalCode}...`,
+    });
+
     await page.goto("https://www.metro.ca/en/find-a-grocery");
 
     await page.waitForSelector("#postalCode");
@@ -127,15 +146,16 @@ export async function getPricesMetro(
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${postalCode}`;
-      await page.goto(`https://www.metro.ca/en/search?filter=${item}`, {
-        waitUntil: "domcontentloaded",
+
+      const loaderData: LoaderDisplayParams = {
+        ...starterLoaderDisplay,
+        storeIndex: postalCodes.indexOf(postalCode),
+        itemIndex: items.indexOf(item),
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${postalCode}`,
       });
 
       //retrieves the value of the first 3 items
@@ -164,83 +184,32 @@ export async function getPricesMetro(
             ) as HTMLElement)!.innerText.slice(4);
             prices.splice(i + 1, 1);
           }
+
           results.push({
             name: name[i],
-            price: price,
+            price: parseFloat(price),
             imgUrl: img[i],
           });
         }
 
         return results;
       });
-      //inserts information to database
-      let company = await Company.findOne({ where: { name: "Metro" } });
 
-      if (!company) {
-        company = new Company({ id: uuidv4(), name: "Metro" });
-        await company.save();
-      }
-
-      let store = await Store.findOne({
-        where: { postalCode, companyId: company.id },
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the prices of ${results.length} item(s)`,
       });
-      if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Metro",
-          street,
-          city,
-          province,
-          country,
-          postalCode,
-          companyId: company.id,
-        });
 
-        await store.save();
-      }
+      await updateItems({
+        results,
+        storeId,
+      });
 
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${postalCode} |(${result.name} for ${result.price})`;
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices!`,
+      });
 
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
-        });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.imgUrl,
-          });
-
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
-        } else if (
-          itemObj.imgUrl ===
-            "https://www.metro.ca/images/shared/placeholders/icon-no-picture.svg" &&
-          itemObj.imgUrl !== result.imgUrl
-        ) {
-          itemObj.imgUrl = result.imgUrl;
-          await itemObj.save();
-        }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: parseFloat(result.price),
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
-      }
       itemBar.increment(1);
       storeIndexes.itemIndex++;
     }

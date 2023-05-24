@@ -1,19 +1,16 @@
 import puppeteer from "puppeteer";
-import sequelize from "../db.js";
-import { v4 as uuidv4 } from "uuid";
 import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
-import fs from "fs";
-import path from "path";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  loaderDisplay,
+  msToTime,
+  updateItems,
+} from "../utils/scrapers.js";
 
 export async function getPricesNoFrills(
   stores: Address[],
@@ -27,7 +24,6 @@ export async function getPricesNoFrills(
 
   const startTime = Date.now();
 
-  await sequelize.sync();
   const browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
@@ -78,17 +74,26 @@ export async function getPricesNoFrills(
 
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
 
-  const loader = ora("Scraping No Frills...").start();
-
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Loblaws Scraper`,
+    })
+  ).start();
 
   let popupDeleted = false;
+
+  const companyId = await getCompanyId("No Frills");
+
+  const postalCodes = stores.map((store) => store.postalCode);
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
@@ -96,16 +101,31 @@ export async function getPricesNoFrills(
 
     postalCode = postalCode as string;
     province = province as string;
-    country = country as string;
+    country = country as Country;
 
     loader.color = "green";
-    loader.text = `Scraping ${postalCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: postalCodes.indexOf(postalCode),
+      message: `Scraping ${postalCode}...`,
+    });
+
     await page.goto(
       `https://www.nofrills.ca/store-locator?searchQuery=${postalCode}`,
       {
         waitUntil: "networkidle2",
       }
     );
+
+    const storeId = await getStoreId({
+      companyId,
+      postalCode,
+      province,
+      country: "canada",
+      street,
+      city,
+      name: "No Frills",
+    });
 
     if (!popupDeleted) {
       page.evaluate(() => {
@@ -132,128 +152,80 @@ export async function getPricesNoFrills(
     await page.click(".fulfillment-location-confirmation__actions__button");
 
     for (const item of items) {
-      try {
-        loader.color = "green";
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.postalCode).indexOf(postalCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${postalCode}`;
-        await page.goto(
-          `https://www.nofrills.ca/search?search-bar=${item}`,
-          {}
+      loader.color = "green";
+
+      const loaderData: LoaderDisplayParams = {
+        ...starterLoaderDisplay,
+        storeIndex: postalCodes.indexOf(postalCode),
+        itemIndex: items.indexOf(item),
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${postalCode}`,
+      });
+
+      await page.goto(`https://www.nofrills.ca/search?search-bar=${item}`, {});
+
+      await page.waitForSelector(".product-tile__thumbnail__image", {
+        timeout: 60 * 1000,
+      });
+
+      //retrieves the value of the first 3 items
+      const results = await page.evaluate(() => {
+        const results = [];
+
+        const name = document.getElementsByClassName(
+          "product-name__item product-name__item--name"
+        );
+        const price = document.querySelectorAll(
+          ".selling-price-list__item__price--now-price__value"
+        );
+        const img = document.querySelectorAll(
+          ".product-tile__thumbnail__image > img"
         );
 
-        await page.waitForSelector(".product-tile__thumbnail__image", {
-          timeout: 60 * 1000,
-        });
+        //finds a maximum of 3 of each item
+        const totalIters = name.length > 3 ? 3 : name.length;
 
-        //retrieves the value of the first 3 items
-        const results = await page.evaluate(() => {
-          const results = [];
-
-          const name = document.getElementsByClassName(
-            "product-name__item product-name__item--name"
-          );
-          const price = document.querySelectorAll(
-            ".selling-price-list__item__price--now-price__value"
-          );
-          const img = document.querySelectorAll(
-            ".product-tile__thumbnail__image > img"
-          );
-
-          //finds a maximum of 3 of each item
-          const totalIters = name.length > 3 ? 3 : name.length;
-
-          let i = 0;
-          while (i < totalIters) {
-            results.push({
-              name: (<HTMLElement>name[i]).innerText,
-              price: (<HTMLElement>price[i]).innerText,
-              imgUrl: (<HTMLImageElement>img[i]).src,
-            });
-            i++;
-          }
-
-          return results;
-        });
-
-        //inserts information to database
-        let company = await Company.findOne({
-          where: { name: "No Frills" },
-        });
-
-        if (!company) {
-          company = new Company({ id: uuidv4(), name: "No Frills" });
-          await company.save();
+        let i = 0;
+        while (i < totalIters) {
+          results.push({
+            name: (<HTMLElement>name[i]).innerText,
+            price: parseFloat((<HTMLElement>price[i]).innerText.slice(1)),
+            imgUrl: (<HTMLImageElement>img[i]).src,
+          });
+          i++;
         }
 
-        let store = await Store.findOne({
-          where: { postalCode, companyId: company.id },
-        });
-        if (!store) {
-          store = new Store({
-            id: uuidv4(),
-            name: "No Frills",
-            street,
-            city,
-            province,
-            country,
-            postalCode,
-            companyId: company.id,
-          });
+        return results;
+      });
 
-          await store.save();
-        }
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the prices of ${results.length} item(s)`,
+      });
 
-        for (const result of results) {
-          loader.text = `${items.indexOf(item)}/${items.length} - ${stores
-            .map((store) => store.postalCode)
-            .indexOf(postalCode)}/${stores.length}| (${
-            storeIndexes.itemIndex
-          } / ${storeIndexes.storeIndex}) ${item} at ${postalCode} |(${
-            result.name
-          } for ${result.price})`;
+      await updateItems({
+        storeId,
+        results,
+      });
 
-          let itemObj = await Item.findOne({
-            where: { name: result.name, storeId: store.id },
-          });
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices!`,
+      });
 
-          if (!itemObj) {
-            itemObj = new Item({
-              id: uuidv4(),
-              name: result.name,
-              storeId: store.id,
-              imgUrl: result.imgUrl,
-            });
-
-            await itemObj.save();
-          } else if (itemObj.category !== item2category[item]) {
-            itemObj.category = item2category[item];
-            await itemObj.save();
-          }
-
-          const itemPrice = new Price({
-            id: uuidv4(),
-            price: parseFloat(result.price.slice(1)),
-            itemId: itemObj.id,
-          });
-
-          await itemPrice.save();
-        }
-        itemBar.increment(1);
-        storeIndexes.itemIndex++;
-      } catch (e) {
-        continue;
-      }
+      itemBar.increment(1);
+      storeIndexes.itemIndex++;
     }
+
     items = items;
     storeBar.increment(1);
     storeIndexes.storeIndex++;
     itemBar.update(0);
   }
+
   itemBar.update(items.length);
   storeBar.stop();
   itemBar.stop();

@@ -2,18 +2,15 @@ import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import path from "path";
-import sequelize from "../db.js";
-import Price from "../../../backend/src/model/Price.js";
-import Item from "../../../backend/src/model/Item.js";
-import Store from "../../../backend/src/model/Store.js";
-import Company from "../../../backend/src/model/Company.js";
-import { Address, StoreIndexes } from "../global.js";
-import { defaultItems, msToTime } from "../util.js";
 
-const __dirname = path.resolve();
+import {
+  defaultItems,
+  getCompanyId,
+  getStoreId,
+  loaderDisplay,
+  msToTime,
+  updateItems,
+} from "../utils/scrapers.js";
 
 export async function getPricesWholeFoodsMarket(
   stores: Address[],
@@ -27,10 +24,8 @@ export async function getPricesWholeFoodsMarket(
 
   const startTime = Date.now();
 
-  await sequelize.sync();
-
   const browser = await puppeteer.launch({
-    headless: !process.argv.includes("--debug"),
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
   });
 
@@ -80,24 +75,49 @@ export async function getPricesWholeFoodsMarket(
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
 
-  const loader = ora("Scraping Whole Foods Market...").start();
+  const starterLoaderDisplay: LoaderDisplayParams = {
+    itemIndex: 0,
+    totalItems: defaultItems.length,
+    storeIndex: 0,
+    totalStores: stores.length,
+    storeScrapedIndex: storeIndexes.storeIndex,
+  };
 
-  const item2category = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, "src", "config", "item2category.json"),
-      "utf-8"
-    )
-  );
+  const loader = ora(
+    loaderDisplay({
+      ...starterLoaderDisplay,
+      message: `Starting Aldi Scraper`,
+    })
+  ).start();
+
+  const companyId = await getCompanyId("Whole Foods Market");
+
+  const zipCodes = stores.map((store) => store.zipCode);
 
   for (const store of stores) {
     let { city, zipCode, state, country, street } = store;
 
     state = state as string;
     zipCode = zipCode as string;
-    country = country as string;
+    country = country as Country;
+
+    const storeId = await getStoreId({
+      street,
+      city,
+      state,
+      zipCode,
+      country: "us",
+      companyId,
+      name: "Target",
+    });
 
     loader.color = "green";
-    loader.text = `Scraping ${zipCode}...`;
+    loader.text = loaderDisplay({
+      ...starterLoaderDisplay,
+      storeIndex: zipCodes.indexOf(zipCode),
+      message: `Searching for ${zipCode}`,
+    });
+
     await page.goto("https://www.wholefoodsmarket.com/stores", {
       waitUntil: "domcontentloaded",
     });
@@ -129,13 +149,17 @@ export async function getPricesWholeFoodsMarket(
 
     for (const item of items) {
       loader.color = "green";
-      loader.text = `${defaultItems.indexOf(item)}/${
-        defaultItems.length
-      } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-        stores.length
-      }| (${storeIndexes.itemIndex} / ${
-        storeIndexes.storeIndex
-      }) ${item} at ${zipCode}`;
+
+      const loaderData: LoaderDisplayParams = {
+        ...starterLoaderDisplay,
+        itemIndex: defaultItems.indexOf(item),
+        storeIndex: zipCodes.indexOf(zipCode),
+      };
+
+      loader.text = loaderDisplay({
+        ...loaderData,
+        message: `${item} at ${zipCode}`,
+      });
 
       await page.goto(`https://www.wholefoodsmarket.com/search?text=${item}`, {
         waitUntil: "domcontentloaded",
@@ -156,108 +180,83 @@ export async function getPricesWholeFoodsMarket(
       });
 
       const results = await page.evaluate(() => {
-        const prices = Array.from(
-          document.querySelectorAll(".regular_price > b")
-        )
-          .map((e) => parseFloat((e as HTMLElement).innerText.slice(1)))
-          .slice(0, 3);
+        const itemCards = Array.from(
+          document.querySelectorAll(".w-pie--product-tile")
+        ) as HTMLElement[];
 
-        const names = Array.from(
-          document.querySelectorAll(`h2[data-testid="product-tile-name"]`)
-        )
-          .map((e) => (e as HTMLElement).innerText)
-          .slice(0, 3);
-
-        const images = Array.from(
-          document.querySelectorAll(`img[data-testid="product-tile-image"]`)
-        )
-          .map((e) => (e as HTMLImageElement).src)
-          .slice(0, 3);
+        const iterations = Math.min(itemCards.length, 5);
 
         const resultData = [];
-        const resultLength = Math.min(
-          prices.length,
-          names.length,
-          images.length
-        );
 
-        for (let i = 0; i < resultLength; i++) {
+        for (let i = 0; i < iterations; i++) {
+          const itemCard = itemCards[i];
+          const name = (
+            itemCard.querySelector(
+              `h2[data-testid="product-tile-name"]`
+            ) as HTMLElement
+          )?.innerText;
+
+          const imgUrl =
+            (
+              itemCard.querySelector(
+                ".w-pie--product-tile__image img"
+              ) as HTMLImageElement | null
+            )?.getAttribute("src") || "";
+
+          const salesPriceElem = itemCard.querySelector(
+            ".sale_price"
+          ) as HTMLElement | null;
+
+          let price = null;
+          let unitOfMeasurement = "unit";
+
+          if (salesPriceElem && !salesPriceElem.innerText.includes("for")) {
+            price = parseFloat(
+              salesPriceElem.innerText.match(/(?<=\$)\d+(\.\d{2})?/gm)![0]
+            );
+          } else {
+            const regularPrice = (
+              itemCard.querySelector(".regular_price") as HTMLElement
+            ).innerText;
+            if (regularPrice.includes("/")) {
+              unitOfMeasurement = regularPrice.split("/")[1].trim();
+              if (unitOfMeasurement === "lb") {
+                unitOfMeasurement = "pound";
+              } else if (unitOfMeasurement === "oz") {
+                unitOfMeasurement = "ounce";
+              } else if (unitOfMeasurement === "gal") {
+                unitOfMeasurement = "gallon";
+              }
+            }
+
+            price = parseFloat(regularPrice.split("/")[0].slice(1));
+          }
+
           resultData.push({
-            name: names[i],
-            price: prices[i],
-            image: images[i],
+            name,
+            price,
+            imgUrl,
+            unit: unitOfMeasurement,
           });
         }
 
         return resultData;
       });
 
-      //inserts information to database
-      let company = await Company.findOne({
-        where: { name: "Whole Foods Market" },
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Inserting the price of ${results.length} item(s)`,
       });
 
-      if (!company) {
-        company = new Company({
-          id: uuidv4(),
-          name: "Whole Foods Market",
-        });
-        await company.save();
-      }
-
-      let store = await Store.findOne({
-        where: { zipCode, companyId: company.id },
+      await updateItems({
+        storeId,
+        results,
       });
-      if (!store) {
-        store = new Store({
-          id: uuidv4(),
-          name: "Whole Foods Market",
-          street,
-          city,
-          state,
-          country,
-          zipCode,
-          companyId: company.id,
-        });
 
-        await store.save();
-      }
-
-      for (const result of results) {
-        loader.text = `${defaultItems.indexOf(item)}/${
-          defaultItems.length
-        } - ${stores.map((store) => store.zipCode).indexOf(zipCode)}/${
-          stores.length
-        }| (${storeIndexes.itemIndex} / ${
-          storeIndexes.storeIndex
-        }) ${item} at ${zipCode} |(${result.name} for ${result.price})`;
-
-        let itemObj = await Item.findOne({
-          where: { name: result.name, storeId: store.id },
-        });
-
-        if (!itemObj) {
-          itemObj = new Item({
-            id: uuidv4(),
-            name: result.name,
-            storeId: store.id,
-            imgUrl: result.image,
-          });
-
-          await itemObj.save();
-        } else if (itemObj.category !== item2category[item]) {
-          itemObj.category = item2category[item];
-          await itemObj.save();
-        }
-
-        const itemPrice = new Price({
-          id: uuidv4(),
-          price: result.price,
-          itemId: itemObj.id,
-        });
-
-        await itemPrice.save();
-      }
+      loader.text = loader.text = loaderDisplay({
+        ...loaderData,
+        message: `Successfully inserted prices`,
+      });
 
       itemBar.increment(1);
       storeIndexes.itemIndex++;

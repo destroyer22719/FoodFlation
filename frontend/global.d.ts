@@ -1,45 +1,62 @@
-export interface Company {
+declare global {
+  interface Item {
     id: string;
     name: string;
-    stores: Store[];
-}
+    storeId: string;
+    imgUrl: string;
+    createdAt: string;
+    updatedAt: string;
+    category: string;
+    storeId: string;
+    prices: Price[];
+  }
 
-export type Category =
-    | "Fruits & Vegetables"
-    | "Meat"
-    | "Dairy"
-    | "Starches & Grains"
-    | "Miscellaneous";
+  interface Price {
+    price: number;
+    createdAt: string;
+  }
 
-export interface Store {
+  interface Store {
     id: string;
     name: string;
     street: string;
     city: string;
+    country: string;
     postalCode?: string;
     zipCode?: string;
-    country: string;
-    companyId: string;
-    company: Company;
-    items: Item[];
-}
+    state?: string;
+    province?: string;
+  }
 
-export interface Item {
+  interface StoreWithCompany extends Store {
+    companies: {
+      id: string;
+    };
+  }
+
+  interface Company {
     id: string;
     name: string;
-    storeId: string;
-    store: Store;
-    imgUrl: string;
-    prices: Price[];
-    price: number;
-    lastUpdated?: Date;
-    category: Category;
+  }
+
+  interface Category {
+    category: string;
+    count: number;
+  }
+
+  type LocationObj = {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: number;
+      };
+    };
+  };
+
+  type LocationMap = {
+    [country: string]: {
+      [stOrProv: string]: string[];
+    };
+  };
 }
 
-export interface Price {
-    id: string;
-    price: number;
-    item: Item;
-    itemId: string;
-    createdAt: string;
-}
+export {};

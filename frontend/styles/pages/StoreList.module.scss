@@ -1,0 +1,13 @@
+@import "../assets/vars";
+
+.store-list {
+  &__stores {
+    width: 80%;
+    max-width: 750px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+  }
+}

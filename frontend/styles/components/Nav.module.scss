@@ -1,0 +1,56 @@
+@import "../assets/vars";
+@import "../assets/mui";
+
+.nav {
+  display: flex;
+  font-family: $montserrat;
+  align-items: center;
+  background-color: $purple-dark;
+  border-bottom: 2px solid $purple-light;
+  padding: 20px;
+  justify-content: space-between;
+  color: $purple-light;
+  width: 100%;
+  flex-direction: column;
+
+  @media only screen and (min-width: 500px) {
+    flex-direction: row;
+  }
+
+  &__section {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 170px;
+    @media only screen and (min-width: 500px) {
+      justify-content: left;
+    }
+
+    &--center {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      @media screen and (max-width: 680px) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  &__item {
+    margin: 8px 5px;
+    font-weight: bold;
+    background-color: $purple-light;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include mui-light($purple-light);
+
+    &--bold {
+      font-weight: bold;
+    }
+  }
+}

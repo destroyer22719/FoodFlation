@@ -1,0 +1,80 @@
+@import "../assets/vars";
+@import "../assets/mui.scss";
+
+.store-item {
+  width: 250px;
+  padding: 10px;
+  height: 110px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: $purple-light;
+
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+
+  @include mui-light($purple-light);
+
+  @media only screen and (min-width: 400px) {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 350px;
+    height: 150px;
+  }
+
+  &__image {
+    &--skeleton {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  &__address {
+    display: flex;
+    flex-direction: column;
+    // margin-left: 25px;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+
+    &--skeleton {
+      div {
+        margin-bottom: 10px;
+        width: 120px;
+        height: 15px;
+      }
+    }
+
+    & div {
+      color: $blue-dark;
+      font-weight: bold;
+      font-size: 15px;
+      overflow-wrap: break-word;
+      width: 120px;
+      text-align: center;
+    }
+  }
+
+  &__image--skeleton,
+  &__address--skeleton div {
+    border-radius: 10px;
+    background: linear-gradient(
+        to right,
+        rgba(lighten($purple, 25%), 0),
+        rgba(lighten($purple, 25%), 0.5) 50%,
+        rgba(lighten($purple, 25%), 0) 80%
+      ),
+      $purple;
+    background-repeat: repeat-y;
+    background-size: 50px 500px;
+    background-position: 0 0;
+    animation: shine 1s infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 100% 0, /* move highlight to right */ 0 0;
+    }
+  }
+}

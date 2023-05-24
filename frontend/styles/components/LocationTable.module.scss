@@ -1,0 +1,68 @@
+@import "../assets/vars";
+@import "../assets/mui.scss";
+
+.location-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__country {
+    margin: 10px;
+    &-header {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      border-radius: 10px;
+      background-color: $blue-dark;
+      width: 100%;
+      padding: 30px;
+      @include mui-dark($blue-dark);
+    }
+  }
+
+  &__province {
+    margin: 10px;
+
+    &s {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    &--header {
+      padding: 20px;
+      width: 175px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      background-color: $purple;
+      border-radius: 10px;
+      margin: 10px 0;
+      @include mui-dark($purple);
+    }
+  }
+
+  &__city {
+    background-color: $purple-light;
+    padding: 10px 25px;
+    font-size: 15px;
+    flex-grow: 1;
+    width: 100%;
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 5px 0;
+
+    @include mui-light($purple-light);
+  }
+
+  &__cities {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & > * {
+      width: 100%;
+    }
+  }
+}

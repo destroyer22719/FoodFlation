@@ -1,0 +1,203 @@
+@import "../assets/mui.scss";
+@import "../assets/vars";
+
+.search-form {
+  font-size: 20px;
+  text-align: center;
+
+  h3 {
+    font-size: 25px;
+    margin: 10px 0;
+  }
+
+  &__countries-list,
+  &__province-list,
+  &__state-list,
+  &__city-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__country,
+  &__province,
+  &__state,
+  &__city,
+  &__sort-by {
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    background-color: $black;
+
+    @include mui-dark($black);
+  }
+
+  &__city-list {
+    margin: auto;
+
+    @media screen and (min-width: 600px) {
+      width: 500px;
+    }
+  }
+
+  &__country {
+    width: 250px;
+  }
+
+  &__selected {
+    background-color: $purple !important;
+    @include mui-dark($purple);
+  }
+
+  &__input-section {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+
+    input {
+      background-color: $black;
+      outline: none;
+      border-left: none;
+      color: white;
+      font-size: 16px;
+      width: 400px;
+
+      border-top: 3px solid $purple;
+      border-bottom: 3px solid $purple;
+      border-right: 3px solid $purple;
+
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+
+      padding: 10px;
+    }
+  }
+
+  &__input-add {
+    padding: 10px;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    display: grid;
+    place-items: center;
+
+    background-color: $purple;
+    @include mui-dark($purple);
+  }
+
+  &__search-terms {
+    margin: 15px auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: max(250px, 80%);
+  }
+
+  &__search-term {
+    display: flex;
+    padding: 12px;
+    border-radius: 5px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-right: 12px;
+
+    // & > * {
+    //   border: 5px solid red;
+    // }
+  }
+
+  &__search-term-text {
+    display: grid;
+    place-items: center;
+    margin-right: 15px;
+  }
+
+  &__search-term-delete {
+    margin-right: 10px;
+    padding: 5px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  &__search-add {
+    background: $green-light;
+
+    .search-form__search-term-delete {
+      @include mui-light($green-light);
+    }
+  }
+
+  &__search-not {
+    background: $red-light;
+
+    .search-form__search-term-delete {
+      @include mui-light($red-light);
+    }
+  }
+
+  &__sort-by-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 40px);
+    grid-gap: 10px;
+
+    width: 250px;
+    margin: auto;
+
+    * {
+      border-radius: 5px;
+    }
+  }
+
+  &__sort-by-price,
+  &__sort-by-time {
+    display: grid;
+    place-items: center;
+    grid-row: 1;
+
+    background-color: $black;
+    @include mui-dark($black);
+  }
+
+  &__sort-by-price {
+    grid-column: 1;
+  }
+
+  &__sort-by-time {
+    grid-column: 2;
+  }
+
+  &__asc-desc {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+
+    display: grid;
+    place-items: center;
+
+    background-color: $purple-light;
+    @include mui-light($purple-light);
+  }
+
+  &__search-button,
+  &__search-button--disabled {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    display: grid;
+    place-items: center;
+  }
+
+  &__search-button {
+    background-color: $blue-dark;
+    @include mui-dark($blue-dark);
+  }
+
+  &__search-button--disabled {
+    background-color: rgba($blue-dark, 0.25);
+    cursor: not-allowed;
+  }
+}
