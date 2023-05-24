@@ -25,8 +25,10 @@ export async function getPricesLoblaws(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
+    protocolTimeout: 999999,
     headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
+    defaultViewport: null,
   });
 
   const page = await browser.newPage();
@@ -167,40 +169,29 @@ export async function getPricesLoblaws(
       });
 
       await page.waitForSelector(".product-tile-group__list__item", {
-        visible: true,
         timeout: 60 * 1000,
       });
-      await page.waitForSelector(
-        ".product-tile__thumbnail__image > img.responsive-image",
-        {
-          visible: true,
-          timeout: 60 * 1000,
-        }
-      );
-      await page.waitForFunction(
-        () => {
-          const matches = Array.from(
-            document.querySelectorAll(
-              ".product-tile__thumbnail__image > img.responsive-image"
-            )
-          );
-          return matches.length >= 5 ? matches : null;
-        },
-        {
-          timeout: 60 * 60 * 1000,
-        }
-      );
-      await page.waitForSelector(".island-block.island-block--ProductGrid", {
-        visible: true,
-        timeout: 60 * 1000,
+
+      // await page.waitForFunction(
+      //   () => {
+      //     const matches = Array.from(
+      //       document.querySelectorAll(
+      //         ".product-tile__thumbnail__image img.responsive-image"
+      //       )
+      //     );
+      //     return matches.length >= 5 ? matches : null;
+      //   },
+      //   {
+      //     timeout: 60 * 60 * 1000,
+      //   }
+      // );
+
+      // const footer = await page.$("#site-footer");
+      // await footer?.scrollIntoView();
+      await page.evaluate(() => {
+        window.scrollBy(0, window.innerHeight);
       });
-      await page.waitForSelector(
-        ".quantity-selector--add-to-cart.quantity-selector--add-to-list-button",
-        {
-          visible: true,
-          timeout: 60 * 1000,
-        }
-      );
+      await page.waitForTimeout(9999999);
 
       //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
@@ -277,7 +268,7 @@ export async function getPricesLoblaws(
 
           const imgUrl = (
             items[i].querySelector(
-              ".product-tile__thumbnail__image > img.responsive-image"
+              ".product-tile__thumbnail__image img.responsive-image"
             ) as HTMLImageElement
           ).src;
 
