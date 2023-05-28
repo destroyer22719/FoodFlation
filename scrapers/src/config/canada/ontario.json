@@ -66,7 +66,8 @@
       "city": "East York",
       "company": "Loblaws",
       "province": "Ontario",
-      "country": "Canada"
+      "country": "Canada",
+      "otherId": "1155"
     },
     {
       "postalCode": "M4T 1L7",
@@ -134,7 +135,7 @@
       "province": "Ontario",
       "country": "Canada",
       "company": "Loblaws",
-      "otherId": "1155"
+      "otherId": "1015"
     },
     {
       "postalCode": "K7L 5G8",
@@ -142,7 +143,8 @@
       "city": "Kingston",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1040"
     },
     {
       "postalCode": "K7P 2X9",
@@ -150,7 +152,8 @@
       "city": "Kingston",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1083"
     },
     {
       "postalCode": "N5X 2S7",
@@ -158,7 +161,8 @@
       "city": "London",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1036"
     },
     {
       "postalCode": "N6L 1A6",
@@ -166,7 +170,8 @@
       "city": "London",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1016"
     },
     {
       "postalCode": "P4N 1A9",
