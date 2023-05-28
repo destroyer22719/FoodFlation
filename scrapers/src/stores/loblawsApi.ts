@@ -82,7 +82,7 @@ export default async function getPricesLoblaws(
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
-    let { city, postalCode, province, country, street } = store;
+    let { city, postalCode, province, country, street, otherId } = store;
 
     postalCode = postalCode as string;
     province = province as string;
@@ -104,8 +104,6 @@ export default async function getPricesLoblaws(
       storeIndex: postalCodes.indexOf(postalCode),
       message: `Scraping ${postalCode}...`,
     });
-
-    const loblawsStoreId = "1029";
 
     for (const item of items) {
       loader.color = "green";
@@ -135,7 +133,7 @@ export default async function getPricesLoblaws(
               size: 10,
             },
             lang: "en",
-            storeId: loblawsStoreId,
+            storeId: otherId,
             banner: "loblaw",
             pickupType: "STORE",
             term: item,
