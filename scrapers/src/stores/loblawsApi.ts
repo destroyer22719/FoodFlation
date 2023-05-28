@@ -141,17 +141,20 @@ export default async function getPricesLoblaws(
           }),
         }
       );
-
-      const { results }: LoblawsApiRes = await req.json();
+      const res: LoblawsApiRes = await req.json();
+      const { results } = res;
 
       const resultsParsed = results.map((result) => {
         const { prices, name, brand, imageAssets, packageSize } = result;
 
         let price: number, unit: string;
-
-        if (!packageSize) {
+        if (!packageSize && prices.price.unit === "ea") {
           price = prices.comparisonPrices[1].value;
           unit = prices.comparisonPrices[1].unit;
+        }
+        if (!packageSize && prices.price.unit !== "ea") {
+          price = prices.price.value;
+          unit = `${prices.price.quantity}${prices.price.unit}}`
         } else {
           price = prices.price.value;
           unit = packageSize;

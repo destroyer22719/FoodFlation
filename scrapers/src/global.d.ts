@@ -115,6 +115,7 @@ declare global {
         price: {
           value: number;
           unit: string;
+          quantity: number;
         };
         comparisonPrices: {
           value: number;

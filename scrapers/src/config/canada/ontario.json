@@ -133,7 +133,8 @@
       "city": "Ottawa",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1155"
     },
     {
       "postalCode": "K7L 5G8",
