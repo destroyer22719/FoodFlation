@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { getPricesLoblaws } from "../stores/loblaws.js";
+// import { getPricesLoblaws } from "../stores/loblaws.js";
+import { getPricesLoblaws } from "../stores/loblawsApi.js";
+
 import { getPricesMetro } from "../stores/metro.js";
 import { getPricesWholeFoodsMarket } from "../stores/whole_foods_market.js";
 import { getPricesAldi } from "../stores/aldi.js";

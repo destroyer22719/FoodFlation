@@ -101,6 +101,27 @@ declare global {
     storeScrapedIndex: number;
     message?: string;
   };
+
+  type LoblawsApiRes = {
+    results: {
+      name: string;
+      brand: string;
+      imageAssets: {
+        mediumUrl: string;
+      }[];
+      packageSize: string;
+      prices: {
+        price: {
+          value: number;
+          unit: string;
+        };
+        comparisonPrices: {
+          value: number;
+          unit: string;
+        }[];
+      };
+    }[];
+  };
 }
 
 export {};
