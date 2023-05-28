@@ -28,7 +28,7 @@ export const itemResolver = async (
         skip: offset || 0,
         orderBy: {
           createdAt: "asc",
-        }
+        },
       },
     },
   });
@@ -151,9 +151,15 @@ export const itemCityResolver = async (
       }
     } else {
       if (sortByAsc) {
-        return new Date(a.prices[0].createdAt).getTime() - new Date(b.prices[0].createdAt).getTime();
+        return (
+          new Date(a.prices[0].createdAt).getTime() -
+          new Date(b.prices[0].createdAt).getTime()
+        );
       } else {
-        return new Date(b.prices[0].createdAt).getTime() - new Date(a.prices[0].createdAt).getTime();
+        return (
+          new Date(b.prices[0].createdAt).getTime() -
+          new Date(a.prices[0].createdAt).getTime()
+        );
       }
     }
   });
