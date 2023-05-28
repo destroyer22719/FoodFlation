@@ -6,14 +6,16 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1007"
     },
     {
       "postalCode": "M4K 2P1",
       "street": "720 Broadview Ave",
       "city": "Toronto",
       "province": "Ontario",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1179"
     },
     {
       "postalCode": "M5E 1Z2",
@@ -21,7 +23,8 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1079"
     },
     {
       "postalCode": "M4E 3W2",
@@ -29,7 +32,8 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1021"
     },
     {
       "postalCode": "M4H 1P6",
@@ -37,7 +41,8 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1092"
     },
     {
       "postalCode": "M4M 3H9",
@@ -45,29 +50,23 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
-    },
-    {
-      "postalCode": "M4K 2P1",
-      "street": "720 Broadview Ave",
-      "city": "Toronto",
-      "province": "Ontario",
-      "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1004"
     },
     {
       "postalCode": "M4P 1H4",
       "street": "101 Eglinton Ave E Unit 1",
       "city": "Toronto",
-      "province": "Ontario",
-      "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1020"
     },
     {
       "postalCode": "M4G 1E1",
       "street": "301 Moore Ave",
-      "city": "East York, Ontario",
-      "company": "Loblaws"
+      "city": "East York",
+      "company": "Loblaws",
+      "province": "Ontario",
+      "country": "Canada"
     },
     {
       "postalCode": "M4T 1L7",
@@ -75,7 +74,8 @@
       "city": "Toronto",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1142"
     },
     {
       "postalCode": "M4P 1P1",
@@ -115,7 +115,8 @@
       "city": "Ottawa",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1051"
     },
     {
       "postalCode": "K1L 8H5",
@@ -123,7 +124,8 @@
       "city": "Ottawa",
       "province": "Ontario",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1014"
     },
     {
       "postalCode": "K1N 5Y6",

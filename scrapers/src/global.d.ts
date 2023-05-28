@@ -10,6 +10,7 @@ declare global {
     province?: string;
     state?: string;
     company: CompanyName;
+    otherId?: string;
   }
 
   type CanadianStoresOptions = {

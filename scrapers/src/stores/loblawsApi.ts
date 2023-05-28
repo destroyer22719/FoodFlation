@@ -11,7 +11,7 @@ import {
   loaderDisplay,
 } from "../utils/scrapers.js";
 
-export async function getPricesLoblaws(
+export default async function getPricesLoblaws(
   stores: Address[],
   items: string[],
   storeIndexes: StoreIndexes,

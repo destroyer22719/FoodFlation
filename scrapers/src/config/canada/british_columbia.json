@@ -6,7 +6,8 @@
       "city": "Vancouver",
       "province": "British Columbia",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "7494"
     },
     {
       "postalCode": "V7M 2J3",
@@ -14,7 +15,8 @@
       "city": "Vancouver",
       "province": "British Columbia",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "1872"
     },
     {
       "postalCode": "V6J 3Z3",
@@ -22,7 +24,8 @@
       "city": "Vancouver",
       "province": "British Columbia",
       "country": "Canada",
-      "company": "Loblaws"
+      "company": "Loblaws",
+      "otherId": "7491"
     }
   ]
 }
