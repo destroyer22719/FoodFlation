@@ -11,7 +11,7 @@ import {
   loaderDisplay,
 } from "../utils/scrapers.js";
 
-export default async function getPricesLoblaws(
+export default async function getPricesNoFrills(
   stores: Address[],
   items: string[],
   storeIndexes: StoreIndexes,
@@ -37,7 +37,7 @@ export default async function getPricesLoblaws(
     {},
     {
       format:
-        "Loblaws |" +
+        "No Frills |" +
         colors.cyan("{bar}") +
         "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
@@ -52,7 +52,7 @@ export default async function getPricesLoblaws(
     {},
     {
       format:
-        "Items   |" +
+      "Items     |"+
         colors.magenta("{bar}") +
         "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
@@ -72,11 +72,11 @@ export default async function getPricesLoblaws(
   const loader = ora(
     loaderDisplay({
       ...starterLoaderDisplay,
-      message: `Starting Loblaws Scraper`,
+      message: `Starting No Frills Scraper`,
     })
   ).start();
 
-  const companyId = await getCompanyId("Loblaws");
+  const companyId = await getCompanyId("No Frills");
 
   const postalCodes = stores.map((store) => store.postalCode);
 
@@ -95,7 +95,7 @@ export default async function getPricesLoblaws(
       country: "canada",
       province,
       postalCode,
-      name: "Loblaws",
+      name: "No Frills",
     });
 
     loader.color = "green";
