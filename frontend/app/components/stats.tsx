@@ -31,7 +31,7 @@ const Stats: React.FC<Props> = ({ itemTotal, storeTotal }) => {
       setStoreCount((prevNum) =>
         prevNum < storeTotal ? prevNum + 1 : storeTotal
       );
-    }, 50);
+    }, 25);
 
     return () => clearInterval(interval);
   }, []);
