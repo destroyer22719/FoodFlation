@@ -94,7 +94,7 @@ export async function getPricesMetro(
   const loader = ora(
     loaderDisplay({
       ...starterLoaderDisplay,
-      message: `Starting Loblaws Scraper`,
+      message: `Starting Metro Scraper`,
     })
   ).start();
 
