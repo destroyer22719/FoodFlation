@@ -28,5 +28,15 @@
     place-items: center;
     margin: 10px;
     font-size: 25px;
+    animation: 0.5s ease-out 0s 1 slideInFromBottom;
+  }
+
+  @keyframes slideInFromBottom {
+    0% {
+      transform: translateY(100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
   }
 }
