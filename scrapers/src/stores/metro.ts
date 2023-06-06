@@ -138,9 +138,7 @@ export async function getPricesMetro(
 
     await page.click("#submit");
     await page.waitForTimeout(5000);
-    await page.click(
-      "#mapResults > li:nth-child(1) > div.white-wrapper > div > div.row.no-gutters.justify-content-between.align-items-center > div:nth-child(1) > button"
-    );
+    await page.click(".cta-set-store");
     await page.waitForNavigation();
 
     for (const item of items) {
@@ -158,37 +156,59 @@ export async function getPricesMetro(
         message: `${item} at ${postalCode}`,
       });
 
+      await page.goto(
+        `https://www.metro.ca/en/online-grocery/search?filter=${item}`,
+        {
+          waitUntil: "domcontentloaded",
+        }
+      );
+
       //retrieves the value of the first 3 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = Array.from(
-          document.querySelectorAll(".defaultable-picture > img")
-        ).map((x) => (x as HTMLImageElement).alt); // const price = document.querySelectorAll(".pi--main-price");
 
-        let prices = Array.from(document.querySelectorAll(".price-update")).map(
-          (x) => (x as HTMLElement).innerText.slice(1)
+        const items = Array.from(
+          document.querySelectorAll(".searchOnlineResults > .tile-product")
         );
-        const prodTile = Array.from(document.querySelectorAll(".tile-product"));
 
-        const img = Array.from(
-          document.querySelectorAll(".defaultable-picture > img")
-        ).map((x) => (x as HTMLImageElement).src);
+        const totalIters = Math.min(items.length, 5);
 
-        const totalIters = name.length > 3 ? 3 : name.length;
         for (let i = 0; i < totalIters; i++) {
-          let price = prices[i];
-          //for in case there is a promotion like 2 / $5 then use the price of per unit
-          if (price.includes("/")) {
-            price = (prodTile[i].querySelector(
-              ".pricing__secondary-price > span"
-            ) as HTMLElement)!.innerText.slice(4);
-            prices.splice(i + 1, 1);
+          const item = items[i];
+
+          const imgElem = item.querySelector("picture img") as HTMLImageElement;
+          const name = imgElem.alt;
+          const imgUrl = imgElem.src;
+
+          const isAveraged =
+            item.querySelector('abbr[title="average"]') !== null;
+
+          let price, unit;
+
+          if (isAveraged) {
+            const text = (
+              item.querySelector(
+                ".pricing__secondary-price > span"
+              ) as HTMLElement
+            ).innerText;
+            unit = text.split("/")[1].trim();
+            price = parseFloat(text.split("/")[0].trim().slice(1));
+          } else {
+            unit = (item.querySelector(".head__unit-details") as HTMLElement)
+              .innerText;
+
+            price = parseFloat(
+              (
+                item.querySelector("div[data-main-price]") as HTMLElement
+              ).getAttribute("data-main-price")!
+            );
           }
 
           results.push({
-            name: name[i],
-            price: parseFloat(price),
-            imgUrl: img[i],
+            name,
+            imgUrl,
+            price,
+            unit,
           });
         }
 
