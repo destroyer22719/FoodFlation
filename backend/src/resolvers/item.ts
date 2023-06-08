@@ -198,11 +198,8 @@ export const itemCityResolver = async (
           prices 
         WHERE 
           items.id = prices.itemId 
-          AND prices.createdAt >= NOW() - INTERVAL 7 DAY 
-        ORDER BY 
-          prices.createdAt DESC 
-        LIMIT 
-          1
+          AND prices.createdAt >= NOW() - INTERVAL 7 DAY
+        LIMIT 1
       ) 
     WHERE 
       stores.city = ${city}
