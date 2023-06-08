@@ -47,6 +47,7 @@ type Item {
   category: String!
   stores: Store!
   prices: [Price!]!
+  unit: String!
 }
 
 type Price {
