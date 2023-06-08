@@ -119,7 +119,7 @@ export const itemCityResolver = async (
   ctx: Context
 ) => {
   page ||= 1;
-
+ 
   type PreMappedItems = Items & {
     stores_id: string;
     stores_name: string;
@@ -187,19 +187,24 @@ export const itemCityResolver = async (
     LIMIT 10 OFFSET ${(page - 1) * 10}
   `;
   const getItemsCountQuery = ctx.prisma.$queryRaw<{ "COUNT(*)": bigint }[]>`
-  SELECT COUNT(*)
-  FROM
-    stores
-    INNER JOIN items ON stores.id = items.storeId
-    INNER JOIN (
-      SELECT *
-      FROM prices
-      WHERE createdAt >= NOW() - INTERVAL 7 DAY
-    ) as prices ON items.id = prices.itemId
-  WHERE 
-    stores.city = ${city}
-    AND items.name LIKE ${`%${search}%`}
-`;
+    SELECT COUNT(*)
+    FROM
+      stores 
+      INNER JOIN items ON stores.id = items.storeId 
+      INNER JOIN prices ON prices.id = (
+        SELECT 
+          id 
+        FROM 
+          prices 
+        WHERE 
+          items.id = prices.itemId 
+          AND prices.createdAt >= NOW() - INTERVAL 7 DAY
+        LIMIT 1
+      ) 
+    WHERE 
+      stores.city = ${city}
+      AND items.name LIKE ${`%${search}%`}
+  `;
 
   let [query, resultsFound] = await Promise.all([
     getItemsQuery,
