@@ -2,11 +2,12 @@ import { FieldNode, GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Context } from "../db/context.js";
 import {
   Item,
+  ItemCitySearchResult,
   QueryItemArgs,
   QueryItemsFromCityArgs,
   QueryItemsFromStoreArgs,
 } from "./resolvers-types.js";
-import { Items, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 function round(num: number) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
@@ -120,7 +121,7 @@ export const itemCityResolver = async (
 ) => {
   page ||= 1;
  
-  type PreMappedItems = Items & {
+  type PreMappedItems = Item & {
     stores_id: string;
     stores_name: string;
     stores_street: string;
@@ -250,7 +251,7 @@ export const itemCityResolver = async (
   return {
     items: parsedQuery,
     resultsFound: Number(resultsFound[0]["COUNT(*)"]),
-  };
+  } as unknown as ItemCitySearchResult;
 };
 
 export const itemCountResolver = async (_: {}, __: {}, ctx: Context) => {
