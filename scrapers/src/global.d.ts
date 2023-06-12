@@ -10,6 +10,7 @@ declare global {
     province?: string;
     state?: string;
     company: CompanyName;
+    otherId?: string;
   }
 
   type CanadianStoresOptions = {
@@ -100,6 +101,28 @@ declare global {
     totalStores: number;
     storeScrapedIndex: number;
     message?: string;
+  };
+
+  type LoblawsApiRes = {
+    results: {
+      name: string;
+      brand: string;
+      imageAssets: {
+        mediumUrl: string;
+      }[];
+      packageSize: string;
+      prices: {
+        price: {
+          value: number;
+          unit: string;
+          quantity: number;
+        };
+        comparisonPrices: {
+          value: number;
+          unit: string;
+        }[];
+      };
+    }[];
   };
 }
 

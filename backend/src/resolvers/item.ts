@@ -2,10 +2,16 @@ import { FieldNode, GraphQLError, GraphQLResolveInfo } from "graphql";
 import { Context } from "../db/context.js";
 import {
   Item,
+  ItemCitySearchResult,
   QueryItemArgs,
   QueryItemsFromCityArgs,
   QueryItemsFromStoreArgs,
 } from "./resolvers-types.js";
+import { Prisma } from "@prisma/client";
+
+function round(num: number) {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
 
 export const itemResolver = async (
   _: {},
@@ -28,7 +34,7 @@ export const itemResolver = async (
         skip: offset || 0,
         orderBy: {
           createdAt: "asc",
-        }
+        },
       },
     },
   });
@@ -113,35 +119,135 @@ export const itemCityResolver = async (
   { city, page, search, sortByPrice, sortByAsc }: QueryItemsFromCityArgs,
   ctx: Context
 ) => {
-  const searchQuery = {
-    name: {
-      search,
-    },
-    stores: {
-      city,
-    },
+  page ||= 1;
+ 
+  type PreMappedItems = Item & {
+    stores_id: string;
+    stores_name: string;
+    stores_street: string;
+    stores_city: string;
+    stores_postalCode: string;
+    stores_companyId: string;
+    stores_createdAt: string;
+    stores_updatedAt: string;
+    stores_province: string;
+    stores_state: string | null;
+    stores_zipCode: string | null;
+    stores_country: string;
+    prices_id: string;
+    prices_price: number;
+    prices_createdAt: string;
+    prices_updatedAt: string;
+    prices_itemId: string;
   };
 
-  let [items, resultsFound] = await Promise.all([
-    ctx.prisma.items.findMany({
-      where: searchQuery,
-      skip: ((page || 1) - 1) * 10,
-      take: 10,
-      include: {
-        prices: {
-          take: 1,
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        stores: true,
-      },
-    }),
-    ctx.prisma.items.count({
-      where: searchQuery,
-    }),
+  const getItemsQuery = ctx.prisma.$queryRaw<PreMappedItems[]>`
+    SELECT 
+      items.*,
+      stores.id AS stores_id,
+      stores.name AS stores_name,
+      stores.street AS stores_street,
+      stores.city AS stores_city,
+      stores.postalCode AS stores_postalCode,
+      stores.companyId AS stores_companyId,
+      stores.createdAt AS stores_createdAt,
+      stores.updatedAt AS stores_updatedAt,
+      stores.province AS stores_province,
+      stores.state AS stores_state,
+      stores.zipCode AS stores_zipCode,
+      stores.country AS stores_country,
+      stores.country AS stores_country,
+      prices.id AS prices_id,
+      prices.price AS prices_price,
+      prices.createdAt AS prices_createdAt,
+      prices.updatedAt AS prices_updatedAt,
+      prices.itemId AS prices_itemId
+    FROM
+      stores 
+      INNER JOIN items ON stores.id = items.storeId 
+      INNER JOIN prices ON prices.id = (
+        SELECT 
+          id 
+        FROM 
+          prices 
+        WHERE 
+          items.id = prices.itemId 
+          AND prices.createdAt >= NOW() - INTERVAL 7 DAY 
+        ORDER BY 
+          prices.createdAt DESC 
+        LIMIT 
+          1
+      ) 
+    WHERE 
+      stores.city = ${city}
+      AND items.name LIKE ${`%${search}%`} 
+      ORDER BY ${
+        sortByPrice ? Prisma.sql`prices.price` : Prisma.sql`prices.createdAt`
+      } 
+      ${sortByAsc ? Prisma.sql`ASC` : Prisma.sql`DESC`}
+    LIMIT 10 OFFSET ${(page - 1) * 10}
+  `;
+  const getItemsCountQuery = ctx.prisma.$queryRaw<{ "COUNT(*)": bigint }[]>`
+    SELECT COUNT(*)
+    FROM
+      stores 
+      INNER JOIN items ON stores.id = items.storeId 
+      INNER JOIN prices ON prices.id = (
+        SELECT 
+          id 
+        FROM 
+          prices 
+        WHERE 
+          items.id = prices.itemId 
+          AND prices.createdAt >= NOW() - INTERVAL 7 DAY
+        LIMIT 1
+      ) 
+    WHERE 
+      stores.city = ${city}
+      AND items.name LIKE ${`%${search}%`}
+  `;
+
+  let [query, resultsFound] = await Promise.all([
+    getItemsQuery,
+    getItemsCountQuery,
   ]);
 
+<<<<<<< HEAD
+  const parsedQuery = query.map((item) => {
+    return {
+      id: item.id,
+      name: item.name,
+      storeId: item.storeId,
+      imgUrl: item.imgUrl,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      category: item.category,
+      unit: item.unit,
+      stores: {
+        id: item.stores_id,
+        name: item.stores_name,
+        street: item.stores_street,
+        city: item.stores_city,
+        postalCode: item.stores_postalCode,
+        companyId: item.stores_companyId,
+        createdAt: item.stores_createdAt,
+        updatedAt: item.stores_updatedAt,
+        province: item.stores_province,
+        state: item.stores_state,
+        zipCode: item.stores_zipCode,
+        country: item.stores_country,
+      },
+      prices: [
+        {
+          id: item.prices_id,
+          price: round(item.prices_price),
+          createdAt: item.prices_createdAt,
+          updatedAt: item.prices_updatedAt,
+          itemId: item.prices_itemId,
+        },
+      ],
+    };
+=======
   items = items.sort((a, b) => {
     if (sortByPrice) {
       if (sortByAsc) {
@@ -151,14 +257,24 @@ export const itemCityResolver = async (
       }
     } else {
       if (sortByAsc) {
-        return new Date(a.prices[0].createdAt).getTime() - new Date(b.prices[0].createdAt).getTime();
+        return (
+          new Date(a.prices[0].createdAt).getTime() -
+          new Date(b.prices[0].createdAt).getTime()
+        );
       } else {
-        return new Date(b.prices[0].createdAt).getTime() - new Date(a.prices[0].createdAt).getTime();
+        return (
+          new Date(b.prices[0].createdAt).getTime() -
+          new Date(a.prices[0].createdAt).getTime()
+        );
       }
     }
+>>>>>>> scrapers-foodflation-v2
   });
 
-  return { items: items as unknown as Item[], resultsFound };
+  return {
+    items: parsedQuery,
+    resultsFound: Number(resultsFound[0]["COUNT(*)"]),
+  } as unknown as ItemCitySearchResult;
 };
 
 export const itemCountResolver = async (_: {}, __: {}, ctx: Context) => {

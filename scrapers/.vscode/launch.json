@@ -12,7 +12,7 @@
       "preLaunchTask": "npm: debug",
       "outFiles": ["${workspaceFolder}/dist/**"],
       "skipFiles": ["<node_internals>/**"],
-      "args": ["--canada", "--loblaws", "--storeStart=2"]
+      "args": ["--usa", "--itemStart=22"]
     }
   ]
 }

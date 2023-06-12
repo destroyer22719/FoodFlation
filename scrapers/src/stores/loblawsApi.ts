@@ -1,18 +1,17 @@
-import puppeteer from "puppeteer";
+import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
-import cliProgress from "cli-progress";
 
 import {
   defaultItems,
   getCompanyId,
-  getStoreId,
-  loaderDisplay,
   msToTime,
   updateItems,
+  getStoreId,
+  loaderDisplay,
 } from "../utils/scrapers.js";
 
-export async function getPricesMetro(
+export default async function getPricesLoblaws(
   stores: Address[],
   items: string[],
   storeIndexes: StoreIndexes,
@@ -23,26 +22,6 @@ export async function getPricesMetro(
   }
 
   const startTime = Date.now();
-
-  const browser = await puppeteer.launch({
-    headless: process.argv.includes("--debug") ? false : "new",
-    ignoreHTTPSErrors: true,
-  });
-
-  const page = await browser.newPage();
-  //disables location
-  const context = browser.defaultBrowserContext();
-  await context.overridePermissions("https://www.Metro.ca/cp/grocery", [
-    "geolocation",
-  ]);
-
-  await page.setRequestInterception(true);
-
-  page.on("request", (req) => {
-    if (req.resourceType() === "stylesheet" || req.resourceType() === "font")
-      req.abort();
-    else req.continue();
-  });
 
   const multiBar = new cliProgress.MultiBar(
     {
@@ -58,7 +37,7 @@ export async function getPricesMetro(
     {},
     {
       format:
-        "Metro |" +
+        "Loblaws |" +
         colors.cyan("{bar}") +
         "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
@@ -73,7 +52,7 @@ export async function getPricesMetro(
     {},
     {
       format:
-        "Items |" +
+        "Items   |" +
         colors.magenta("{bar}") +
         "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
@@ -82,7 +61,6 @@ export async function getPricesMetro(
 
   //this is a cheap workaround for combining multiple bars with ora spinners
   multiBar.create(0, 0);
-
   const starterLoaderDisplay: LoaderDisplayParams = {
     itemIndex: 0,
     totalItems: defaultItems.length,
@@ -94,30 +72,30 @@ export async function getPricesMetro(
   const loader = ora(
     loaderDisplay({
       ...starterLoaderDisplay,
-      message: `Starting Metro Scraper`,
+      message: `Starting Loblaws Scraper`,
     })
   ).start();
 
-  const companyId = await getCompanyId("Metro");
+  const companyId = await getCompanyId("Loblaws");
 
   const postalCodes = stores.map((store) => store.postalCode);
 
   for (const store of stores) {
     //searches up store postal code directly and set the store location
-    let { city, postalCode, province, country, street } = store;
+    let { city, postalCode, province, country, street, otherId } = store;
 
     postalCode = postalCode as string;
     province = province as string;
     country = country as Country;
 
     const storeId = await getStoreId({
-      street,
-      city,
-      province,
-      country: "canada",
-      postalCode,
       companyId,
-      name: "Metro",
+      city,
+      street,
+      country: "canada",
+      province,
+      postalCode,
+      name: "Loblaws",
     });
 
     loader.color = "green";
@@ -127,22 +105,7 @@ export async function getPricesMetro(
       message: `Scraping ${postalCode}...`,
     });
 
-    await page.goto("https://www.metro.ca/en/find-a-grocery");
-
-    await page.waitForSelector("#postalCode");
-    await page.$eval(
-      "#postalCode",
-      (input, pc) => ((input as HTMLInputElement).value = pc as string),
-      postalCode
-    );
-
-    await page.click("#submit");
-    await page.waitForTimeout(5000);
-    await page.click(".cta-set-store");
-    await page.waitForNavigation();
-
     for (const item of items) {
-      //searches up the price of each item
       loader.color = "green";
 
       const loaderData: LoaderDisplayParams = {
@@ -156,63 +119,55 @@ export async function getPricesMetro(
         message: `${item} at ${postalCode}`,
       });
 
-      await page.goto(
-        `https://www.metro.ca/en/online-grocery/search?filter=${item}`,
+      const req = await fetch(
+        "https://api.pcexpress.ca/product-facade/v3/products/search",
         {
-          waitUntil: "domcontentloaded",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-apikey": " 1im1hL52q9xvta16GlSdYDsTsG0dmyhF",
+          },
+          body: JSON.stringify({
+            pagination: {
+              from: 0,
+              size: 10,
+            },
+            lang: "en",
+            storeId: otherId,
+            banner: "loblaw",
+            pickupType: "STORE",
+            term: item,
+            cartId: "9aaf26ca-190e-44e1-9a89-4b233fd48ef2",
+          }),
         }
       );
+      const res: LoblawsApiRes = await req.json();
+      const { results } = res;
 
-      //retrieves the value of the first 3 items
-      const results = await page.evaluate(() => {
-        const results = [];
+      const resultsParsed = results.map((result) => {
+        const { prices, name, brand, imageAssets, packageSize } = result;
 
-        const items = Array.from(
-          document.querySelectorAll(".searchOnlineResults > .tile-product")
-        );
-
-        const totalIters = Math.min(items.length, 5);
-
-        for (let i = 0; i < totalIters; i++) {
-          const item = items[i];
-
-          const imgElem = item.querySelector("picture img") as HTMLImageElement;
-          const name = imgElem.alt;
-          const imgUrl = imgElem.src;
-
-          const isAveraged =
-            item.querySelector('abbr[title="average"]') !== null;
-
-          let price, unit;
-
-          if (isAveraged) {
-            const text = (
-              item.querySelector(
-                ".pricing__secondary-price > span"
-              ) as HTMLElement
-            ).innerText;
-            unit = text.split("/")[1].trim();
-            price = parseFloat(text.split("/")[0].trim().slice(1));
-          } else {
-            unit = (item.querySelector(".head__unit-details") as HTMLElement)
-              .innerText;
-
-            price = parseFloat(
-              (
-                item.querySelector("div[data-main-price]") as HTMLElement
-              ).getAttribute("data-main-price")!
-            );
-          }
-
-          results.push({
-            name,
-            imgUrl,
-            price,
-            unit,
-          });
+        let price: number, unit: string;
+        if (!packageSize && prices.price.unit === "ea") {
+          price = prices.comparisonPrices[1].value;
+          unit = prices.comparisonPrices[1].unit;
+        }
+        if (!packageSize && prices.price.unit !== "ea") {
+          price = prices.price.value;
+          unit = `${prices.price.quantity}${prices.price.unit}}`
+        } else {
+          price = prices.price.value;
+          unit = packageSize;
         }
 
-        return results;
+        return {
+          price,
+          name: `${brand ? `${brand},` : ""} ${name} ${
+            packageSize ? `(${packageSize})` : ""
+          }`.trim(),
+          imgUrl: imageAssets[0].mediumUrl,
+          unit,
+        };
       });
 
       loader.text = loaderDisplay({
@@ -221,8 +176,8 @@ export async function getPricesMetro(
       });
 
       await updateItems({
-        results,
         storeId,
+        results: resultsParsed,
       });
 
       loader.text = loaderDisplay({
@@ -233,23 +188,22 @@ export async function getPricesMetro(
       itemBar.increment(1);
       storeIndexes.itemIndex++;
     }
+
     // if itemStart is set, reset it back to the original for the next store
     if (items.length !== defaultItems.length) {
       items = defaultItems;
     }
 
-    storeBar.increment(1);
     storeIndexes.storeIndex++;
+    storeBar.increment(1);
     itemBar.update(0);
   }
 
   itemBar.update(items.length);
-
   storeBar.stop();
   itemBar.stop();
   multiBar.stop();
   loader.stop();
-  await browser.close();
 
   const endTime = Date.now();
   const timeTaken = endTime - startTime;

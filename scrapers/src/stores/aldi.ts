@@ -37,6 +37,17 @@ export async function getPricesAldi(
     ["geolocation"]
   );
 
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    if (
+      ["image", "stylesheet", "font", "other"].includes(request.resourceType())
+    ) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
+
   const multiBar = new cliProgress.MultiBar(
     {
       clearOnComplete: false,
@@ -92,7 +103,6 @@ export async function getPricesAldi(
   ).start();
 
   const companyId = await getCompanyId("Aldi");
-
   const zipCodes = stores.map((store) => store.zipCode);
 
   for (const store of stores) {
@@ -108,6 +118,7 @@ export async function getPricesAldi(
       ...starterLoaderDisplay,
       storeIndex: zipCodes.indexOf(zipCode),
       message: `Searching for ${zipCode}`,
+      storeScrapedIndex: storeIndexes.storeIndex,
     });
 
     const storeId = await getStoreId({
@@ -142,34 +153,51 @@ export async function getPricesAldi(
       await page.goto(`https://shop.aldi.us/store/aldi/search/${item}`, {
         waitUntil: "domcontentloaded",
       });
-      await page.waitForSelector('div[aria-label^="$"]', {
-        timeout: 60 * 60 * 1000,
-        visible: true,
-      });
-      await page.waitForSelector("a>div+div>div>span", {
-        timeout: 60 * 60 * 1000,
-        visible: true,
-      });
-      //retrieves the value of the first 3 items
+
+      await page.waitForFunction(
+        () => {
+          const matches = Array.from(
+            document.querySelectorAll('div[aria-label^="$"]')
+          );
+          return matches.length >= 5 ? matches : null;
+        },
+        {
+          timeout: 60 * 60 * 1000,
+        }
+      );
+      await page.waitForTimeout(2000)
+      //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
-        const name = document.querySelectorAll("a>div+div>div>span");
-        const price = document.querySelectorAll('div[aria-label^="$"]');
-        const img = document.querySelectorAll("li img[srcset]");
 
-        //finds a maximum of 3 of each item
-        const totalIters = Math.min(name.length, 5);
+        const items = Array.from(
+          document.querySelectorAll('div[aria-label="Product"]')
+        );
+
+        const totalIters = Math.min(items.length, 5);
         for (let i = 0; i < totalIters; i++) {
+          const item = items[i];
+          const price = +item
+            .querySelector('div[aria-label^="$"]')!
+            .getAttribute("aria-label")!
+            .match(/(?<=\$)(\d|\.)+/gm)![0];
+          const name = (item.querySelector("a>div+div>div>span") as HTMLElement)
+            .innerText;
+          const imgUrl = (
+            item.querySelector("img[srcset]") as HTMLImageElement
+          ).srcset.split(", ")[0];
+          let unit =
+            (item.querySelector("div[title]") as HTMLElement | null)
+              ?.innerText ?? "unit";
+          if (unit !== "unit" && unit.includes("/")) {
+            unit = "unit";
+          }
+
           results.push({
-            name: (<HTMLElement>name[i]).innerText,
-            price: parseFloat(
-              (<HTMLElement>price[i])
-                .getAttribute("aria-label")!
-                .match(/(?<=\$)(\d|\.)+/gm)![0]
-            ),
-            imgUrl: (<HTMLImageElement>img[i]).srcset
-              .split(", ")
-              .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
+            name,
+            price,
+            imgUrl,
+            unit,
           });
         }
 
