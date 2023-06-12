@@ -151,10 +151,13 @@ export async function getPricesLoblaws(
 
         let price: number, unit: string;
 
-        if (!packageSize) {
+        if (!packageSize && prices.comparisonPrices.length > 1) {
           price = prices.comparisonPrices[1].value;
           unit = prices.comparisonPrices[1].unit;
-        } else {
+        } else if (!packageSize && prices.comparisonPrices.length > 0) {
+          price = prices.comparisonPrices[0].value;
+          unit = prices.comparisonPrices[0].unit;
+        }else {
           price = prices.price.value;
           unit = packageSize;
         }
