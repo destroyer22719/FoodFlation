@@ -25,8 +25,10 @@ export async function getPricesLoblaws(
   const startTime = Date.now();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    protocolTimeout: 999999,
+    headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
+    defaultViewport: null,
   });
 
   const page = await browser.newPage();
@@ -162,38 +164,124 @@ export async function getPricesLoblaws(
         message: `${item} at ${postalCode}`,
       });
 
-      await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {});
-      await page.waitForSelector(".product-tile__thumbnail__image", {
+      await page.goto(`https://www.loblaws.ca/search?search-bar=${item}`, {
+        waitUntil: "domcontentloaded",
+      });
+
+      await page.waitForSelector(".product-tile-group__list__item", {
         timeout: 60 * 1000,
       });
 
-      //retrieves the value of the first 3 items
+      // await page.waitForFunction(
+      //   () => {
+      //     const matches = Array.from(
+      //       document.querySelectorAll(
+      //         ".product-tile__thumbnail__image img.responsive-image"
+      //       )
+      //     );
+      //     return matches.length >= 5 ? matches : null;
+      //   },
+      //   {
+      //     timeout: 60 * 60 * 1000,
+      //   }
+      // );
+
+      // const footer = await page.$("#site-footer");
+      // await footer?.scrollIntoView();
+      await page.evaluate(() => {
+        window.scrollBy(0, window.innerHeight);
+      });
+      await page.waitForTimeout(9999999);
+
+      //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
 
-        const name = document.getElementsByClassName(
-          "product-name__item product-name__item--name"
+        const items = document.querySelectorAll(
+          ".product-tile-group__list__item"
         );
-        const price = document.querySelectorAll(
-          ".selling-price-list__item__price--now-price__value"
-        );
-        const img = document.querySelectorAll(
-          ".product-tile__thumbnail__image > img"
-        );
-
-        //finds a maximum of 3 of each item
-        const totalIters = name.length > 3 ? 3 : name.length;
+        let totalIters = Math.min(items.length, 5);
 
         let i = 0;
         while (i < totalIters) {
+          const isSponsored =
+            (
+              items[i].querySelector(
+                ".product-tile__eyebrow>.product-badge__text.product-badge__text--product-tile"
+              ) as HTMLElement
+            ).innerText !== "";
+          if (isSponsored) {
+            i++;
+            totalIters++;
+            continue;
+          }
+
+          const brand =
+            (
+              items[i].querySelector(
+                ".product-name.product-name--product-tile .product-name__item--brand"
+              ) as HTMLElement
+            )?.innerText ?? "";
+          const name = (
+            items[i].querySelector(
+              ".product-name.product-name--product-tile .product-name__item--name"
+            ) as HTMLElement
+          ).innerText;
+
+          let price: number;
+          let unit: string;
+
+          const isEstimate =
+            (
+              (items[i].querySelector(
+                ".price__type.selling-price-list__item__price.selling-price-list__item__price--now-price__type"
+              ) as HTMLElement) || null
+            )?.innerText === "(est.)";
+
+          if (isEstimate) {
+            price = parseFloat(
+              (
+                items[i].querySelectorAll(
+                  ".price__value.comparison-price-list__item__price__value"
+                )[1] as HTMLElement
+              ).innerText.slice(1)
+            );
+            unit = (
+              items[i].querySelectorAll(
+                ".price__unit.comparison-price-list__item__price__unit"
+              )[1] as HTMLElement
+            ).innerText.slice(2);
+          } else {
+            unit = (
+              items[i].querySelector(
+                ".product-name.product-name--product-tile .product-name__item--package-size"
+              ) as HTMLElement
+            ).innerText;
+            price = parseFloat(
+              (
+                items[i].querySelector(
+                  ".price__value.selling-price-list__item__price.selling-price-list__item__price--now-price__value"
+                ) as HTMLElement
+              ).innerText.slice(1)
+            );
+          }
+
+          const imgUrl = (
+            items[i].querySelector(
+              ".product-tile__thumbnail__image img.responsive-image"
+            ) as HTMLImageElement
+          ).src;
+
           results.push({
-            name: (<HTMLElement>name[i]).innerText,
-            price: parseFloat((<HTMLElement>price[i]).innerText.slice(1)),
-            imgUrl: (<HTMLImageElement>img[i]).src,
+            name: `${brand ? `${brand}, ` : ""} ${name} ${
+              !isEstimate ? `(${unit})` : ""
+            }`.trim(),
+            price,
+            imgUrl,
+            unit,
           });
           i++;
         }
-
         return results;
       });
 

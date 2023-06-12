@@ -10,6 +10,7 @@ declare global {
     province?: string;
     state?: string;
     company: CompanyName;
+    otherId?: string;
   }
 
   type CanadianStoresOptions = {
@@ -114,6 +115,7 @@ declare global {
         price: {
           value: number;
           unit: string;
+          quantity: number;
         };
         comparisonPrices: {
           value: number;

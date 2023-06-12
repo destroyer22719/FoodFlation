@@ -212,6 +212,7 @@ export const itemCityResolver = async (
     getItemsCountQuery,
   ]);
 
+<<<<<<< HEAD
   const parsedQuery = query.map((item) => {
     return {
       id: item.id,
@@ -246,6 +247,28 @@ export const itemCityResolver = async (
         },
       ],
     };
+=======
+  items = items.sort((a, b) => {
+    if (sortByPrice) {
+      if (sortByAsc) {
+        return a.prices[0].price - b.prices[0].price;
+      } else {
+        return b.prices[0].price - a.prices[0].price;
+      }
+    } else {
+      if (sortByAsc) {
+        return (
+          new Date(a.prices[0].createdAt).getTime() -
+          new Date(b.prices[0].createdAt).getTime()
+        );
+      } else {
+        return (
+          new Date(b.prices[0].createdAt).getTime() -
+          new Date(a.prices[0].createdAt).getTime()
+        );
+      }
+    }
+>>>>>>> scrapers-foodflation-v2
   });
 
   return {
