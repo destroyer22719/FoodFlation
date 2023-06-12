@@ -185,32 +185,41 @@ export async function scrapeStores(
     console.log(`${prov}, Canada`);
 
     const loblawsStores = allLoblawsStores.slice(counter.count);
-    await getPricesLoblaws(
-      loblawsStores,
-      currentItemList,
-      storeIndexes,
-      counter.count
-    );
+    if (loblawsStores.length) {
+      await getPricesLoblaws(
+        loblawsStores,
+        currentItemList,
+        storeIndexes,
+        counter.count
+      );
+      currentItemList = items;
+    }
 
     counter.subtract(Math.min(allLoblawsStores.length, counter.count));
     const metroStores = allMetroStores.slice(counter.count);
 
-    await getPricesMetro(
-      metroStores,
-      currentItemList,
-      storeIndexes,
-      counter.count
-    );
+    if (metroStores.length) {
+      await getPricesMetro(
+        metroStores,
+        currentItemList,
+        storeIndexes,
+        counter.count
+      );
+      currentItemList = items;
+    }
 
     counter.subtract(Math.min(allMetroStores.length, counter.count));
     const noFrillsStores = allNoFrillsStores.slice(counter.count);
 
-    await getPricesNoFrills(
-      noFrillsStores,
-      currentItemList,
-      storeIndexes,
-      counter.count
-    );
+    if (noFrillsStores.length) {
+      await getPricesNoFrills(
+        noFrillsStores,
+        currentItemList,
+        storeIndexes,
+        counter.count
+      );
+      currentItemList = items;
+    }
 
     storeStartSetOrNotFound = false;
   }
@@ -246,24 +255,30 @@ export async function scrapeStores(
     console.log(`${state}, United States`);
     const aldiStores = allAldiStores.slice(counter.count);
 
-    await getPricesAldi(
-      aldiStores,
-      currentItemList,
-      storeIndexes,
-      counter.count
-    );
+    if (aldiStores.length) {
+      await getPricesAldi(
+        aldiStores,
+        currentItemList,
+        storeIndexes,
+        counter.count
+      );
+      currentItemList = items;
+    }
 
     counter.subtract(Math.min(allAldiStores.length, counter.count));
     const wholeFoodsMarketStores = allWholeFoodsMarketStores.slice(
       counter.count
     );
 
-    await getPricesWholeFoodsMarket(
-      wholeFoodsMarketStores,
-      currentItemList,
-      storeIndexes,
-      counter.count
-    );
+    if (wholeFoodsMarketStores.length) {
+      await getPricesWholeFoodsMarket(
+        wholeFoodsMarketStores,
+        currentItemList,
+        storeIndexes,
+        counter.count
+      );
+      currentItemList = items;
+    }
 
     storeStartSetOrNotFound = false;
   }
