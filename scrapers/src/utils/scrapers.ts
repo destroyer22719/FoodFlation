@@ -8,9 +8,7 @@ export const msToTime = (ms: number): string => {
   const minutes = Math.floor((ms % 3600000) / 60000);
   const seconds = Math.floor(((ms % 3600000) % 60000) / 1000);
 
-  return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
+  return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 };
 
 export const defaultItems = [
@@ -50,12 +48,7 @@ export const defaultItems = [
 
 const __dirname = path.resolve();
 
-const item2category = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, "src", "config", "item2category.json"),
-    "utf-8"
-  )
-);
+const item2category = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "config", "item2category.json"), "utf-8"));
 
 export const getCompanyId = async (name: string) => {
   const company = await prisma.companies.upsert({
@@ -94,22 +87,21 @@ export const getStoreId = async ({
         name,
         street,
         city,
-        country,
         companyId,
         ...(isCanada
           ? {
+              country: "Canada",
               postalCode,
               province,
             }
           : {
+              country: "United States",
               zipCode,
               state,
             }),
       },
     });
-    console.log(
-      `Created ${store.name} in ${store.city}, ${store.country} | ${store.id}`
-    );
+    console.log(`Created ${store.name} in ${store.city}, ${store.country} | ${store.id}`);
   }
 
   return store.id;
