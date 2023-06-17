@@ -120,7 +120,7 @@ export const itemCityResolver = async (
   ctx: Context
 ) => {
   page ||= 1;
- 
+
   type PreMappedItems = Item & {
     stores_id: string;
     stores_name: string;
@@ -180,10 +180,8 @@ export const itemCityResolver = async (
       ) 
     WHERE 
       stores.city = ${city}
-      AND items.name LIKE ${`%${search}%`} 
-      ORDER BY ${
-        sortByPrice ? Prisma.sql`prices.price` : Prisma.sql`prices.createdAt`
-      } 
+      AND MATCH (items.name) AGAINST (${search} IN BOOLEAN MODE)
+      ORDER BY ${sortByPrice ? Prisma.sql`prices.price` : Prisma.sql`prices.createdAt`} 
       ${sortByAsc ? Prisma.sql`ASC` : Prisma.sql`DESC`}
     LIMIT 10 OFFSET ${(page - 1) * 10}
   `;
@@ -204,15 +202,11 @@ export const itemCityResolver = async (
       ) 
     WHERE 
       stores.city = ${city}
-      AND items.name LIKE ${`%${search}%`}
+      AND MATCH (items.name) AGAINST (${search} IN BOOLEAN MODE)
   `;
 
-  let [query, resultsFound] = await Promise.all([
-    getItemsQuery,
-    getItemsCountQuery,
-  ]);
+  let [query, resultsFound] = await Promise.all([getItemsQuery, getItemsCountQuery]);
 
-<<<<<<< HEAD
   const parsedQuery = query.map((item) => {
     return {
       id: item.id,
@@ -247,28 +241,6 @@ export const itemCityResolver = async (
         },
       ],
     };
-=======
-  items = items.sort((a, b) => {
-    if (sortByPrice) {
-      if (sortByAsc) {
-        return a.prices[0].price - b.prices[0].price;
-      } else {
-        return b.prices[0].price - a.prices[0].price;
-      }
-    } else {
-      if (sortByAsc) {
-        return (
-          new Date(a.prices[0].createdAt).getTime() -
-          new Date(b.prices[0].createdAt).getTime()
-        );
-      } else {
-        return (
-          new Date(b.prices[0].createdAt).getTime() -
-          new Date(a.prices[0].createdAt).getTime()
-        );
-      }
-    }
->>>>>>> scrapers-foodflation-v2
   });
 
   return {
