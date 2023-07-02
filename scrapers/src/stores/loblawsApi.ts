@@ -151,10 +151,9 @@ export default async function getPricesLoblaws(
         if (!packageSize && prices.price.unit === "ea") {
           price = prices.comparisonPrices[1].value;
           unit = prices.comparisonPrices[1].unit;
-        }
-        if (!packageSize && prices.price.unit !== "ea") {
+        } else if (!packageSize && prices.price.unit !== "ea") {
           price = prices.price.value;
-          unit = `${prices.price.quantity}${prices.price.unit}}`
+          unit = `${prices.price.quantity}${prices.price.unit}`
         } else {
           price = prices.price.value;
           unit = packageSize;
