@@ -9,6 +9,7 @@ declare global {
     category: string;
     storeId: string;
     prices: Price[];
+    unit: string;
   }
 
   interface Price {

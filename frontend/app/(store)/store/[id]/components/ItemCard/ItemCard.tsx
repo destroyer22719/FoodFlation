@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ItemCard = ({ item }: Props) => {
-  const { category, id, imgUrl, name, prices } = item;
+  const { category, id, imgUrl, name, prices, unit } = item;
 
   if (prices.length === 0) {
     return <></>;
@@ -21,17 +21,13 @@ const ItemCard = ({ item }: Props) => {
   return (
     <Link href={`/item/${id}`}>
       <div className={styles["item-card"]}>
-        <Image
-          alt={name}
-          height={250}
-          width={250}
-          src={imgUrl}
-          className={styles["item-card__image"]}
-        />
+        <Image alt={name} height={250} width={250} src={imgUrl} className={styles["item-card__image"]} />
         <div className={styles["item-card__info"]}>
           <CategoryIcon category={category} />
           <div className={styles["item-card__price"]}>
-            <div>$ {price}</div>
+            <div>
+              $ {price} / {unit || "unit"}
+            </div>
           </div>
         </div>
         <h3>{name}</h3>
