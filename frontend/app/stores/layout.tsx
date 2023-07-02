@@ -12,6 +12,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const { locations: locationData, companies } =
     await getLocationsAndCompanies();
 
+  console.log(locationData);
+
   const locations: LocationObj = {};
   locationData.forEach(({ _count, city, country, province, state }) => {
     if (!locations[country]) {
@@ -25,6 +27,10 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     }
     if (city && !locations[country][state || province!][city]) {
       locations[country][state || province!][city] = _count;
+    }
+
+    if (country === "canada") {
+      console.log(city, country);
     }
   });
 

@@ -1,13 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-let withBundleAnalyzer;
-if (process.env.NODE_ENV !== "production") {
-  withBundleAnalyzer = require("@next/bundle-analyzer")({
-    enabled: process.env.ANALYZE === "true",
-  });
-}
 const { withSentryConfig } = require("@sentry/nextjs");
-const million = require("million/compiler");
 
 const moduleExports = {
   reactStrictMode: true,
@@ -25,14 +18,10 @@ const moduleExports = {
   },
 };
 
-if (process.env.NODE_ENV !== "production") {
-  module.exports = withBundleAnalyzer(moduleExports);
-} else {
-  // module.exports = million.next(moduleExports);
-  // module.exports = moduleExports;
-
+if (process.env.NODE_ENV === "production") {
   module.exports = withSentryConfig(
-    million.next(moduleExports),
+    // million.next(moduleExports),
+    moduleExports,
     {
       silent: true,
       org: "food-flation",
@@ -46,4 +35,6 @@ if (process.env.NODE_ENV !== "production") {
       disableLogger: true,
     }
   );
+} else {
+  module.exports = moduleExports;
 }
