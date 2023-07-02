@@ -81,6 +81,9 @@ export const itemStoreResolver = async (
       where: searchQuery,
       take: 10,
       skip: (page - 1) * 10,
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         prices: itemFieldsSelected?.includes("prices") && {
           take: 1,
