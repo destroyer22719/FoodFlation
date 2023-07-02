@@ -142,6 +142,7 @@ export const getStoreData = async (id: string) => {
         }
       }
       itemsFromStore(storeId: $id) {
+        
         total
         categories {
           count
@@ -191,6 +192,7 @@ export const getItemsFromStore = async ({
           name
           imgUrl
           category
+          unit
           prices {
             price
             createdAt
@@ -227,6 +229,7 @@ export const getItemsAndItsStoreData = async (id: string) => {
         name
         category
         imgUrl
+        unit
         stores {
           id
           street

@@ -84,6 +84,7 @@ query getItemsFromStore(
       name
       imgUrl
       category
+      unit
       prices {
         price
         createdAt
@@ -133,6 +134,7 @@ query getItemAndItsStoreData($itemId: ID!) {
     name
     category
     imgUrl
+    unit
     stores {
       id
       name

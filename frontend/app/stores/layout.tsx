@@ -12,8 +12,6 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const { locations: locationData, companies } =
     await getLocationsAndCompanies();
 
-  console.log(locationData);
-
   const locations: LocationObj = {};
   locationData.forEach(({ _count, city, country, province, state }) => {
     if (!locations[country]) {

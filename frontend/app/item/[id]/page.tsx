@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -10,7 +11,6 @@ import { getItemsAndItsStoreData } from "@/graphql/queries";
 import StoreItem from "@/components/StoreItem/StoreItem";
 
 import styles from "@/styles/pages/Item.module.scss";
-import { Metadata } from "next";
 
 export async function generateMetadata({
   params,
@@ -42,6 +42,7 @@ const ItemPage = async ({ params }: Props) => {
   const { id } = params;
 
   const item = await getItemsAndItsStoreData(id);
+
   if (!item) {
     return notFound();
   }
@@ -139,7 +140,7 @@ const ItemPage = async ({ params }: Props) => {
         </div>
       </div>
       <div>
-        <ChartComponent pricesData={parsedPrices} />
+        <ChartComponent pricesData={parsedPrices} unit={item.unit || "unit"}/>
       </div>
     </>
   );

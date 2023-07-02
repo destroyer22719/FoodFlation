@@ -13,26 +13,18 @@ import {
 } from "chart.js";
 import { DataSet } from "../page";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 ChartJS.defaults.font.size = 20;
 ChartJS.defaults.font.weight = "bold";
 ChartJS.defaults.color = "white";
 
-const ChartComponent = ({ pricesData }: { pricesData: DataSet[] }) => {
+const ChartComponent = ({ pricesData, unit="unit" }: { pricesData: DataSet[]; unit?: string }) => {
   const data = {
     label: "Date",
     datasets: [
       {
-        label: "Item Price",
+        label: `Price per ${unit}`,
         fill: true,
         borderColor: "rgb(255,255,255)",
         data: pricesData,
