@@ -32,11 +32,7 @@ const ItemSearch = () => {
   const searchParams = useSearchParams()!;
 
   const addSearch = (search: string, type: "search" | "notSearch") => {
-    if (
-      search === "" ||
-      searchQuery.map((term) => term.slice(2, term.length - 1)).includes(search)
-    )
-      return;
+    if (search === "" || searchQuery.map((term) => term.slice(2, term.length - 1)).includes(search)) return;
     if (type === "search") {
       setSearchQuery([...searchQuery, ` "${search}"`]);
       setSearch("");
@@ -48,7 +44,9 @@ const ItemSearch = () => {
 
   const searchQueryParam = searchParams.get("search");
   const searchByPriceParam = searchParams.get("sortByPrice") === "false" ? false : true;
-  const ascParam = searchParams.get("sortByAsc") === "true";
+  const ascParam = searchParams.get("sortByAsc") ? searchParams.get("sortByAsc") === "true" : true;
+  
+  console.log(ascParam);
 
   useEffect(() => {
     if (searchQueryParam) {
@@ -95,10 +93,7 @@ const ItemSearch = () => {
   };
 
   const deleteSearch = (index: number) => {
-    setSearchQuery([
-      ...searchQuery.slice(0, index),
-      ...searchQuery.slice(index + 1),
-    ]);
+    setSearchQuery([...searchQuery.slice(0, index), ...searchQuery.slice(index + 1)]);
   };
 
   return (
@@ -110,10 +105,7 @@ const ItemSearch = () => {
             <div>
               <label htmlFor="search">Words To Search For</label>
               <div className={styles["search-form__input-section"]}>
-                <div
-                  className={styles["search-form__input-add"]}
-                  onClick={() => addSearch(search, "search")}
-                >
+                <div className={styles["search-form__input-add"]} onClick={() => addSearch(search, "search")}>
                   <AiOutlinePlus />
                 </div>
                 <input
@@ -146,9 +138,7 @@ const ItemSearch = () => {
                         >
                           <RxCross1 />
                         </div>
-                        <div
-                          className={styles["search-form__search-term-text"]}
-                        >
+                        <div className={styles["search-form__search-term-text"]}>
                           {searchTerm.slice(2, searchTerm.length - 1)}
                         </div>
                       </div>
@@ -159,10 +149,7 @@ const ItemSearch = () => {
             <div>
               <label htmlFor="notSearch">Words To Exclude</label>
               <div className={styles["search-form__input-section"]}>
-                <div
-                  className={styles["search-form__input-add"]}
-                  onClick={() => addSearch(notSearch, "notSearch")}
-                >
+                <div className={styles["search-form__input-add"]} onClick={() => addSearch(notSearch, "notSearch")}>
                   <AiOutlinePlus />
                 </div>
                 <input
@@ -188,15 +175,10 @@ const ItemSearch = () => {
                           ${styles["search-form__search-not"]}
                         `}
                       >
-                        <div
-                          onClick={() => deleteSearch(i)}
-                          className={styles["search-form__search-term-delete"]}
-                        >
+                        <div onClick={() => deleteSearch(i)} className={styles["search-form__search-term-delete"]}>
                           <RxCross1 />
                         </div>
-                        <div
-                          className={styles["search-form__search-term-text"]}
-                        >
+                        <div className={styles["search-form__search-term-text"]}>
                           {searchTerm.slice(2, searchTerm.length - 1)}
                         </div>
                       </div>
@@ -234,37 +216,20 @@ const ItemSearch = () => {
               >
                 <BiTime />
               </div>
-              <div
-                className={styles["search-form__asc-desc"]}
-                onClick={() => setAsc(!asc)}
-              >
+              <div className={styles["search-form__asc-desc"]} onClick={() => setAsc(!asc)}>
                 {asc ? (
-                  <div
-                    title={
-                      searchByPrice ? "Lowest to Highest" : "Oldest to Newest"
-                    }
-                  >
+                  <div title={searchByPrice ? "Lowest to Highest" : "Oldest to Newest"}>
                     <BsArrowUpRight />
                   </div>
                 ) : (
-                  <div
-                    title={
-                      searchByPrice ? "Highest to Lowest" : "Newest to Oldest"
-                    }
-                  >
+                  <div title={searchByPrice ? "Highest to Lowest" : "Newest to Oldest"}>
                     <BsArrowDownRight />
                   </div>
                 )}
               </div>
               <div
                 onClick={() => searchItems()}
-                className={
-                  styles[
-                    `search-form__search-button${
-                      searchAllowed ? "" : "--disabled"
-                    }`
-                  ]
-                }
+                className={styles[`search-form__search-button${searchAllowed ? "" : "--disabled"}`]}
               >
                 <AiOutlineSearch />
               </div>
