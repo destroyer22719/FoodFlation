@@ -303,6 +303,7 @@ export const getItemsFromCity = async ({
           name
           imgUrl
           category
+          unit
           prices {
             price
             createdAt

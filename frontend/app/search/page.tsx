@@ -31,6 +31,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       {resultsFound > 0 && (
         <Suspense fallback={<div></div>}>
           <PaginationComponent resultsFound={resultsFound} />
+          <h3 className={styles["search__results-found"]}>{resultsFound} Items Found</h3>
         </Suspense>
       )}
       <div className={styles["search__list"]}>

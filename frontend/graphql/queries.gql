@@ -113,6 +113,7 @@ query getItemsFromCity(
       name
       imgUrl
       category
+      unit
       prices {
         price
         createdAt

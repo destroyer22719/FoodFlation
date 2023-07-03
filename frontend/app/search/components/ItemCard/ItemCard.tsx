@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ItemCard: React.FC<Props> = ({ item }) => {
-  const { stores, imgUrl, name, prices } = item;
+  const { stores, imgUrl, name, prices, unit } = item;
   return (
     <Link href={`/item/${item.id}`}>
       <div className={styles["item-card"]}>
@@ -19,7 +19,7 @@ const ItemCard: React.FC<Props> = ({ item }) => {
         </div>
         <div className={styles["item-card__name"]}>{name}</div>
         <div>
-          $ {prices[0].price} on{" "}
+          $ {prices[0].price} / {unit} on{" "}
           {new Date(+prices[0].createdAt).toISOString().split("T")[0]}
         </div>
         <div className={styles["item-card__store"]}>
