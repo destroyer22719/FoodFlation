@@ -13,8 +13,6 @@ type SearchParams = {
   sortByAsc?: string;
 };
 
-
-
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { city, search, page, sortByAsc, sortByPrice } = searchParams;
 
@@ -31,10 +29,10 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       {resultsFound > 0 && (
         <Suspense fallback={<div></div>}>
           <PaginationComponent resultsFound={resultsFound} />
-          <h3 className={styles["search__results-found"]}>{resultsFound} Items Found</h3>
         </Suspense>
       )}
       <div className={styles["search__list"]}>
+        <h3 className={styles["search__results-found"]}>{resultsFound} Items Found</h3>
         {items.map((item) => (
           <ItemCard item={item} key={item.id} />
         ))}
