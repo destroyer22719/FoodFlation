@@ -2,14 +2,7 @@ import cliProgress from "cli-progress";
 import ora from "ora";
 import colors from "ansi-colors";
 
-import {
-  defaultItems,
-  getCompanyId,
-  msToTime,
-  updateItems,
-  getStoreId,
-  loaderDisplay,
-} from "../utils/scrapers.js";
+import { defaultItems, getCompanyId, msToTime, updateItems, getStoreId, loaderDisplay } from "../utils/scrapers.js";
 
 export default async function getPricesLoblaws(
   stores: Address[],
@@ -36,25 +29,17 @@ export default async function getPricesLoblaws(
     storeStart,
     {},
     {
-      format:
-        "Loblaws |" +
-        colors.cyan("{bar}") +
-        "| {percentage}% | {value}/{total} Stores",
+      format: "Loblaws |" + colors.cyan("{bar}") + "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
     }
   );
 
   const itemBar = multiBar.create(
     defaultItems.length,
-    items.length !== defaultItems.length
-      ? defaultItems.length - items.length
-      : 0,
+    items.length !== defaultItems.length ? defaultItems.length - items.length : 0,
     {},
     {
-      format:
-        "Items   |" +
-        colors.magenta("{bar}") +
-        "| {percentage}% | {value}/{total} Items",
+      format: "Items   |" + colors.magenta("{bar}") + "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
     }
   );
@@ -119,55 +104,57 @@ export default async function getPricesLoblaws(
         message: `${item} at ${postalCode}`,
       });
 
-      const req = await fetch(
-        "https://api.pcexpress.ca/product-facade/v3/products/search",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-apikey": " 1im1hL52q9xvta16GlSdYDsTsG0dmyhF",
+      const req = await fetch("https://api.pcexpress.ca/product-facade/v3/products/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-apikey": " 1im1hL52q9xvta16GlSdYDsTsG0dmyhF",
+        },
+        body: JSON.stringify({
+          pagination: {
+            from: 0,
+            size: 10,
           },
-          body: JSON.stringify({
-            pagination: {
-              from: 0,
-              size: 10,
-            },
-            lang: "en",
-            storeId: otherId,
-            banner: "loblaw",
-            pickupType: "STORE",
-            term: item,
-            cartId: "9aaf26ca-190e-44e1-9a89-4b233fd48ef2",
-          }),
-        }
-      );
+          lang: "en",
+          storeId: otherId,
+          banner: "loblaw",
+          pickupType: "STORE",
+          term: item,
+          cartId: "9aaf26ca-190e-44e1-9a89-4b233fd48ef2",
+        }),
+      });
       const res: LoblawsApiRes = await req.json();
       const { results } = res;
 
-      const resultsParsed = results.map((result) => {
-        const { prices, name, brand, imageAssets, packageSize } = result;
+      const resultsParsed = results
+        .filter(({ imageAssets }) => {
+          if (!imageAssets) {
+            return false;
+          }
+          return true;
+        })
+        .map((result) => {
+          const { prices, name, brand, imageAssets, packageSize } = result;
 
-        let price: number, unit: string;
-        if (!packageSize && prices.price.unit === "ea") {
-          price = prices.comparisonPrices[1].value;
-          unit = prices.comparisonPrices[1].unit;
-        } else if (!packageSize && prices.price.unit !== "ea") {
-          price = prices.price.value;
-          unit = `${prices.price.quantity}${prices.price.unit}`
-        } else {
-          price = prices.price.value;
-          unit = packageSize;
-        }
+          let price: number, unit: string;
+          if (!packageSize && prices.price.unit === "ea") {
+            price = prices.comparisonPrices[1].value;
+            unit = prices.comparisonPrices[1].unit;
+          } else if (!packageSize && prices.price.unit !== "ea") {
+            price = prices.price.value;
+            unit = `${prices.price.quantity}${prices.price.unit}`;
+          } else {
+            price = prices.price.value;
+            unit = packageSize;
+          }
 
-        return {
-          price,
-          name: `${brand ? `${brand},` : ""} ${name} ${
-            packageSize ? `(${packageSize})` : ""
-          }`.trim(),
-          imgUrl: imageAssets[0].mediumUrl,
-          unit,
-        };
-      });
+          return {
+            price,
+            name: `${brand ? `${brand},` : ""} ${name} ${packageSize ? `(${packageSize})` : ""}`.trim(),
+            imgUrl: imageAssets[0].mediumUrl,
+            unit,
+          };
+        });
 
       loader.text = loaderDisplay({
         ...loaderData,
