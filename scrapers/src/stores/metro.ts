@@ -1,16 +1,10 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
 
-import {
-  defaultItems,
-  getCompanyId,
-  getStoreId,
-  loaderDisplay,
-  msToTime,
-  updateItems,
-} from "../utils/scrapers.js";
+import { defaultItems, getCompanyId, getStoreId, loaderDisplay, msToTime, updateItems } from "../utils/scrapers.js";
 
 export async function getPricesMetro(
   stores: Address[],
@@ -24,25 +18,28 @@ export async function getPricesMetro(
 
   const startTime = Date.now();
 
+  puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
     headless: process.argv.includes("--debug") ? false : "new",
     ignoreHTTPSErrors: true,
+    defaultViewport: {
+      height: 0,
+      width: 0,
+    }
   });
 
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
-  await context.overridePermissions("https://www.Metro.ca/cp/grocery", [
-    "geolocation",
-  ]);
+  await context.overridePermissions("https://www.Metro.ca/", ["geolocation"]);
 
-  await page.setRequestInterception(true);
+  // await page.setRequestInterception(true);
 
-  page.on("request", (req) => {
-    if (req.resourceType() === "stylesheet" || req.resourceType() === "font")
-      req.abort();
-    else req.continue();
-  });
+  // page.on("request", (req) => {
+  //   if (req.resourceType() === "stylesheet" || req.resourceType() === "font")
+  //     req.abort();
+  //   else req.continue();
+  // });
 
   const multiBar = new cliProgress.MultiBar(
     {
@@ -57,25 +54,17 @@ export async function getPricesMetro(
     storeStart,
     {},
     {
-      format:
-        "Metro |" +
-        colors.cyan("{bar}") +
-        "| {percentage}% | {value}/{total} Stores",
+      format: "Metro |" + colors.cyan("{bar}") + "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
     }
   );
 
   const itemBar = multiBar.create(
     defaultItems.length,
-    items.length !== defaultItems.length
-      ? defaultItems.length - items.length
-      : 0,
+    items.length !== defaultItems.length ? defaultItems.length - items.length : 0,
     {},
     {
-      format:
-        "Items |" +
-        colors.magenta("{bar}") +
-        "| {percentage}% | {value}/{total} Items",
+      format: "Items |" + colors.magenta("{bar}") + "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
     }
   );
@@ -127,19 +116,34 @@ export async function getPricesMetro(
       message: `Scraping ${postalCode}...`,
     });
 
-    await page.goto("https://www.metro.ca/en/find-a-grocery");
+    await page.goto("https://www.metro.ca/en", {
+      waitUntil: "domcontentloaded",
+    });
+    await page.waitForSelector("#header-choose-new-service-pickup-btn", {
+      visible: true,
+      timeout: 999999
+    });
+    await page.waitForTimeout(500);
+    await page.click("#header-choose-new-service-pickup-btn");
+    await page.waitForSelector("#deliveryPostalCode");
+    await page.waitForTimeout(500);
+    await page.type("#deliveryPostalCode", postalCode, {delay: 100});
+    await page.waitForTimeout(500);
+    await page.keyboard.press("Enter");
+    // await page.waitForSelector(".btn-search");
+    // await page.click(".btn-search");
 
-    await page.waitForSelector("#postalCode");
-    await page.$eval(
-      "#postalCode",
-      (input, pc) => ((input as HTMLInputElement).value = pc as string),
-      postalCode
-    );
-
-    await page.click("#submit");
-    await page.waitForTimeout(5000);
-    await page.click(".cta-set-store");
-    await page.waitForNavigation();
+    await page.waitForSelector(".service--type__description:nth-of-type(1)", {
+      visible: true,
+    });
+    await page.waitForTimeout(1000);
+    await page.click(".service--type__description:nth-of-type(1)");
+    await page.waitForTimeout(500);
+    await page.click("#see-more-ecomm-stores+.cart-setup__store");
+    await page.waitForTimeout(500);
+    await page.click("#serviceNext");
+    await page.waitForSelector(".timeslot-confirm");
+    // await page.waitForNavigation();
 
     for (const item of items) {
       //searches up the price of each item
@@ -156,20 +160,18 @@ export async function getPricesMetro(
         message: `${item} at ${postalCode}`,
       });
 
-      await page.goto(
-        `https://www.metro.ca/en/online-grocery/search?filter=${item}`,
-        {
-          waitUntil: "domcontentloaded",
-        }
-      );
+      await page.goto(`https://www.metro.ca/en/online-grocery/search?filter=${item}`, {
+        waitUntil: "domcontentloaded",
+      });
 
-      //retrieves the value of the first 3 items
+      await page.waitForSelector(".searchOnlineResults", {
+        timeout: 999999
+      });
+      //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
         const results = [];
 
-        const items = Array.from(
-          document.querySelectorAll(".searchOnlineResults > .tile-product")
-        );
+        const items = Array.from(document.querySelectorAll(".searchOnlineResults > .tile-product"));
 
         const totalIters = Math.min(items.length, 5);
 
@@ -180,27 +182,19 @@ export async function getPricesMetro(
           const name = imgElem.alt;
           const imgUrl = imgElem.src;
 
-          const isAveraged =
-            item.querySelector('abbr[title="average"]') !== null;
+          const isAveraged = item.querySelector('abbr[title="average"]') !== null;
 
           let price, unit;
 
           if (isAveraged) {
-            const text = (
-              item.querySelector(
-                ".pricing__secondary-price > span"
-              ) as HTMLElement
-            ).innerText;
+            const text = (item.querySelector(".pricing__secondary-price > span") as HTMLElement).innerText;
             unit = text.split("/")[1].trim();
             price = parseFloat(text.split("/")[0].trim().slice(1));
           } else {
-            unit = (item.querySelector(".head__unit-details") as HTMLElement)
-              .innerText;
+            unit = (item.querySelector(".head__unit-details") as HTMLElement).innerText;
 
             price = parseFloat(
-              (
-                item.querySelector("div[data-main-price]") as HTMLElement
-              ).getAttribute("data-main-price")!
+              (item.querySelector("div[data-main-price]") as HTMLElement).getAttribute("data-main-price")!
             );
           }
 

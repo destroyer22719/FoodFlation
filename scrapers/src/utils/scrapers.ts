@@ -119,42 +119,32 @@ export const loaderDisplay = ({
 };
 
 export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
-  const resultNames = results.map((result) => result.name);
+  results.forEach(async ({ name, imgUrl, unit, price }) => {
+    let item = await prisma.items.findFirst({
+      where: {
+        name,
+        storeId,
+        imgUrl,
+      },
+    });
 
-  let itemObjs = await prisma.items.findMany({
-    where: { storeId, name: { in: resultNames } },
-  });
+    if (!item) {
+      item = await prisma.items.create({
+        data: {
+          name,
+          unit,
+          storeId,
+          imgUrl,
+          category: item2category[name],
+        },
+      });
+    }
 
-  if (itemObjs.length !== results.length) {
-    const itemsNotFound = results.filter(
-      //this checks for any items that are not in the database by checking if the name is in the resultNames array
-      (result) => itemObjs.map((item) => item.name).indexOf(result.name) === -1
-    );
-
-    const newItems = await Promise.all(
-      itemsNotFound.map(async ({ name, imgUrl, unit }) => {
-        const item = await prisma.items.create({
-          data: {
-            name,
-            storeId,
-            imgUrl,
-            category: item2category[name],
-            unit,
-          },
-        });
-        return item;
-      })
-    );
-
-    itemObjs = [...itemObjs, ...newItems];
-  }
-
-  await prisma.prices.createMany({
-    data: results.map((result) => ({
-      price: result.price,
-      itemId: itemObjs.find((itemObj) => {
-        return itemObj.name.toLowerCase() === result.name.toLowerCase();
-      })!.id,
-    })),
+    await prisma.prices.create({
+      data: {
+        price,
+        itemId: item.id,
+      },
+    });
   });
 };
