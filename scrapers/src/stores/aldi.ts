@@ -135,6 +135,7 @@ export async function getPricesAldi(
       `https://shop.aldi.us/store/aldi/storefront/?current_zip_code=${zipCode}`
     );
 
+    await page.waitForSelector('svg[color="systemGrayscale70"]>path[d^="M19"]');
     for (const item of items) {
       //searches up the price of each item
       loader.color = "green";
@@ -194,10 +195,13 @@ export async function getPricesAldi(
           }
 
           results.push({
-            name,
-            price,
-            imgUrl,
-            unit,
+            name: (<HTMLElement>name[i]).innerText,
+            price: (<HTMLElement>price[i])
+              .getAttribute("aria-label")!
+              .match(/(?<=\$)(\d|\.)+/gm)![0],
+            imgUrl: (<HTMLImageElement>img[i]).srcset
+              .split(", ")
+              .filter((url) => /\.(jpe?g|png)$/gm.test(url))[0],
           });
         }
 
