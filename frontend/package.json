@@ -11,14 +11,14 @@
     "generate": "graphql-codegen"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.0-rc.1",
-    "@apollo/experimental-nextjs-app-support": "^0.3.4",
+    "@apollo/client": "^3.8.4",
+    "@apollo/experimental-nextjs-app-support": "^0.4.3",
     "@sentry/nextjs": "^7.58.1",
-    "@vercel/analytics": "^1.0.1",
+    "@vercel/analytics": "^1.0.2",
     "chart.js": "^4.3.0",
     "graphql": "^16.7.1",
     "million": "^2.5.1-beta.2",
-    "next": "^13.4.10",
+    "next": "^13.5.2",
     "next-sitemap": "^4.1.8",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
