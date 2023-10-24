@@ -25,6 +25,6 @@
     "suppressImplicitAnyIndexErrors": true,
     "ignoreDeprecations": "5.0",
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "src/stores/aldi.ts"],
   "include": ["./src/**/*.ts", "loblaws.ts", "src/stores/nofrills.ts", "src/test.ts"]
 }

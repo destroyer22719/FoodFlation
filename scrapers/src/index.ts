@@ -1,13 +1,7 @@
 import yargs from "yargs/yargs";
 import { generateStoresToScrape, scrapeStores } from "./utils/cli.js";
 
-// console.log(`
-//   - include a new field, unit, to represent the unit of measurement for the price of the item
-//   - investigate issue with whole foods market and fix it and investigate if there are any other stores with the same issue with different child elements which corresponds to prices, item, and img not corresponding to each other
-//   - start with:$ npm run scrape:prod -- --usa --storeStart=7 --itemStart=9
-// `)
-
-// process.exit(1);
+console.log("Don't forget to add aldi back to tsc")
 
 const argv = yargs(process.argv.slice(2))
   .options({

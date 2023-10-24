@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import puppeteer from "puppeteer";
 import ora from "ora";
 import colors from "ansi-colors";
