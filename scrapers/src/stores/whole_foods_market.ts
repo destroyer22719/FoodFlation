@@ -3,14 +3,7 @@ import ora from "ora";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
 
-import {
-  defaultItems,
-  getCompanyId,
-  getStoreId,
-  loaderDisplay,
-  msToTime,
-  updateItems,
-} from "../utils/scrapers.js";
+import { defaultItems, getCompanyId, getStoreId, loaderDisplay, msToTime, updateItems } from "../utils/scrapers.js";
 
 export async function getPricesWholeFoodsMarket(
   stores: Address[],
@@ -32,15 +25,11 @@ export async function getPricesWholeFoodsMarket(
   const page = await browser.newPage();
   //disables location
   const context = browser.defaultBrowserContext();
-  await context.overridePermissions("https://www.wholefoodsmarket.com/stores", [
-    "geolocation",
-  ]);
+  await context.overridePermissions("https://www.wholefoodsmarket.com/stores", ["geolocation"]);
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {
-    if (
-      ["image", "stylesheet", "font", "other"].includes(request.resourceType())
-    ) {
+    if (["image", "stylesheet", "font", "other"].includes(request.resourceType())) {
       request.abort();
     } else {
       request.continue();
@@ -60,25 +49,17 @@ export async function getPricesWholeFoodsMarket(
     storeStart,
     {},
     {
-      format:
-        "Whole Foods Market |" +
-        colors.cyan("{bar}") +
-        "| {percentage}% | {value}/{total} Stores",
+      format: "Whole Foods Market |" + colors.cyan("{bar}") + "| {percentage}% | {value}/{total} Stores",
       hideCursor: true,
     }
   );
 
   const itemBar = multiBar.create(
     defaultItems.length,
-    items.length !== defaultItems.length
-      ? defaultItems.length - items.length
-      : 0,
+    items.length !== defaultItems.length ? defaultItems.length - items.length : 0,
     {},
     {
-      format:
-        "Items              |" +
-        colors.magenta("{bar}") +
-        "| {percentage}% | {value}/{total} Items",
+      format: "Items              |" + colors.magenta("{bar}") + "| {percentage}% | {value}/{total} Items",
       hideCursor: true,
     }
   );
@@ -97,7 +78,7 @@ export async function getPricesWholeFoodsMarket(
   const loader = ora(
     loaderDisplay({
       ...starterLoaderDisplay,
-      message: `Starting Aldi Scraper`,
+      message: `Starting Whole Foods Market Scraper`,
     })
   ).start();
 
@@ -143,17 +124,12 @@ export async function getPricesWholeFoodsMarket(
 
     //clicking on the right store
     await page.waitForTimeout(2500);
-    await page.waitForSelector(
-      "wfm-store-list li:nth-child(1) wfm-store-selector > span",
-      {
-        visible: true,
-        timeout: 5000,
-      }
-    );
+    await page.waitForSelector("wfm-store-list li:nth-child(1) wfm-store-selector > span", {
+      visible: true,
+      timeout: 5000,
+    });
 
-    await page.click(
-      "wfm-store-list li:nth-child(1) wfm-store-selector > span"
-    );
+    await page.click("wfm-store-list li:nth-child(1) wfm-store-selector > span");
 
     await page.waitForSelector(".w-mystore", {
       timeout: 1000 * 60,
@@ -192,9 +168,7 @@ export async function getPricesWholeFoodsMarket(
       });
 
       const results = await page.evaluate(() => {
-        const itemCards = Array.from(
-          document.querySelectorAll(".w-pie--product-tile")
-        ) as HTMLElement[];
+        const itemCards = Array.from(document.querySelectorAll(".w-pie--product-tile")) as HTMLElement[];
 
         const iterations = Math.min(itemCards.length, 5);
 
@@ -202,47 +176,33 @@ export async function getPricesWholeFoodsMarket(
 
         for (let i = 0; i < iterations; i++) {
           const itemCard = itemCards[i];
-          const name = (
-            itemCard.querySelector(
-              `h2[data-testid="product-tile-name"]`
-            ) as HTMLElement
-          )?.innerText;
+          const name = (itemCard.querySelector(`h2[data-testid="product-tile-name"]`) as HTMLElement)?.innerText;
 
-          const imgUrl =
-            (
-              itemCard.querySelector(
-                ".w-pie--product-tile__image img"
-              ) as HTMLImageElement | null
-            )?.getAttribute("src") || "";
+          const imgUrl = itemCard.querySelector("img")?.getAttribute("src") || "";
 
-          const salesPriceElem = itemCard.querySelector(
-            ".sale_price"
-          ) as HTMLElement | null;
+          const onSale = !!itemCard.querySelector(`[data-testid="product-tile-badge-icon"]`);
 
-          let price = null;
+          let price: number = 0;
+          let preParsedPrice = "";
           let unitOfMeasurement = "unit";
 
-          if (salesPriceElem && !salesPriceElem.innerText.includes("for")) {
-            price = parseFloat(
-              salesPriceElem.innerText.match(/(?<=\$)\d+(\.\d{2})?/gm)![0]
-            );
+          if (onSale) {
+            preParsedPrice = (itemCard.querySelector(`.text-squid-ink>div:first-child`) as HTMLElement).innerText;
           } else {
-            const regularPrice = (
-              itemCard.querySelector(".regular_price") as HTMLElement
-            ).innerText;
-            if (regularPrice.includes("/")) {
-              unitOfMeasurement = regularPrice.split("/")[1].trim();
-              if (unitOfMeasurement === "lb") {
-                unitOfMeasurement = "pound";
-              } else if (unitOfMeasurement === "oz") {
-                unitOfMeasurement = "ounce";
-              } else if (unitOfMeasurement === "gal") {
-                unitOfMeasurement = "gallon";
-              }
-            }
-
-            price = parseFloat(regularPrice.split("/")[0].slice(1));
+            preParsedPrice = (itemCard.querySelector(".text-left.bds--heading-5") as HTMLElement).innerText;
           }
+          if (preParsedPrice.includes("/")) {
+            unitOfMeasurement = preParsedPrice.split("/")[1].trim();
+            if (unitOfMeasurement === "lb") {
+              unitOfMeasurement = "pound";
+            } else if (unitOfMeasurement === "oz") {
+              unitOfMeasurement = "ounce";
+            } else if (unitOfMeasurement === "gal") {
+              unitOfMeasurement = "gallon";
+            }
+          }
+
+          price = parseFloat(preParsedPrice.split("/")[0].slice(1));
 
           resultData.push({
             name,
