@@ -25,7 +25,7 @@ export async function getPricesMetro(
     defaultViewport: {
       height: 0,
       width: 0,
-    }
+    },
   });
 
   const page = await browser.newPage();
@@ -121,29 +121,31 @@ export async function getPricesMetro(
     });
     await page.waitForSelector("#header-choose-new-service-pickup-btn", {
       visible: true,
-      timeout: 999999
+      timeout: 999999,
     });
     await page.waitForTimeout(500);
     await page.click("#header-choose-new-service-pickup-btn");
     await page.waitForSelector("#deliveryPostalCode");
     await page.waitForTimeout(500);
-    await page.type("#deliveryPostalCode", postalCode, {delay: 100});
+    await page.type("#deliveryPostalCode", postalCode, { delay: 100 });
     await page.waitForTimeout(500);
     await page.keyboard.press("Enter");
-    // await page.waitForSelector(".btn-search");
-    // await page.click(".btn-search");
+    await page.waitForTimeout(5000);
 
-    await page.waitForSelector(".service--type__description:nth-of-type(1)", {
-      visible: true,
-    });
-    await page.waitForTimeout(1000);
-    await page.click(".service--type__description:nth-of-type(1)");
-    await page.waitForTimeout(500);
-    await page.click("#see-more-ecomm-stores+.cart-setup__store");
-    await page.waitForTimeout(500);
+    if (await page.$("#popupIntercept")) {
+      await page.click("#popupIntercept > .close > a");
+    }
+
+    await page.waitForSelector(".expand-store-list");
+    await page.click(".expand-store-list");
+
+    await page.waitForSelector(".cart-setup__store");
+    await page.click(".cart-setup__store");
+
+    await page.waitForSelector("#serviceNext");
     await page.click("#serviceNext");
-    await page.waitForSelector(".timeslot-confirm");
-    // await page.waitForNavigation();
+    
+    await page.waitForSelector(".cta-basic-primary.timeslot-confirm.except-mobile");
 
     for (const item of items) {
       //searches up the price of each item
@@ -165,7 +167,7 @@ export async function getPricesMetro(
       });
 
       await page.waitForSelector(".searchOnlineResults", {
-        timeout: 999999
+        timeout: 999999,
       });
       //retrieves the value of the first 5 items
       const results = await page.evaluate(() => {
@@ -191,6 +193,9 @@ export async function getPricesMetro(
             unit = text.split("/")[1].trim();
             price = parseFloat(text.split("/")[0].trim().slice(1));
           } else {
+            if (!item.querySelector(".head__unit-details")) {
+              continue;
+            }
             unit = (item.querySelector(".head__unit-details") as HTMLElement).innerText;
 
             price = parseFloat(
