@@ -7,6 +7,8 @@ import style from "@/styles/pages/Layout.module.scss";
 import "@/styles/global.scss";
 import { Metadata } from "next";
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 type Props = {
   title: string;
   children: React.ReactNode;
@@ -22,6 +24,7 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <html lang="en">
       <body>
+        <SpeedInsights />
         <div className={style["layout"]}>
           <Nav />
           <div className={style["layout__main"]}>{children}</div>

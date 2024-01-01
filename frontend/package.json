@@ -15,6 +15,7 @@
     "@apollo/experimental-nextjs-app-support": "^0.5.2",
     "@sentry/nextjs": "^7.91.0",
     "@vercel/analytics": "^1.1.1",
+    "@vercel/speed-insights": "^1.0.2",
     "chart.js": "^4.4.1",
     "graphql": "^16.8.1",
     "million": "^2.6.4",
