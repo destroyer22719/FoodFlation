@@ -137,9 +137,15 @@ export default async function getPricesLoblaws(
           const { prices, name, brand, imageAssets, packageSize } = result;
 
           let price: number, unit: string;
+
           if (!packageSize && prices.price.unit === "ea") {
-            price = prices.comparisonPrices[1].value;
-            unit = prices.comparisonPrices[1].unit;
+            if (prices.comparisonPrices.length >= 2) {
+              price = prices.comparisonPrices[1].value;
+              unit = prices.comparisonPrices[1].unit;
+            } else {
+              price = prices.comparisonPrices[0].value;
+              unit = prices.comparisonPrices[0].unit;
+            }
           } else if (!packageSize && prices.price.unit !== "ea") {
             price = prices.price.value;
             unit = `${prices.price.quantity}${prices.price.unit}`;
