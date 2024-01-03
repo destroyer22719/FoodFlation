@@ -119,11 +119,15 @@ export async function getPricesMetro(
     await page.goto("https://www.metro.ca/en", {
       waitUntil: "domcontentloaded",
     });
+
+
     await page.waitForSelector("#header-choose-new-service-pickup-btn", {
       visible: true,
       timeout: 999999,
     });
     await page.waitForTimeout(500);
+    await page.click("#onetrust-reject-all-handler");
+    await page.waitForTimeout(1000);
     await page.click("#header-choose-new-service-pickup-btn");
     await page.waitForSelector("#deliveryPostalCode");
     await page.waitForTimeout(500);
