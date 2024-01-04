@@ -127,7 +127,6 @@ export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
         imgUrl,
       },
     });
-
     if (!item) {
       item = await prisma.items.create({
         data: {
@@ -139,12 +138,23 @@ export const updateItems = async ({ results, storeId }: UpdateItemsParams) => {
         },
       });
     }
-
-    await prisma.prices.create({
-      data: {
-        price,
-        itemId: item.id,
-      },
-    });
+    try {
+      await prisma.prices.create({
+        data: {
+          price,
+          itemId: item.id,
+        },
+      });
+    } catch (err) {
+      console.log("\n")
+      console.log(name);
+      console.log(price);
+      console.log(unit);
+      console.log(imgUrl);
+      
+      console.log(item);
+      console.log(item.storeId);
+      throw new Error(err);
+    }
   });
 };
