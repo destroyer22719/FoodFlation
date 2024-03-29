@@ -2,7 +2,7 @@
 
 Unfortunately, due to cloud hosting challenges, FoodFlation will be shut down indefinitely. You can still access the source and run locally if you wish. Thank you for your support.
 
-https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7016442228684312576?
+[link to video](https://www.linkedin.com/posts/nathan-cai-dev_nodejs-react-mysql-activity-7016442347190177792-rlkF?utm_source=share&utm_medium=member_desktop)
 
 # FoodFlation
 
