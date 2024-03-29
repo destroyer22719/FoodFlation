@@ -22,7 +22,9 @@ export const metadata: Metadata = {
 };
 
 const Layout: React.FC<Props> = ({ children }) => {
-  redirect("https://github.com/destroyer22719/FoodFlation?");
+  // if (1+1===2) {
+  //   redirect("https://github.com/destroyer22719/FoodFlation?");
+  // }
 
   return (
     <html lang="en">
