@@ -7,7 +7,8 @@ import style from "@/styles/pages/Layout.module.scss";
 import "@/styles/global.scss";
 import { Metadata } from "next";
 
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { redirect } from "next/navigation";
 
 type Props = {
   title: string;
@@ -18,9 +19,11 @@ export const metadata: Metadata = {
   title: "FoodFlation",
   description: "Helping consumers undersand and navigate food inflation",
   keywords: "food, inflation, prices, groceries, grocery, canada, usa",
-}
+};
 
 const Layout: React.FC<Props> = ({ children }) => {
+  redirect("https://github.com/destroyer22719/FoodFlation?");
+
   return (
     <html lang="en">
       <body>
