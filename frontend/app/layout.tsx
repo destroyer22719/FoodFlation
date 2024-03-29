@@ -1,5 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
-
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import style from "@/styles/pages/Layout.module.scss";
@@ -18,7 +16,7 @@ export const metadata: Metadata = {
   keywords: "food, inflation, prices, groceries, grocery, canada, usa",
 };
 
-const Layout: React.FC<Props> = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   // if (1+1===2) {
   //   redirect("https://github.com/destroyer22719/FoodFlation?");
   // }
@@ -32,7 +30,6 @@ const Layout: React.FC<Props> = ({ children }) => {
           <Footer />
         </div>
       </body>
-      <Analytics />
     </html>
   );
 };
