@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
+// import Footer from "@/components/Footer";
+// import Nav from "@/components/Nav";
 import style from "@/styles/pages/Layout.module.scss";
 
 import "@/styles/global.scss";
@@ -20,9 +20,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <body>
         <div className={style["layout"]}>
-          <Nav />
+          {/* <Nav /> */}
           <div className={style["layout__main"]}>{children}</div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </body>
     </html>

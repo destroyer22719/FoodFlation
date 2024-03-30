@@ -35,8 +35,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/search/components/Form/FormRoot.tsx",
-    "app/search/components/Form/FormRoottsx"
+    "../frontend_old/app_old/search/components/Form/FormRoot.tsx",
+    "../frontend_old/app_old/search/components/Form/FormRoottsx"
   ],
   "exclude": ["node_modules"]
 }
